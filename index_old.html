@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRSV - Freelance Game Development Prototype</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        'game-dark': '#1a1a2e',
+                        'game-mid': '#16213e',
+                        'game-light': '#0f3460',
+                        'accent': '#e94560',
+                        'proto-green': '#00ff88',
+                        'proto-blue': '#00a9ff',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: radial-gradient(ellipse at center, #16213e 0%, #0f3460 50%, #1a1a2e 100%);
+            font-family: Poppins, sans-serif;
+            overflow-x: hidden;
+        }
+        .hero-bg {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(0,169,255,0.05) 50%, rgba(0,255,136,0.05) 100%);
+            backdrop-filter: blur(10px);
+        }
+        .service-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 40px rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+        }
+        .portfolio-item img {
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+        .portfolio-item:hover img {
+            transform: scale(1.05) rotate(2deg);
+            filter: brightness(1.1);
+        }
+        .brand {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #e94560;
+            text-shadow: 0 0 10px rgba(233, 69, 96, 0.5);
+            animation: pulse-slow;
+        }
+        .proto-line {
+            background: linear-gradient(90deg, transparent, #00ff88, transparent);
+            height: 2px;
+            animation: grow 2s ease-in-out infinite alternate;
+        }
+        @keyframes grow {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, #00a9ff 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 3s ease-in-out infinite;
+            z-index: -1;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.5; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+        }
+        @media (max-width: 768px) {
+            .hero-bg {
+                height: 50vh;
+            }
+            .grid-cols-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="text-white relative">
+    <div id="particles"></div>
+
+<header class="bg-game-mid p-4 shadow-lg fixed w-full top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="brand text-3xl cursor-pointer" id="logo">KRSV</h1>
+        <nav>
+            <ul class="flex space-x-6" id="navLinks">
+                <li><a href="#about" class="nav-link hover:text-accent transition">About</a></li>
+                <li><a href="#services" class="nav-link hover:text-accent transition">Services</a></li>
+                <li><a href="#portfolio" class="nav-link hover:text-accent transition">Portfolio</a></li>
+                <li><a href="#contact" class="nav-link hover:text-accent transition">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+    <section id="hero" class="hero-bg h-screen flex items-center justify-center text-center px-6 relative overflow-hidden" style="padding-top: 80px;">
+        <div class="max-w-4xl reveal" id="hero-content">
+            <h2 class="text-6xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-proto-blue to-proto-green animate-bounce-slow">Crafting Epic Adventures</h2>
+            <p class="text-xl mb-6 opacity-90">This is a prototype of KRSV's website, showcasing freelance game development in an interactive, futuristic style. Explore features like smooth navigation, reveal animations, and dynamic elements!</p>
+            <div class="proto-line mb-6"></div>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button id="heroBtn" class="bg-accent px-8 py-3 rounded-full hover:bg-white hover:text-game-dark transition transform hover:scale-105">Start Exploration</button>
+                <a href="#portfolio" class="border-2 border-proto-green px-8 py-3 rounded-full hover:bg-proto-green hover:text-game-dark transition transform hover:scale-105">View Portfolio</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-16 px-6">
+        <div class="container mx-auto text-center max-w-4xl reveal" id="about-content">
+            <h2 class="text-4xl font-bold mb-8">About KRSV</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="service-card p-6 rounded-lg">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/e448f65b-0b51-4880-ade2-e8ed6236e098.png" alt="Futuristic digital studio environment with holographic displays showing video game concept art, 3D models of characters and environments, virtual reality workstations, and glowing code matrices floating in mid-air, all illuminated by neon blue and green lights in a high-tech room" class="w-full h-48 object-cover rounded-lg mb-4" />
+                    <p>"
+KRSV: A cutting-edge freelance game development collective. We fuse passion for gaming with innovative technology to create immersive experiences." - Founders</p>
+                </div>
+                <div class="service-card p-6 rounded-lg">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/76b62bf4-1b89-4a28-8537-3a47ed941f9f.png" alt="Team of diverse digital developers wearing VR headsets, working on gaming projects at transparent touchscreens in a circular workspace, with older and younger creators collaborating, laptops open to coding, and game prototypes running on monitors in a clean, modern setting" class="w-full h-48 object-cover rounded-lg mb-4" />
+                    <p>We excel in Unity, Unreal Engine, Godot, and custom frameworks, delivering high-performance games for PC, console, mobile, VR/AR, and web platforms with unparalleled optimization.</p>
+                </div>
+                <div class="service-card p-6 rounded-lg">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/8f784a53-b415-481b-b757-223b4b61792c.png" alt="Virtual meeting room in cyberspace with floating geometric shapes representing game elements like controllers, pixels, meshes, scripts, and data streams connecting team members avatars in a digital realm with futuristic architecture" class="w-full h-48 object-cover rounded-lg mb-4" />
+                    <p>Our prototype approach ensures flexible, transparent freelancing: from rapid concept validation and iterative prototyping to full release, with real-time collaboration tools.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="bg-game-light py-16 px-6">
+        <div class="container mx-auto text-center max-w-4xl reveal" id="services-content">
+            <h2 class="text-4xl font-bold mb-8">Our Services</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="service-card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-proto-green">Game Development</h3>
+                    <p>Prototype-driven creation: 2D/3D design, coding, AI integration, multiplayer systems. We iterate based on playtesting for maximum engagement.</p>
+                </div>
+                <div class="service-card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-proto-green">Asset Creation</h3>
+                    <p>Custom digital assets: characters, worlds, audio, UI. Using Blender, Maya, Phonoshop, FMOD for photorealistic or stylized prototypes.</p>
+                </div>
+                <div class="service-card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-proto-green">Prototyping & Consulting</h3>
+                    <p>Rapid MVP development, feasibility studies, market analysis. Expert advice on monetization, scalability, platform strategies.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="portfolio" class="py-16 px-6">
+        <div class="container mx-auto text-center max-w-4xl reveal" id="portfolio-content">
+            <h2 class="text-4xl font-bold mb-8">Portfolio Prototypes</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="portfolio-item service-card p-6 rounded-lg cursor-pointer" data-target="modal-pixel">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/0bce35ef-5d7d-47d4-9fae-a937f4bb1c23.png" alt="Retro-style 2D platformer prototype screenshot with pixel art protagonist jumping across pixelated forest levels, collecting power-ups and battling simple enemies in a vibrant, colorful environment with basic HUD displaying health and score" class="w-full h-64 object-cover rounded-lg mb-4" />
+                    <h3 class="text-xl font-semibold mb-2">Pixel Quest Prototype</h3>
+                    <p>A retro-inspired platformer prototype with smooth controls, level progression, and power-up mechanics. Built in Unity for responsive gameplay.</p>
+                </div>
+                <div class="portfolio-item service-card p-6 rounded-lg cursor-pointer" data-target="modal-neon">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/716a9d93-fcc7-4d31-8f24-ea0b4850d0cb.png" alt="Futuristic 3D game prototype scene in a neon-glow cyberpunk city with detailed buildings, vehicles, and interactive elements, rendered in a stylized low-poly art style with volumetric lighting and particle effects" class="w-full h-64 object-cover rounded-lg mb-4" />
+                    <h3 class="text-xl font-semibold mb-2">Neon Horizon Prototype</h3>
+                    <p>An immersive 3D prototype showcasing procedural generation, dynamic weather, and VR integration for an open-world experience in Unreal Engine.</p>
+                </div>
+                <div class="portfolio-item service-card p-6 rounded-lg cursor-pointer" data-target="modal-gem">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/df3ce126-6399-428b-b952-fc193c34920e.png" alt="Puzzle game prototype interface on mobile screen showing gem-matching gameplay with cascading animations, score multipliers, and UI elements like lives, level progress, and leaderboard integration in a clean, colorful layout" class="w-full h-64 object-cover rounded-lg mb-4" />
+                    <h3 class="text-xl font-semibold mb-2">Gem Cascade Prototype</h3>
+                    <p>A mobile puzzle prototype with intuitive touch controls, leaderboards, and visual effects optimized for smooth performance across devices.</p>
+                </div>
+                <div class="portfolio-item service-card p-6 rounded-lg cursor-pointer" data-target="modal-island">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3d5d19f0-ae6e-4562-a595-f4a71c9e3246.png" alt="Multiplayer survival game prototype overview with top-down island map displaying players, zones, and resources in a bright tropical setting on console/handheld, with simple HUD for stats and inventory" class="w-full h-64 object-cover rounded-lg mb-4" />
+                    <h3 class="text-xl font-semibold mb-2">Island Survival Prototype</h3>
+                    <p>A competitive multiplayer prototype with matchmaking, anti-cheat measures, and balanced gameplay for PC and console platforms.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal for portfolio details -->
+    <div id="portfolioModal" class="fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-60 hidden">
+        <div class="bg-game-mid p-8 rounded-lg max-w-4xl w-full mx-4 relative">
+            <button id="closeModal" class="absolute top-4 right-4 text-accent text-2xl">&times;</button>
+            <div id="modalContent">
+                <!-- Modal content will be inserted here via JS -->
+            </div>
+        </div>
+    </div>
+
+    <section id="contact" class="bg-game-light py-16 px-6">
+        <div class="container mx-auto max-w-2xl reveal" id="contact-content">
+            <h2 class="text-4xl font-bold text-center mb-8">Contact Us for Prototyping</h2>
+            <form class="space-y-4" id="contactForm">
+                <div>
+                    <label for="name" class="block text-sm font-medium mb-2">Name</label>
+                    <input type="text" id="name" class="w-full p-3 bg-white bg-opacity-10 rounded-lg border border-gray-300 focus:border-accent focus:outline-none" required>
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium mb-2">Email</label>
+                    <input type="email" id="email" class="w-full p-3 bg-white bg-opacity-10 rounded-lg border border-gray-300 focus:border-accent focus:outline-none" required>
+                </div>
+                <div>
+                    <label for="message" class="block text-sm font-medium mb-2">Project Details</label>
+                    <textarea id="message" rows="5" placeholder="Describe your game idea or prototyping needs..." class="w-full p-3 bg-white bg-opacity-10 rounded-lg border border-gray-300 focus:border-accent focus:outline-none" required></textarea>
+                </div>
+                <button type="submit" class="bg-accent px-8 py-3 rounded-full hover:bg-proto-green hover:text-game-dark transition w-full transform hover:scale-105">Send Prototype Query</button>
+            </form>
+            <p class="text-center mt-4 text-proto-blue">Average response: 6-12 hours. Let's build something amazing!</p>
+        </div>
+    </section>
+
+    <footer class="bg-game-mid py-8 px-6">
+        <div class="container mx-auto text-center">
+            <div class="flex justify-center space-x-4 mb-4">
+                <a href="#" class="hover:text-accent transition">Twitter</a>
+                <a href="#" class="hover:text-accent transition">LinkedIn</a>
+                <a href="#" class="hover:text-accent transition">GitHub</a>
+                <a href="#" class="hover:text-accent transition">Itch.io</a>
+            </div>
+            <p>© 2023 KRSV Studio. This is a prototype version. All rights reserved. Gaming the future, one prototype at a time.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Particles background
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + 'vw';
+            particle.style.top = Math.random() * 100 + 'vh';
+            particle.style.width = Math.random() * 4 + 'px';
+            particle.style.height = Math.random() * 4 + 'px';
+            particle.style.animationDelay = Math.random() * 3 + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Smooth scroll and nav highlighting
+        document.querySelectorAll('a.nav-link').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    window.scrollTo({
+                        top: targetSection.offsetTop - document.querySelector('header').offsetHeight,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        const sections = ['hero', 'about', 'services', 'portfolio', 'contact'];
+        const navLinks = document.querySelectorAll('a.nav-link');
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '-50% 0px -50% 0px',
+            threshold: 0
+        };
+
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const currentSection = entry.target.id;
+                    navLinks.forEach(link => {
+                        link.classList.remove('text-accent', 'font-bold');
+                        if (link.getAttribute('href') === '#' + currentSection) {
+                            link.classList.add('text-accent', 'font-bold');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            const el = document.getElementById(section);
+            if (el) sectionObserver.observe(el);
+        });
+
+        // Scroll reveal for sections
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // Hero button interaction
+        document.getElementById('heroBtn').addEventListener('click', () => {
+            const about = document.getElementById('about');
+            about.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Portfolio modal functionality
+        const modal = document.getElementById('portfolioModal');
+        const modalContent = document.getElementById('modalContent');
+        const closeModal = document.getElementById('closeModal');
+
+        const portfolioItems = [
+            {
+                title: 'Pixel Quest Prototype',
+                description: 'Detailed prototype featuring advanced pixel shader effects, procedural level generation, and AI-driven enemy behavior. Tech stack: Unity, C#.',
+                features: ['Adaptive difficulty', 'Save system', 'Achievement unlocks'],
+                image: 'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/4e0b0ded-7150-4303-b5ec-9c8ca7d658c4.png'
+            },
+            {
+                title: 'Neon Horizon Prototype',
+                description: 'Cyberpunk adventure prototype with ray-traced lighting, volumetric fog, and seamless multiplayer integration. Built for next-gen consoles.',
+                features: ['VR mode', 'Destructible environments', 'Live weather simulation'],
+                image: 'https://placehold.co/800x600'
+            },
+            {
+                title: 'Gem Cascade Prototype',
+                description: 'Hyper-casual puzzle prototype optimized for 60fps on all devices, with cloud syncing and social features.',
+                features: ['AI helper mode', 'Daily challenges', 'Microtransactions framework'],
+                image: 'https://placehold.co/800x600'
+            },
+            {
+                title: 'Island Survival Prototype',
+                description: 'Battle royale prototype with advanced networking, anti-cheat, and spectacular visual effects.',
+                features: ['Crossplay', 'Voice chat', 'Esports mode'],
+                image: 'https://placehold.co/800x600'
+            }
+        ];
+
+        document.querySelectorAll('.portfolio-item').forEach((item, index) => {
+            item.addEventListener('click', () => {
+                const project = portfolioItems[index];
+                modalContent.innerHTML = `
+                    <h3 class="text-3xl font-bold mb-4 text-accent">${project.title}</h3>
+                    <img src="${project.image}" alt="${project.title} detailed prototype screenshot" class="w-full h-64 object-cover rounded-lg mb-4" />
+                    <p class="mb-4 text-lg">${project.description}</p>
+                    <ul class="list-disc list-inside text-left mb-4">
+                        ${project.features.map(feature => `<li>${feature}</li>`).join('')}
+                    </ul>
+                `;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            });
+        });
+
+        closeModal.addEventListener('click', () => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        });
+
+        // Logo click
+        document.getElementById('logo').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Contact form validation and submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            if (!name || !email || !message) {
+                alert('Please fill in all fields.');
+                return;
+            }
+            
+            // Simulate form submission (in real app, send to server)
+            console.log({ name, email, message });
+            alert('Thanks for your message! As a prototype, this form submits to console. We\'ll respond soon in production!');
+            this.reset();
+        });
+
+        // Mobile menu toggle (simple version)
+        if (window.innerWidth <= 768) {
+            const nav = document.querySelector('nav ul');
+            nav.classList.add('flex-col', 'absolute', 'bg-game-mid', 'right-0', 'top-full', 'w-48', 'p-4', 'rounded-lg');
+            nav.classList.add('hidden');
+            
+            const menuToggle = document.createElement('button');
+            menuToggle.innerHTML = '☰';
+            menuToggle.className = 'text-xl';
+            menuToggle.addEventListener('click', () => nav.classList.toggle('hidden'));
+            document.querySelector('header div').appendChild(menuToggle);
+        }
+    </script>
+</body>
+</html>
+</content>
+</create_file>

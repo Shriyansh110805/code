@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Developer Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0f1419, #1a202c);
+            color: #e2e8f0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        header {
+            background: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #60a5fa;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: #d1d5db;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+        
+        .nav-links a:hover {
+            color: #60a5fa;
+            background: rgba(96, 165, 250, 0.1);
+        }
+        
+        .resume-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .resume-btn:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #d1d5db;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        main {
+            margin-top: 80px;
+        }
+        
+        section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 6rem 2rem;
+            background: linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1));
+            border-radius: 20px;
+            margin: 2rem auto;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #60a5fa, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            color: #9ca3af;
+        }
+        
+        .cta-btn {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.4);
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #f9fafb;
+        }
+        
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .about-image {
+            flex: 0 0 250px;
+            text-align: center;
+        }
+        
+        .profile-img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #60a5fa;
+            box-shadow: 0 8px 30px rgba(96, 165, 250, 0.3);
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .skill-card {
+            background: rgba(31, 41, 55, 0.5);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(96, 165, 250, 0.2);
+        }
+        
+        .skill-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(96, 165, 250, 0.5);
+        }
+        
+        .skill-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .project-card {
+            background: rgba(31, 41, 55, 0.7);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(96, 165, 250, 0.2);
+        }
+        
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(96, 165, 250, 0.5);
+        }
+        
+        .project-img {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #374151, #4b5563);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+            font-size: 1.2rem;
+        }
+        
+        .project-content {
+            padding: 1.5rem;
+        }
+        
+        .project-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #f9fafb;
+        }
+        
+        .demo-btn {
+            background: #10b981;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: background 0.3s ease;
+        }
+        
+        .demo-btn:hover {
+            background: #059669;
+        }
+        
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(31, 41, 55, 0.7);
+            border: 1px solid #4b5563;
+            border-radius: 8px;
+            color: #f9fafb;
+            font-size: 1rem;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+        }
+        
+        .submit-btn {
+            background: #3b82f6;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            background: #2563eb;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .social-link {
+            color: #60a5fa;
+            font-size: 2rem;
+            transition: color 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .social-link:hover {
+            color: #93c5fd;
+        }
+        
+        footer {
+            background: #111827;
+            text-align: center;
+            padding: 2rem;
+            color: #9ca3af;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(17, 24, 39, 0.98);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1rem;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .mobile-toggle {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .about-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .skills-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="#" class="logo">Shriyansh GameDev</a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Games</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#resume.pdf" download="Shriyansh_GameDev_Resume.pdf" class="resume-btn">📄 Resume</a></li>
+            </ul>
+            <button class="mobile-toggle" id="mobileToggle">☰</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Crafting Worlds Through Code</h1>
+                <p>Indie Game Developer specializing in Unity, Unreal Engine, and WebGL experiences. Passionate about storytelling and immersive gameplay.</p>
+                <a href="#projects" class="cta-btn">View My Games</a>
+            </div>
+        </section>
+
+        <section id="about">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Hi, I'm Shriyansh, a beginner game developer passionate about creating engaging games. I'm working hard to improve my skills in game development across various platforms. From pixel art adventures to immersive experiences, I love exploring the boundaries of interactive entertainment.</p>
+                    <br>
+                    <p>When not coding, you'll find me sketching game concepts, exploring new tech trends, or playing the latest indie releases for inspiration. In my free time, when I don't want to game dev, I explore VFX in games as well as films. My passion lies in creating memorable experiences that players will remember long after they've put down the controller.</p>
+                </div>
+                <div class="about-image">
+                    <div class="profile-img" style="background: linear-gradient(45deg, #60a5fa, #a855f7); display: flex; align-items: center; justify-content: center; font-size: 4rem;">👨‍💻</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills">
+            <h2 class="section-title">My Skills & Tools</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-icon" style="color: #a855f7;">🎮</div>
+                    <h3>Unity</h3>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon" style="color: #3b82f6;">🚀</div>
+                    <h3>Unreal Engine</h3>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon" style="color: #10b981;">🖼️</div>
+                    <h3>Modelling</h3>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon" style="color: #ef4444;">💻</div>
+                    <h3>C#</h3>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon" style="color: #f59e0b;">🔧</div>
+                    <h3>C++</h3>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon" style="color: #8b5cf6;">📝</div>
+                    <h3>Blueprint Scripting</h3>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon" style="color: #f97316;">🎯</div>
+                    <h3>Game Design</h3>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon" style="color: #ec4899;">🎵</div>
+                    <h3>Audio Design</h3>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon" style="color: #f59e0b;">✨</div>
+                    <h3>VFX</h3>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon" style="color: #ef4444;">🎬</div>
+                    <h3>After Effects</h3>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <h2 class="section-title">My Game Portfolio</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-img">🐉 Pixel Quest Screenshot</div>
+                    <div class="project-content">
+                        <h3 class="project-title">Pixel Quest</h3>
+                        <p>A retro RPG adventure with procedural dungeons and hand-crafted pixel art. Features puzzle-solving and combat mechanics.</p>
+                        <button class="demo-btn" onclick="showDemo('Pixel Quest')">Play Demo</button>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-img">🚀 Cosmic Runner Screenshot</div>
+                    <div class="project-content">
+                        <h3 class="project-title">Cosmic Runner</h3>
+                        <p>Endless runner in space with neon aesthetics and unique power-ups. Optimized for mobile devices.</p>
+                        <button class="demo-btn" onclick="showDemo('Cosmic Runner')">Play Demo</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2 class="section-title">Get In Touch</h2>
+            <form class="contact-form" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <div class="form-row">
+                        <input type="text" placeholder="Your Name" required>
+                        <input type="email" placeholder="Your Email" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <textarea placeholder="Your Message" rows="6" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+            
+            <div class="social-links">
+                <a href="#" class="social-link" title="GitHub" aria-label="GitHub">🐙</a>
+                <a href="#" class="social-link" title="Instagram" aria-label="Instagram">📷</a>
+                <a href="#" class="social-link" title="Itch.io" aria-label="Itch.io">🎮</a>
+                <a href="#" class="social-link" title="LinkedIn" aria-label="LinkedIn">👔</a>
+            </div>
+        </section>
