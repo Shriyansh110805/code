@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speed Quiz Game - Typography Studio</title>
+    <link rel="stylesheet" href="../design-tokens.css">
+    <link rel="stylesheet" href="../unified-components.css">
+    <style>
+        .quiz-arena {
+            max-width: 900px;
+            margin: 40px auto;
+        }
+        
+        .level-indicator {
+            text-align: center;
+            margin: 30px 0;
+            font-size: 1.5em;
+            color: var(--accent);
+            font-weight: 300;
+        }
+        
+        .question-card {
+            background: var(--white);
+            border: 3px solid var(--light-gray);
+            padding: 60px;
+            margin: 30px 0;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .question-text {
+            font-size: 2em;
+            font-weight: 300;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .option-btn {
+            padding: 30px;
+            background: var(--white);
+            border: 3px solid var(--light-gray);
+            font-size: 1.3em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .option-btn:hover {
+            background: var(--black);
+            color: var(--white);
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .option-btn.correct {
+            background: #4caf50;
+            color: var(--white);
+            border-color: #4caf50;
+            animation: correct-pulse 0.6s;
+        }
+        
+        @keyframes correct-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); box-shadow: 0 0 30px rgba(76, 175, 80, 0.6); }
+        }
+        
+        .option-btn.wrong {
+            background: #f44336;
+            color: var(--white);
+            border-color: #f44336;
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--light-gray);
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+        
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            padding: 30px;
+            background: var(--white);
+            border: 2px solid var(--light-gray);
+            margin: 20px 0;
+        }
+        
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        
+        .timer-bar {
+            width: 100%;
+            height: 20px;
+            background: var(--light-gray);
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .timer-fill {
+            height: 100%;
+            background: var(--accent);
+            transition: width 0.1s linear;
+        }
+        
+        .timer-fill.warning {
+            background: #f44336;
+        }
+        
+        .streak-celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5em;
+            font-weight: 700;
+            color: #ff6b00;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1500;
+            text-shadow: 0 0 20px rgba(255, 107, 0, 0.5);
+        }
+        
+        .streak-celebration.show {
+            animation: streak-burst 1.2s;
+        }
+        
+        @keyframes streak-burst {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3) rotate(-20deg); }
+            40% { opacity: 1; transform: translate(-50%, -50%) scale(1.3) rotate(10deg); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <a href="#/" class="logo">Typography Studio</a>
+            <ul class="nav-links">
+                <li><a href="../index.html#fundamentals">Fundamentals</a></li>
+                <li><a href="../index.html#tools">Design Tools</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="game-container">
+            <a href="#/comparison" class="back-btn">← Back to Comparison</a>
+            
+            <div style="padding: 80px 0 60px; border-bottom: 1px solid var(--light-gray);">
+                <h1 style="font-size: 4em; color: var(--black); margin-bottom: 20px; font-weight: 300;">Speed Quiz Challenge</h1>
+                <p style="font-size: 1.2em; color: var(--mid-gray);">Answer questions quickly to advance through levels!</p>
+            </div>
+
+            <div class="quiz-arena">
+                <div class="level-indicator">Level <span id="level">1</span> of 3</div>
+                
+                <div class="timer-bar">
+                    <div class="timer-fill" id="timer-fill" style="width: 100%;"></div>
+                </div>
+                
+                <div class="game-stats">
+                    <div class="stat">
+                        <div class="stat-value" id="score">0</div>
+                        <div class="stat-label">Score</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="streak">0</div>
+                        <div class="stat-label">Streak</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="correct">0/10</div>
+                        <div class="stat-label">Correct</div>
+                    </div>
+                </div>
+                
+                <div class="question-card">
+                    <div class="question-text" id="question"></div>
+                    <div class="options-grid" id="options"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-over" id="game-over" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 2000;">
+        <div style="background: var(--white); padding: 80px; text-align: center; max-width: 600px;">
+            <h2 id="game-result" style="font-size: 3em; margin-bottom: 20px; font-weight: 300;"></h2>
+            <div style="font-size: 5em; color: var(--accent); font-weight: 300; margin: 30px 0;" id="final-score"></div>
+            <p style="font-size: 1.2em; color: var(--mid-gray); margin-bottom: 30px;" id="result-message"></p>
+            <button class="btn" onclick="location.reload()">Play Again</button>
+        </div>
+    </div>
+    
+    <div class="streak-celebration" id="streak-celebration"></div>
+
+    <script>
+        const questions = [
+            // Level 1 - Easy
+            { q: "Which typeface is better for digital screens?", a: "Sans-serif", o: ["Serif", "Sans-serif", "Script", "Display"], level: 1 },
+            { q: "When did serif typefaces originate?", a: "Ancient Rome", o: ["Ancient Rome", "1816", "1920s", "1957"], level: 1 },
+            { q: "Which is best for long-form print reading?", a: "Serif", o: ["Sans-serif", "Serif", "Monospace", "Display"], level: 1 },
+            // Level 2 - Medium
+            { q: "What year was Helvetica released?", a: "1957", o: ["1816", "1920", "1957", "2000"], level: 2 },
+            { q: "Which movement popularized geometric sans-serifs?", a: "Bauhaus", o: ["Renaissance", "Bauhaus", "Art Deco", "Modernism"], level: 2 },
+            { q: "Serif typefaces have decorative strokes at:", a: "Letter ends", o: ["Letter ends", "Letter centers", "Everywhere", "Nowhere"], level: 2 },
+            // Level 3 - Hard
+            { q: "Who created the first sans-serif typeface?", a: "William Caslon IV", o: ["William Caslon IV", "John Baskerville", "Claude Garamond", "Adrian Frutiger"], level: 3 },
+            { q: "Which serif style has high contrast strokes?", a: "Modern", o: ["Old Style", "Transitional", "Modern", "Slab"], level: 3 },
+            { q: "Sans-serif means:", a: "Without serifs", o: ["Without serifs", "With serifs", "Many serifs", "Curved serifs"], level: 3 },
+            { q: "Best typeface for UI elements?", a: "Sans-serif", o: ["Serif", "Sans-serif", "Script", "Decorative"], level: 3 }
+        ];
+
+        let currentLevel = 1;
+        let currentQuestion = 0;
+        let score = 0;
+        let streak = 0;
+        let correct = 0;
+        let timeLeft = 15;
+        let timerInterval;
+        let questionStartTime = 15;
+
+        function loadQuestion() {
+            if (currentQuestion >= questions.length) {
+                endGame(true);
+                return;
+            }
+            
+            const q = questions[currentQuestion];
+            
+            if (q.level > currentLevel) {
+                currentLevel = q.level;
+                document.getElementById('level').textContent = currentLevel;
+                questionStartTime = Math.max(10, 15 - (currentLevel * 2));
+            }
+            
+            timeLeft = questionStartTime;
+            document.getElementById('question').textContent = q.q;
+            document.getElementById('options').innerHTML = q.o.map(opt => 
+                `<button class="option-btn" onclick="selectAnswer('${opt}')">${opt}</button>`
+            ).join('');
+            
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft -= 0.1;
+                const percent = (timeLeft / questionStartTime) * 100;
+                const fill = document.getElementById('timer-fill');
+                fill.style.width = percent + '%';
+                
+                if (percent < 30) {
+                    fill.classList.add('warning');
+                } else {
+                    fill.classList.remove('warning');
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    selectAnswer(null);
+                }
+            }, 100);
+        }
+
+        function selectAnswer(answer) {
+            clearInterval(timerInterval);
+            const q = questions[currentQuestion];
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if (btn.textContent === q.a) {
+                    btn.classList.add('correct');
+                }
+                if (btn.textContent === answer && answer !== q.a) {
+                    btn.classList.add('wrong');
+                }
+            });
+            
+            if (answer === q.a) {
+                const timeBonus = Math.floor(timeLeft * 10);
+                score += 100 + timeBonus + (streak * 20);
+                streak++;
+                correct++;
+                
+                // Show streak celebration
+                if (streak >= 3) {
+                    showStreakCelebration(streak);
+                }
+                
+                document.getElementById('score').textContent = score;
+                document.getElementById('streak').textContent = streak;
+                document.getElementById('correct').textContent = `${correct}/10`;
+            } else {
+                streak = 0;
+                document.getElementById('streak').textContent = '0';
+            }
+            
+            setTimeout(() => {
+                currentQuestion++;
+                loadQuestion();
+            }, 1500);
+        }
+        
+        function showStreakCelebration(streak) {
+            const celebration = document.getElementById('streak-celebration');
+            celebration.textContent = `${streak}x STREAK! 🔥`;
+            celebration.classList.add('show');
+            setTimeout(() => celebration.classList.remove('show'), 1200);
+        }
+
+        function endGame(completed) {
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('game-result').textContent = completed ? '🎉 Complete!' : '⏰ Time Up!';
+            document.getElementById('result-message').textContent = `You answered ${correct} out of ${questions.length} correctly!`;
+            document.getElementById('game-over').style.display = 'flex';
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>

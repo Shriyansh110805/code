@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poster Showcase - Typography Studio</title>
+    <link rel="stylesheet" href="../design-tokens.css">
+    <link rel="stylesheet" href="../unified-components.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0a0a;
+            background-image: radial-gradient(circle at 50% 30%, rgba(99,102,241,0.08) 0%, transparent 50%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        /* Navigation */
+        nav {
+            background: rgba(10,10,10,0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 0 40px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+        .nav-logo {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            text-decoration: none;
+            letter-spacing: -0.01em;
+        }
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+            align-items: center;
+        }
+        .nav-link {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+            letter-spacing: 0.01em;
+        }
+        .nav-link:hover {
+            color: rgba(255,255,255,0.9);
+        }
+        .nav-link.active {
+            color: #fff;
+        }
+        
+        /* Page Container */
+        .page-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 100px 40px 60px;
+            opacity: 0;
+            animation: fadeIn 0.6s ease 0.2s forwards;
+        }
+        
+        /* Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .page-title {
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 300;
+            color: #fff;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+        .page-subtitle {
+            font-size: clamp(14px, 1.5vw, 16px);
+            color: rgba(255,255,255,0.5);
+            font-weight: 300;
+        }
+        
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 60px;
+            align-items: start;
+        }
+        
+        /* Flip Card Container */
+        .flip-container {
+            position: relative;
+            opacity: 0;
+            animation: liftIn 1s ease 0.4s forwards;
+        }
+        .flip-hint {
+            text-align: center;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.4);
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+        .flip-hint span {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+        }
+        .canvas-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            height: 70%;
+            background: radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%);
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* 3D Flip Card */
+        .flip-card-wrapper {
+            perspective: 2000px;
+            width: 100%;
+            max-width: 595px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            cursor: pointer;
+        }
+        .flip-card {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 595/842;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .flip-card.flipped {
+            transform: rotateY(180deg);
+        }
+        .flip-card-wrapper:hover .flip-card {
+            transform: scale(1.02);
+        }
+        .flip-card-wrapper:hover .flip-card.flipped {
+            transform: rotateY(180deg) scale(1.02);
+        }
+        
+        /* Click overlay to capture clicks above iframe */
+        .click-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            cursor: pointer;
+        }
+        
+        /* Card Faces */
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.5),
+                0 0 0 1px rgba(255,255,255,0.1);
+            transition: box-shadow 0.4s;
+        }
+        .flip-card-wrapper:hover .card-face {
+            box-shadow: 
+                0 24px 70px rgba(0,0,0,0.6),
+                0 0 0 1px rgba(255,255,255,0.15);
+        }
+        .card-front {
+            transform: rotateY(0deg);
+        }
+        .card-back {
+            transform: rotateY(180deg);
+        }
+        .card-face iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+        
+        /* Analysis Panel */
+        .analysis-panel {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 32px;
+            position: sticky;
+            top: 100px;
+            opacity: 0;
+            animation: fadeInRight 0.8s ease 0.6s forwards;
+            max-height: calc(100vh - 140px);
+            overflow-y: auto;
+        }
+        .analysis-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+        .analysis-panel::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 3px;
+        }
+        .analysis-panel::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+        }
+        .analysis-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        .analysis-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .toggle-btn {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: rgba(255,255,255,0.7);
+        }
+        .toggle-btn:hover {
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+        }
+        .analysis-content {
+            max-height: 2000px;
+            opacity: 1;
+            transition: all 0.4s ease;
+        }
+        .analysis-content.hidden {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .analysis-section {
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .analysis-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .section-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 10px;
+        }
+        .section-text {
+            font-size: 14px;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 12px;
+        }
+        .section-text strong {
+            color: #fff;
+            font-weight: 600;
+        }
+        .principle-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .principle-item {
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 10px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.7);
+        }
+        .principle-item strong {
+            color: rgba(99,102,241,0.9);
+            font-weight: 600;
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes liftIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .content-grid {
+                grid-template-columns: 1fr 380px;
+                gap: 40px;
+            }
+        }
+        @media (max-width: 968px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .analysis-panel {
+                position: relative;
+                top: 0;
+                max-height: none;
+            }
+            .nav-links {
+                gap: 20px;
+            }
+            .nav-link {
+                font-size: 13px;
+            }
+        }
+        @media (max-width: 768px) {
+            nav {
+                padding: 0 20px;
+            }
+            .page-container {
+                padding: 90px 20px 40px;
+            }
+            .card-face {
+                border-radius: 8px;
+            }
+            .analysis-panel {
+                padding: 24px;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-content">
+            <a href="#/" class="nav-logo">Typography Studio</a>
+            <ul class="nav-links">
+                <li><a href="#/anatomy" class="nav-link">Anatomy</a></li>
+                <li><a href="#/classification" class="nav-link">Classification</a></li>
+                <li><a href="#/comparison" class="nav-link">Comparison</a></li>
+                <li><a href="#/psychology" class="nav-link">Psychology</a></li>
+                <li><a href="#/poster" class="nav-link active">Showcase</a></li>
+                <li><a href="#/brand" class="nav-link">Brand</a></li>
+                <li><a href="#/expressive" class="nav-link">Expressive</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Page Container -->
+    <div class="page-container">
+        <!-- Header -->
+        <div class="page-header">
+            <h1 class="page-title">Poster Showcase</h1>
+            <p class="page-subtitle">Interactive comparison of expressive typography designs</p>
+        </div>
+        
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Flip Card Container -->
+            <div class="flip-container">
+                <div class="flip-hint">
+                    <span>✨ Click to flip</span>
+                </div>
+                <div class="canvas-glow"></div>
+                <div class="flip-card-wrapper" 
+                     role="button" 
+                     tabindex="0"
+                     aria-label="Flip poster"
+                     onclick="flipCard()"
+                     onkeydown="handleKeyPress(event)">
+                    <div class="flip-card" id="flipCard">
+                        <div class="card-face card-front">
+                            <iframe src="https://drive.google.com/file/d/143rVwHncNq-yLBlZkIrRIE2MgBSEebBd/preview" 
+                                    allow="autoplay"
+                                    loading="lazy"
+                                    title="Poster 1"></iframe>
+                            <div class="click-overlay"></div>
+                        </div>
+                        <div class="card-face card-back">
+                            <iframe src="https://drive.google.com/file/d/1JmCqDciE9hJOgmdxLxMKo9yA4JGbAzyy/preview" 
+                                    allow="autoplay"
+                                    loading="lazy"
+                                    title="Poster 2"></iframe>
+                            <div class="click-overlay"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analysis Panel -->
+            <div class="analysis-panel">
+                <div class="analysis-header">
+                    <h2 class="analysis-title">Design Analysis</h2>
+                    <button class="toggle-btn" onclick="toggleAnalysis()">Hide Analysis</button>
+                </div>
+                
+                <div class="analysis-content" id="analysisContent">
+                    <!-- Design Elements -->
+                    <div class="analysis-section">
+                        <div class="section-label">Design Elements</div>
+                        <div class="principle-list">
+                            <div class="principle-item">
+                                <strong>Line</strong>
+                                Typographic strokes create visual pathways, guiding the eye through the composition and establishing rhythm.
+                            </div>
+                            <div class="principle-item">
+                                <strong>Shape</strong>
+                                Letter forms and negative space create geometric relationships that define the poster's structure.
+                            </div>
+                            <div class="principle-item">
+                                <strong>Color</strong>
+                                Monochromatic or limited palettes emphasize typographic form and enhance readability.
+                            </div>
+                            <div class="principle-item">
+                                <strong>Texture</strong>
+                                Typographic density and spacing variations create visual texture and tactile quality.
+                            </div>
+                            <div class="principle-item">
+                                <strong>Space</strong>
+                                White space provides breathing room, creates emphasis, and balances dense typographic areas.
+                            </div>
+                            <div class="principle-item">
+                                <strong>Typography</strong>
+                                Font selection, size, weight, and arrangement communicate meaning beyond literal text.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Design Principles -->
+                    <div class="analysis-section">
+                        <div class="section-label">Design Principles</div>
+                        <div class="principle-list">
+                            <div class="principle-item">
+                                <strong>Hierarchy</strong>
+                                Size, weight, and position establish importance and reading order within the composition.
+                            </div>
+                            <div class="principle-item">
+                                <strong>Contrast</strong>
+                                Variations in scale, weight, and spacing create visual interest and emphasize key elements.
+                            </div>
+                            <div class="principle-item">
+                                <strong>Balance</strong>
+                                Distribution of visual weight creates stability or intentional tension in the layout.
+                            </div>
+                            <div class="principle-item">
+                                <strong>Emphasis</strong>
+                                Focal points draw attention through size, color, position, or isolation.
+                            </div>
+                            <div class="principle-item">
+                                <strong>Repetition</strong>
+                                Recurring elements create unity, rhythm, and reinforce the conceptual message.
+                            </div>
+                            <div class="principle-item">
+                                <strong>Rhythm</strong>
+                                Patterns in spacing, size, and alignment create visual flow and movement.
+                            </div>
+                            <div class="principle-item">
+                                <strong>Unity</strong>
+                                Cohesive relationships between elements create a harmonious, complete composition.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Gestalt Principles -->
+                    <div class="analysis-section">
+                        <div class="section-label">Gestalt Principles</div>
+                        <div class="principle-list">
+                            <div class="principle-item">
+                                <strong>Figure–Ground</strong>
+                                The relationship between typography (figure) and negative space (ground) creates depth and visual interest.
+                            </div>
+                            <div class="principle-item">
+                                <strong>Proximity</strong>
+                                Elements placed close together are perceived as related, creating visual groupings and meaning.
+                            </div>
+                            <div class="principle-item">
+                                <strong>Similarity</strong>
+                                Elements sharing visual characteristics (size, weight, style) are perceived as belonging together.
+                            </div>
+                            <div class="principle-item">
+                                <strong>Continuity</strong>
+                                The eye follows lines and curves, creating implied connections between separate elements.
+                            </div>
+                            <div class="principle-item">
+                                <strong>Closure</strong>
+                                The mind completes incomplete forms, allowing for creative typographic fragmentation and layering.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function flipCard() {
+            const card = document.getElementById('flipCard');
+            card.classList.toggle('flipped');
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                flipCard();
+            }
+        }
+        
+        function toggleAnalysis() {
+            const content = document.getElementById('analysisContent');
+            const btn = event.target;
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                btn.textContent = 'Hide Analysis';
+            } else {
+                content.classList.add('hidden');
+                btn.textContent = 'Show Analysis';
+            }
+        }
+    </script>
+</body>
+</html>

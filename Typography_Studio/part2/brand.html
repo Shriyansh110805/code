@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Typography Analysis - Typography Studio</title>
+    <link rel="stylesheet" href="../design-tokens.css">
+    <link rel="stylesheet" href="../unified-components.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #000; 
+            color: #fff; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Brand Selection Screen */
+        .brand-selection {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 40px;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+        .brand-selection.hidden {
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+        }
+        .selection-container {
+            max-width: 1400px;
+            width: 100%;
+        }
+        .selection-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+        .selection-title {
+            font-size: clamp(40px, 6vw, 72px);
+            font-weight: 200;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+        .selection-subtitle {
+            font-size: clamp(18px, 2vw, 22px);
+            color: #aaa;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+        .brand-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+        .brand-card {
+            background: rgba(255,255,255,0.02);
+            border: 2px solid rgba(255,255,255,0.05);
+            border-radius: 24px;
+            padding: 60px 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .brand-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .brand-card:hover::before {
+            opacity: 1;
+        }
+        .brand-card:hover {
+            border-color: rgba(255,255,255,0.2);
+            transform: translateY(-8px);
+            background: rgba(255,255,255,0.04);
+        }
+        .brand-card-logo {
+            font-size: clamp(48px, 6vw, 72px);
+            font-weight: 300;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+        }
+        .brand-card-industry {
+            font-size: 14px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-weight: 500;
+        }
+        
+        /* Analysis View */
+        .brand-analysis {
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            transition: opacity 0.5s ease;
+            transform: translateY(20px);
+        }
+        .brand-analysis.active {
+            opacity: 1;
+            pointer-events: all;
+            position: relative;
+            transform: translateY(0);
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Back Button */
+        .back-button {
+            position: fixed;
+            top: 30px;
+            left: 40px;
+            z-index: 1000;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 14px 28px;
+            border-radius: 24px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .back-button:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateX(-4px);
+            border-color: rgba(255,255,255,0.25);
+        }
+        
+        /* Breadcrumb */
+        .breadcrumb {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 12px 24px;
+            border-radius: 24px;
+            backdrop-filter: blur(10px);
+            font-size: 13px;
+            color: #888;
+        }
+        .breadcrumb-item {
+            display: inline;
+            color: #888;
+        }
+        .breadcrumb-item.active {
+            color: #fff;
+            font-weight: 500;
+        }
+        .breadcrumb-separator {
+            margin: 0 8px;
+            color: #555;
+        }
+        
+        /* Brand Switcher */
+        .brand-switcher {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 20px 40px;
+            display: none;
+        }
+        .brand-switcher.active {
+            display: block;
+        }
+        .switcher-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .switcher-container::-webkit-scrollbar {
+            display: none;
+        }
+        .switcher-tab {
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            color: #888;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        .switcher-tab:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.15);
+            color: #bbb;
+        }
+        .switcher-tab.active {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.25);
+            color: #fff;
+        }
+        
+        /* Hero Section */
+        .brand-hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+        }
+        .brand-hero-content {
+            text-align: center;
+            max-width: 900px;
+            padding: 0 40px;
+        }
+        .brand-logo-display {
+            font-size: clamp(80px, 15vw, 180px);
+            font-weight: 300;
+            margin-bottom: 40px;
+            letter-spacing: -0.02em;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+        .brand-tagline {
+            font-size: clamp(20px, 2.5vw, 32px);
+            color: #aaa;
+            font-weight: 300;
+            letter-spacing: 0.02em;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.3s forwards;
+        }
+        .scroll-hint {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 13px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.6s forwards, bounce 2s ease 1.6s infinite;
+        }
+        
+        /* Section Base */
+        .analysis-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 40px;
+            position: relative;
+        }
+        .section-container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .section-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: #888;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .section-title {
+            font-size: clamp(40px, 6vw, 72px);
+            font-weight: 200;
+            margin-bottom: 60px;
+            letter-spacing: -0.02em;
+        }
+        
+        /* Typography Grid */
+        .typo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin: 80px 0;
+        }
+        .typo-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 40px 30px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .typo-card:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: rgba(255,255,255,0.1);
+            transform: translateY(-8px);
+        }
+        .typo-card-icon {
+            font-size: 40px;
+            margin-bottom: 24px;
+            display: block;
+        }
+        .typo-card-title {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+        .typo-card-desc {
+            font-size: 15px;
+            color: #aaa;
+            line-height: 1.7;
+        }
+        
+        /* Visual Comparison */
+        .visual-compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin: 100px 0;
+            align-items: center;
+        }
+        .compare-box {
+            text-align: center;
+            padding: 60px 40px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.5s ease;
+        }
+        .compare-box:hover {
+            background: rgba(255,255,255,0.04);
+            transform: scale(1.02);
+        }
+        .compare-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: #888;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        .compare-display {
+            font-size: clamp(60px, 8vw, 120px);
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+        .compare-tags {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .tag {
+            padding: 8px 18px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 16px;
+            font-size: 13px;
+            color: #ccc;
+            border: 1px solid rgba(255,255,255,0.15);
+            font-weight: 500;
+        }
+        
+        /* Personality Matrix */
+        .personality-matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 80px 0;
+        }
+        .personality-item {
+            text-align: center;
+            padding: 50px 30px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.01) 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+        }
+        .personality-item:hover {
+            border-color: rgba(255,255,255,0.15);
+            transform: translateY(-4px);
+        }
+        .personality-score {
+            font-size: 56px;
+            font-weight: 200;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff 0%, #888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .personality-label {
+            font-size: 15px;
+            color: #bbb;
+            font-weight: 400;
+        }
+        
+        /* Usage Showcase */
+        .usage-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin: 80px 0;
+        }
+        .usage-item {
+            aspect-ratio: 1;
+            background: rgba(255,255,255,0.02);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 16px;
+            padding: 30px;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+        .usage-item:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: rgba(255,255,255,0.1);
+            transform: scale(1.05);
+        }
+        .usage-icon {
+            font-size: 40px;
+        }
+        .usage-label {
+            font-size: 14px;
+            color: #aaa;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        /* Alternative Section */
+        .alternative-section {
+            background: linear-gradient(180deg, #000 0%, #0a0a0a 50%, #000 100%);
+            padding: 120px 40px;
+        }
+        .alternative-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            max-width: 1400px;
+            margin: 80px auto;
+            align-items: center;
+        }
+        .alternative-side {
+            text-align: center;
+        }
+        .alternative-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #888;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        .alternative-display {
+            font-size: clamp(60px, 10vw, 120px);
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+        .insight-list {
+            text-align: left;
+            max-width: 500px;
+            margin: 40px auto 0;
+        }
+        .insight-item {
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            font-size: 15px;
+            color: #bbb;
+            line-height: 1.7;
+        }
+        .insight-item:last-child {
+            border-bottom: none;
+        }
+        .insight-icon {
+            color: #888;
+            margin-right: 12px;
+            font-weight: bold;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 968px) {
+            .visual-compare,
+            .alternative-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .brand-grid {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 20px;
+            }
+            .back-button {
+                left: 20px;
+                top: 20px;
+                padding: 12px 20px;
+                font-size: 13px;
+            }
+            .breadcrumb {
+                top: 80px;
+                font-size: 12px;
+                padding: 10px 20px;
+            }
+            .brand-switcher {
+                padding: 16px 20px;
+            }
+            .switcher-tab {
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+        }
+        @media (max-width: 640px) {
+            .brand-grid {
+                grid-template-columns: 1fr;
+            }
+            .personality-matrix,
+            .usage-showcase {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .breadcrumb {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Brand Selection Screen -->
+    <div class="brand-selection" id="brandSelection">
+        <div class="selection-container">
+            <div class="selection-header">
+                <h1 class="selection-title">Brand Typography Analysis</h1>
+                <p class="selection-subtitle">Select a brand to explore how typography shapes identity</p>
+            </div>
+            
+            <div class="brand-grid">
+                <div class="brand-card" onclick="showBrand('apple')">
+                    <div class="brand-card-logo" style="font-family: -apple-system, sans-serif;">Apple</div>
+                    <div class="brand-card-industry">Technology</div>
+                </div>
+                
+                <div class="brand-card" onclick="showBrand('nike')">
+                    <div class="brand-card-logo" style="font-family: 'Arial Black', sans-serif; font-weight: 900;">NIKE</div>
+                    <div class="brand-card-industry">Sports</div>
+                </div>
+                
+                <div class="brand-card" onclick="showBrand('coca-cola')">
+                    <div class="brand-card-logo" style="font-family: 'Brush Script MT', cursive; color: #f40009;">Coca-Cola</div>
+                    <div class="brand-card-industry">Beverage</div>
+                </div>
+                
+                <div class="brand-card" onclick="showBrand('google')">
+                    <div class="brand-card-logo" style="font-family: Arial, sans-serif;">
+                        <span style="color: #4285F4;">G</span><span style="color: #EA4335;">o</span><span style="color: #FBBC05;">o</span><span style="color: #4285F4;">g</span><span style="color: #34A853;">l</span><span style="color: #EA4335;">e</span>
+                    </div>
+                    <div class="brand-card-industry">Search Engine</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Brand Analysis View -->
+    <div class="brand-analysis" id="brandAnalysis">
+        <button class="back-button" onclick="backToSelection()" aria-label="Back to brand selection">
+            ← Back to Brand Selection
+        </button>
+        
+        <div class="breadcrumb" id="breadcrumb">
+            <span class="breadcrumb-item">Home</span>
+            <span class="breadcrumb-separator">→</span>
+            <span class="breadcrumb-item">Brand Analysis</span>
+            <span class="breadcrumb-separator">→</span>
+            <span class="breadcrumb-item active" id="breadcrumbBrand">Apple</span>
+        </div>
+        
+        <div class="brand-switcher" id="brandSwitcher">
+            <div class="switcher-container">
+                <div class="switcher-tab active" data-brand="apple" onclick="switchBrand('apple')" tabindex="0" role="button">
+                    Apple
+                </div>
+                <div class="switcher-tab" data-brand="nike" onclick="switchBrand('nike')" tabindex="0" role="button">
+                    Nike
+                </div>
+                <div class="switcher-tab" data-brand="coca-cola" onclick="switchBrand('coca-cola')" tabindex="0" role="button">
+                    Coca-Cola
+                </div>
+                <div class="switcher-tab" data-brand="google" onclick="switchBrand('google')" tabindex="0" role="button">
+                    Google
+                </div>
+            </div>
+        </div>
+        
+        <!-- Hero -->
+        <section class="brand-hero">
+            <div class="brand-hero-content">
+                <div class="brand-logo-display" id="heroLogo">Apple</div>
+                <p class="brand-tagline" id="heroTagline">Typography as Innovation</p>
+            </div>
+            <div class="scroll-hint">Scroll to Explore</div>
+        </section>
+        
+        <!-- Overview -->
+        <section class="analysis-section">
+            <div class="section-container">
+                <div class="section-label">01 — Overview</div>
+                <h2 class="section-title" id="overviewTitle">Designed for Clarity</h2>
+                
+                <div class="typo-grid" id="overviewGrid">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Typography -->
+        <section class="analysis-section" style="background: #0a0a0a;">
+            <div class="section-container">
+                <div class="section-label">02 — Typography</div>
+                <h2 class="section-title" id="typographyTitle">San Francisco</h2>
+                
+                <div class="visual-compare">
+                    <div class="compare-box">
+                        <div class="compare-label">Typeface</div>
+                        <div class="compare-display" id="typefaceDisplay">Aa</div>
+                        <div class="compare-tags" id="typefaceTags">
+                            <!-- Dynamic tags -->
+                        </div>
+                    </div>
+                    <div class="compare-box">
+                        <div class="compare-label">Characteristics</div>
+                        <div style="text-align: left; padding: 0 20px;" id="characteristics">
+                            <!-- Dynamic content -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Personality -->
+        <section class="analysis-section">
+            <div class="section-container">
+                <div class="section-label">03 — Personality</div>
+                <h2 class="section-title">Emotional Tone</h2>
+                
+                <div class="personality-matrix" id="personalityMatrix">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Usage -->
+        <section class="analysis-section" style="background: #0a0a0a;">
+            <div class="section-container">
+                <div class="section-label">04 — Application</div>
+                <h2 class="section-title">Everywhere</h2>
+                
+                <div class="usage-showcase" id="usageShowcase">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Alternative -->
+        <section class="alternative-section">
+            <div class="section-container">
+                <div class="section-label" style="text-align: center;">05 — Alternative</div>
+                <h2 class="section-title" style="text-align: center;">What If?</h2>
+                
+                <div class="alternative-grid">
+                    <div class="alternative-side current">
+                        <div class="alternative-title">Current</div>
+                        <div class="alternative-display" id="currentFont">Apple</div>
+                        <div class="compare-tags" style="justify-content: center;" id="currentTags">
+                            <!-- Dynamic tags -->
+                        </div>
+                    </div>
+                    <div class="alternative-side suggested">
+                        <div class="alternative-title">Alternative</div>
+                        <div class="alternative-display" id="alternativeFont">Apple</div>
+                        <div class="compare-tags" style="justify-content: center;" id="alternativeTags">
+                            <!-- Dynamic tags -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="insight-list" id="insightList">
+                    <!-- Dynamic insights -->
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        // Brand Data
+        const brands = {
+            apple: {
+                name: 'Apple',
+                tagline: 'Typography as Innovation',
+                font: 'San Francisco',
+                fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
+                alternativeFont: 'Futura',
+                alternativeFontFamily: '"Century Gothic", Futura, sans-serif',
+                overview: {
+                    title: 'Designed for Clarity',
+                    cards: [
+                        { icon: '🎯', title: 'Industry', desc: 'Consumer Electronics & Technology' },
+                        { icon: '👥', title: 'Audience', desc: 'Premium consumers, creative professionals, tech enthusiasts' },
+                        { icon: '✨', title: 'Positioning', desc: 'Innovation meets simplicity. Technology and liberal arts.' }
+                    ]
+                },
+                typography: {
+                    tags: ['Neo-grotesque', 'Sans-serif', 'Custom'],
+                    characteristics: [
+                        { label: 'Optical sizing', desc: 'Dynamic spacing' },
+                        { label: 'Humanist proportions', desc: 'Subtle warmth' },
+                        { label: 'Open apertures', desc: 'Screen optimized' },
+                        { label: 'Tall x-height', desc: 'Maximum legibility' }
+                    ]
+                },
+                personality: [
+                    { score: 95, label: 'Modern' },
+                    { score: 92, label: 'Premium' },
+                    { score: 98, label: 'Trustworthy' },
+                    { score: 90, label: 'Innovative' },
+                    { score: 96, label: 'Accessible' },
+                    { score: 88, label: 'Minimal' }
+                ],
+                usage: [
+                    { icon: '📱', label: 'iOS Interface' },
+                    { icon: '💻', label: 'macOS System' },
+                    { icon: '📦', label: 'Product Packaging' },
+                    { icon: '🏪', label: 'Retail Stores' },
+                    { icon: '🌐', label: 'Apple.com' },
+                    { icon: '📺', label: 'Advertising' }
+                ],
+                alternative: {
+                    currentTags: ['San Francisco', 'Optimized'],
+                    alternativeTags: ['Futura', 'Geometric'],
+                    insights: [
+                        { icon: '✓', text: 'Geometric precision echoes product design' },
+                        { icon: '✓', text: 'Timeless modernism, forward-thinking heritage' },
+                        { icon: '✓', text: 'Premium associations with luxury brands' },
+                        { icon: '✗', text: 'Reduced legibility at small sizes' },
+                        { icon: '✗', text: 'No optical sizing for digital optimization' },
+                        { icon: '✗', text: 'Licensing costs vs. proprietary ownership' }
+                    ]
+                }
+            },
+            nike: {
+                name: 'Nike',
+                tagline: 'Just Do It — In Bold',
+                font: 'Futura Bold Condensed',
+                fontFamily: '"Arial Black", sans-serif',
+                alternativeFont: 'DIN Bold',
+                alternativeFontFamily: 'Arial, sans-serif',
+                overview: {
+                    title: 'Power & Performance',
+                    cards: [
+                        { icon: '⚡', title: 'Industry', desc: 'Sports & Athletic Apparel' },
+                        { icon: '🏃', title: 'Audience', desc: 'Athletes, fitness enthusiasts, sports fans' },
+                        { icon: '🏆', title: 'Positioning', desc: 'Athletic excellence, determination, victory' }
+                    ]
+                },
+                typography: {
+                    tags: ['Geometric', 'Sans-serif', 'Bold'],
+                    characteristics: [
+                        { label: 'Heavy weight', desc: 'Commands attention' },
+                        { label: 'Condensed form', desc: 'Forward motion' },
+                        { label: 'All caps', desc: 'Power & authority' },
+                        { label: 'Geometric shapes', desc: 'Precision & performance' }
+                    ]
+                },
+                personality: [
+                    { score: 98, label: 'Bold' },
+                    { score: 95, label: 'Dynamic' },
+                    { score: 92, label: 'Powerful' },
+                    { score: 90, label: 'Athletic' },
+                    { score: 88, label: 'Confident' },
+                    { score: 94, label: 'Motivating' }
+                ],
+                usage: [
+                    { icon: '👟', label: 'Product Design' },
+                    { icon: '📦', label: 'Packaging' },
+                    { icon: '🏬', label: 'Retail Stores' },
+                    { icon: '📱', label: 'Nike App' },
+                    { icon: '🌐', label: 'Nike.com' },
+                    { icon: '📺', label: 'Campaigns' }
+                ],
+                alternative: {
+                    currentTags: ['Futura Bold', 'Geometric'],
+                    alternativeTags: ['DIN Bold', 'Industrial'],
+                    insights: [
+                        { icon: '✓', text: 'Industrial origins reinforce performance credibility' },
+                        { icon: '✓', text: 'Technical precision matches engineering focus' },
+                        { icon: '✓', text: 'Maintains bold, authoritative presence' },
+                        { icon: '✗', text: 'Less distinctive than current choice' },
+                        { icon: '✗', text: 'May feel too technical, less emotional' }
+                    ]
+                }
+            },
+            'coca-cola': {
+                name: 'Coca-Cola',
+                tagline: 'Timeless Script, Timeless Taste',
+                font: 'Spencerian Script',
+                fontFamily: '"Brush Script MT", cursive',
+                alternativeFont: 'Lobster',
+                alternativeFontFamily: '"Brush Script MT", cursive',
+                color: '#f40009',
+                overview: {
+                    title: 'Classic & Authentic',
+                    cards: [
+                        { icon: '🥤', title: 'Industry', desc: 'Beverage & Refreshment' },
+                        { icon: '🌍', title: 'Audience', desc: 'Global consumers, all ages, mass market' },
+                        { icon: '❤️', title: 'Positioning', desc: 'Nostalgia, happiness, tradition, authenticity' }
+                    ]
+                },
+                typography: {
+                    tags: ['Script', 'Handwritten', 'Classic'],
+                    characteristics: [
+                        { label: 'Flowing curves', desc: 'Friendliness & warmth' },
+                        { label: 'Connected letters', desc: 'Continuity & tradition' },
+                        { label: 'Spencerian style', desc: '1886 authenticity' },
+                        { label: 'Dynamic rhythm', desc: 'Movement & energy' }
+                    ]
+                },
+                personality: [
+                    { score: 98, label: 'Nostalgic' },
+                    { score: 95, label: 'Friendly' },
+                    { score: 92, label: 'Authentic' },
+                    { score: 90, label: 'Joyful' },
+                    { score: 88, label: 'Classic' },
+                    { score: 94, label: 'Emotional' }
+                ],
+                usage: [
+                    { icon: '🥤', label: 'Bottle Design' },
+                    { icon: '📦', label: 'Packaging' },
+                    { icon: '🏪', label: 'Vending Machines' },
+                    { icon: '🎬', label: 'Advertising' },
+                    { icon: '🌐', label: 'Coca-Cola.com' },
+                    { icon: '🎉', label: 'Events' }
+                ],
+                alternative: {
+                    currentTags: ['Spencerian', 'Historic'],
+                    alternativeTags: ['Lobster', 'Modern Script'],
+                    insights: [
+                        { icon: '✓', text: 'Modern script maintains flowing personality' },
+                        { icon: '✓', text: 'Could refresh brand while keeping friendliness' },
+                        { icon: '✗', text: 'Loses historical significance and authenticity' },
+                        { icon: '✗', text: 'Original script is irreplaceable brand asset' },
+                        { icon: '✗', text: 'Unparalleled recognition would be lost' }
+                    ]
+                }
+            },
+            google: {
+                name: 'Google',
+                tagline: 'Friendly, Accessible, Universal',
+                font: 'Product Sans',
+                fontFamily: 'Arial, sans-serif',
+                alternativeFont: 'Circular',
+                alternativeFontFamily: 'Arial, sans-serif',
+                multicolor: true,
+                overview: {
+                    title: 'Approachable Innovation',
+                    cards: [
+                        { icon: '🔍', title: 'Industry', desc: 'Search Engine & Technology' },
+                        { icon: '🌐', title: 'Audience', desc: 'Global users, all demographics, universal access' },
+                        { icon: '🎨', title: 'Positioning', desc: 'Friendly technology, diversity, accessibility' }
+                    ]
+                },
+                typography: {
+                    tags: ['Geometric', 'Sans-serif', 'Rounded'],
+                    characteristics: [
+                        { label: 'Rounded forms', desc: 'Friendly & approachable' },
+                        { label: 'Geometric base', desc: 'Modern & technical' },
+                        { label: 'Multicolor', desc: 'Playful & diverse' },
+                        { label: 'Balanced proportions', desc: 'Stability & trust' }
+                    ]
+                },
+                personality: [
+                    { score: 96, label: 'Friendly' },
+                    { score: 94, label: 'Playful' },
+                    { score: 92, label: 'Accessible' },
+                    { score: 90, label: 'Modern' },
+                    { score: 88, label: 'Diverse' },
+                    { score: 95, label: 'Innovative' }
+                ],
+                usage: [
+                    { icon: '🔍', label: 'Search Page' },
+                    { icon: '📱', label: 'Android OS' },
+                    { icon: '🌐', label: 'Google.com' },
+                    { icon: '📧', label: 'Gmail' },
+                    { icon: '🗺️', label: 'Google Maps' },
+                    { icon: '📺', label: 'YouTube' }
+                ],
+                alternative: {
+                    currentTags: ['Product Sans', 'Custom'],
+                    alternativeTags: ['Circular', 'Rounded'],
+                    insights: [
+                        { icon: '✓', text: 'Similar geometric construction and warmth' },
+                        { icon: '✓', text: 'Maintains friendly, approachable feel' },
+                        { icon: '✓', text: 'Modern alternative with similar personality' },
+                        { icon: '✗', text: 'Product Sans optimized for Google ecosystem' },
+                        { icon: '✗', text: 'Custom design ensures brand uniqueness' }
+                    ]
+                }
+            }
+        };
+        
+        let currentBrand = null;
+        
+        // Show brand analysis
+        function showBrand(brandKey) {
+            const brand = brands[brandKey];
+            if (!brand) return;
+            
+            currentBrand = brandKey;
+            
+            // Hide selection, show analysis
+            document.getElementById('brandSelection').classList.add('hidden');
+            document.getElementById('brandAnalysis').classList.add('active');
+            document.getElementById('brandSwitcher').classList.add('active');
+            
+            // Update breadcrumb
+            document.getElementById('breadcrumbBrand').textContent = brand.name;
+            
+            // Update switcher active state
+            document.querySelectorAll('.switcher-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.dataset.brand === brandKey) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            // Populate content
+            populateBrandContent(brand, brandKey);
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Switch between brands
+        function switchBrand(brandKey) {
+            if (brandKey === currentBrand) return;
+            
+            const analysisView = document.getElementById('brandAnalysis');
+            
+            // Fade out
+            analysisView.style.opacity = '0.5';
+            analysisView.style.transform = 'translateY(10px)';
+            
+            setTimeout(() => {
+                showBrand(brandKey);
+                
+                // Fade in
+                setTimeout(() => {
+                    analysisView.style.opacity = '1';
+                    analysisView.style.transform = 'translateY(0)';
+                }, 50);
+            }, 300);
+        }
+        
+        // Populate brand content
+        function populateBrandContent(brand, brandKey) {
+            
+            // Populate hero
+            const heroLogo = document.getElementById('heroLogo');
+            heroLogo.textContent = brand.name;
+            heroLogo.style.fontFamily = brand.fontFamily;
+            if (brand.color) heroLogo.style.color = brand.color;
+            if (brand.multicolor) {
+                heroLogo.innerHTML = '<span style="color: #4285F4;">G</span><span style="color: #EA4335;">o</span><span style="color: #FBBC05;">o</span><span style="color: #4285F4;">g</span><span style="color: #34A853;">l</span><span style="color: #EA4335;">e</span>';
+            }
+            document.getElementById('heroTagline').textContent = brand.tagline;
+            
+            // Populate overview
+            document.getElementById('overviewTitle').textContent = brand.overview.title;
+            const overviewGrid = document.getElementById('overviewGrid');
+            overviewGrid.innerHTML = brand.overview.cards.map(card => `
+                <div class="typo-card">
+                    <span class="typo-card-icon">${card.icon}</span>
+                    <h3 class="typo-card-title">${card.title}</h3>
+                    <p class="typo-card-desc">${card.desc}</p>
+                </div>
+            `).join('');
+            
+            // Populate typography
+            document.getElementById('typographyTitle').textContent = brand.font;
+            const typefaceDisplay = document.getElementById('typefaceDisplay');
+            typefaceDisplay.style.fontFamily = brand.fontFamily;
+            if (brand.color) typefaceDisplay.style.color = brand.color;
+            
+            document.getElementById('typefaceTags').innerHTML = brand.typography.tags.map(tag => 
+                `<span class="tag">${tag}</span>`
+            ).join('');
+            
+            document.getElementById('characteristics').innerHTML = `
+                <p style="font-size: 17px; color: #bbb; line-height: 2.2; font-weight: 300;">
+                    ${brand.typography.characteristics.map(char => 
+                        `<span style="color: #fff; font-weight: 500;">${char.label}</span> — ${char.desc}<br>`
+                    ).join('')}
+                </p>
+            `;
+            
+            // Populate personality
+            document.getElementById('personalityMatrix').innerHTML = brand.personality.map(item => `
+                <div class="personality-item">
+                    <div class="personality-score">${item.score}</div>
+                    <div class="personality-label">${item.label}</div>
+                </div>
+            `).join('');
+            
+            // Populate usage
+            document.getElementById('usageShowcase').innerHTML = brand.usage.map(item => `
+                <div class="usage-item">
+                    <div class="usage-icon">${item.icon}</div>
+                    <div class="usage-label">${item.label}</div>
+                </div>
+            `).join('');
+            
+            // Populate alternative
+            const currentFont = document.getElementById('currentFont');
+            currentFont.textContent = brand.name;
+            currentFont.style.fontFamily = brand.fontFamily;
+            if (brand.color) currentFont.style.color = brand.color;
+            if (brand.multicolor) {
+                currentFont.innerHTML = '<span style="color: #4285F4;">G</span><span style="color: #EA4335;">o</span><span style="color: #FBBC05;">o</span><span style="color: #4285F4;">g</span><span style="color: #34A853;">l</span><span style="color: #EA4335;">e</span>';
+            }
+            
+            const alternativeFont = document.getElementById('alternativeFont');
+            alternativeFont.textContent = brand.name;
+            alternativeFont.style.fontFamily = brand.alternativeFontFamily;
+            if (brand.color) alternativeFont.style.color = brand.color;
+            if (brand.multicolor) {
+                alternativeFont.innerHTML = '<span style="color: #4285F4;">G</span><span style="color: #EA4335;">o</span><span style="color: #FBBC05;">o</span><span style="color: #4285F4;">g</span><span style="color: #34A853;">l</span><span style="color: #EA4335;">e</span>';
+            }
+            
+            document.getElementById('currentTags').innerHTML = brand.alternative.currentTags.map(tag => 
+                `<span class="tag">${tag}</span>`
+            ).join('');
+            
+            document.getElementById('alternativeTags').innerHTML = brand.alternative.alternativeTags.map(tag => 
+                `<span class="tag">${tag}</span>`
+            ).join('');
+            
+            document.getElementById('insightList').innerHTML = brand.alternative.insights.map(insight => `
+                <div class="insight-item">
+                    <span class="insight-icon">${insight.icon}</span>
+                    ${insight.text}
+                </div>
+            `).join('');
+        }
+        
+        // Back to selection
+        function backToSelection() {
+            const selectionView = document.getElementById('brandSelection');
+            const analysisView = document.getElementById('brandAnalysis');
+            
+            // Fade out analysis
+            analysisView.style.opacity = '0';
+            analysisView.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                selectionView.classList.remove('hidden');
+                analysisView.classList.remove('active');
+                document.getElementById('brandSwitcher').classList.remove('active');
+                currentBrand = null;
+                
+                // Reset analysis view
+                analysisView.style.opacity = '';
+                analysisView.style.transform = '';
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 300);
+        }
+        
+        // Keyboard navigation for switcher tabs
+        document.addEventListener('keydown', (e) => {
+            const tabs = document.querySelectorAll('.switcher-tab');
+            const activeTab = document.querySelector('.switcher-tab.active');
+            
+            if (!activeTab || !document.getElementById('brandSwitcher').classList.contains('active')) return;
+            
+            let currentIndex = Array.from(tabs).indexOf(activeTab);
+            
+            if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                currentIndex = (currentIndex + 1) % tabs.length;
+                tabs[currentIndex].focus();
+                switchBrand(tabs[currentIndex].dataset.brand);
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                currentIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+                tabs[currentIndex].focus();
+                switchBrand(tabs[currentIndex].dataset.brand);
+            } else if (e.key === 'Enter' && document.activeElement.classList.contains('switcher-tab')) {
+                e.preventDefault();
+                switchBrand(document.activeElement.dataset.brand);
+            }
+        });
+    </script>
+</body>
+</html>
