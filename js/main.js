@@ -294,7 +294,7 @@ modeToggle.addEventListener('click', () => {
   modeToggle.setAttribute('aria-pressed', String(isCollege));
   modeToggle.setAttribute('aria-label', isCollege ? 'Switch to Game Dev Portfolio' : 'Switch to College Portfolio');
   modeLabel.textContent = isCollege ? 'GameDev' : 'College';
-  logoEl.textContent    = isCollege ? 'Shriyansh — College' : 'Shriyansh GameDev';
+  logoEl.textContent    = isCollege ? 'Shriyansh | Student' : 'Shriyansh GameDev';
   logoEl.setAttribute('aria-label', isCollege ? 'Shriyansh College Portfolio — Home' : 'Shriyansh GameDev — Home');
   logoEl.setAttribute('href', isCollege ? '#college-home' : '#home');
   applyNavLinks(isCollege ? COLLEGE_NAV : GAMEDEV_NAV);

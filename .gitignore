@@ -1,0 +1,20 @@
+# ============================================================
+# Development artifacts — excluded from deployment
+# ============================================================
+
+# Python UI/UX agent (dev tool, not part of the website)
+agent/
+
+# Kiro planning specs (internal docs)
+.kiro/
+Typography_Studio/.kiro/
+
+# Loose screenshot PNGs at root (dev snapshots)
+resp_*.png
+resp_small_phone.png
+resp_tablet.png
+resp_college_phone.png
+
+# OS files
+.DS_Store
+Thumbs.db

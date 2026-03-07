@@ -39,28 +39,30 @@
         </li>
       </ul>
 
-      <!-- Portfolio Mode Toggle -->
-      <button
-        class="mode-toggle-btn"
-        id="modeToggle"
-        aria-pressed="false"
-        aria-label="Switch to College Portfolio"
-      >
-        <span class="mode-toggle-btn__icon">🎓</span>
-        <span class="mode-toggle-btn__label">College</span>
-      </button>
+      <!-- Right-side actions: mode toggle + hamburger grouped together -->
+      <div class="nav-right">
+        <button
+          class="mode-toggle-btn"
+          id="modeToggle"
+          aria-pressed="false"
+          aria-label="Switch to College Portfolio"
+        >
+          <span class="mode-toggle-btn__icon">🎓</span>
+          <span class="mode-toggle-btn__label">College</span>
+        </button>
 
-      <button
-        class="mobile-toggle"
-        id="mobileToggle"
-        aria-expanded="false"
-        aria-controls="mobileDrawer"
-        aria-label="Toggle navigation menu"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+        <button
+          class="mobile-toggle"
+          id="mobileToggle"
+          aria-expanded="false"
+          aria-controls="mobileDrawer"
+          aria-label="Toggle navigation menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
     </nav>
 
     <!-- Mobile Drawer -->
@@ -491,7 +493,7 @@
           aria-label="Contact form"
         >
           <input type="hidden" name="_subject" value="New Contact Form Submission from Portfolio" />
-          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_captcha" value="true" />
           <input type="hidden" name="_next"    value="https://shriyansh-agrawal1.itch.io/" />
 
           <div id="formError" class="form-error" role="alert" aria-live="polite"></div>
@@ -587,7 +589,7 @@
            aria-label="Visit itch.io profile">
           <span class="social-link__icon" aria-hidden="true">🎮</span> Itch.io
         </a>
-        <a href="http://www.linkedin.com/in/shriyansh-agrawal-0009782a1"
+        <a href="https://www.linkedin.com/in/shriyansh-agrawal-0009782a1"
            target="_blank" rel="noopener noreferrer"
            class="social-link"
            aria-label="Visit LinkedIn profile">
