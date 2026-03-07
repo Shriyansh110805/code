@@ -1403,16 +1403,15 @@
             });
         });
         
-        // Keyboard Navigation
+        // Keyboard Navigation — null-guarded so it doesn't crash on other pages
         document.addEventListener('keydown', (e) => {
-            // Press 1, 2, 3 to jump to case studies
-            if (e.key === '1') {
-                document.querySelector('.typeface-card.serif').scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } else if (e.key === '2') {
-                document.querySelector('.typeface-card.sans').scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } else if (e.key === '3') {
-                document.querySelector('.typeface-card.casual').scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
+            const serifCard   = document.querySelector('.typeface-card.serif');
+            const sansCard    = document.querySelector('.typeface-card.sans');
+            const casualCard  = document.querySelector('.typeface-card.casual');
+            if (!serifCard) return; // not on psychology page anymore
+            if (e.key === '1') serifCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            else if (e.key === '2' && sansCard)   sansCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            else if (e.key === '3' && casualCard) casualCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
         });
         
         // Add tooltip on hover for keyboard shortcuts
@@ -1432,7 +1431,8 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         `;
-        document.body.appendChild(shortcutHint);
+        // Append inside SPA content container so it's removed on navigation
+        (document.getElementById('content-container') || document.body).appendChild(shortcutHint);
         
         // Show hint after 3 seconds
         setTimeout(() => {

@@ -10,7 +10,11 @@ class TypographyStudioApp {
         this.nav = document.getElementById('nav');
         this.currentRoute = null;
         this.heroScene = null;
-        
+
+        // Track all page-level timers so we can clear them on navigation
+        this._trackedTimers = [];
+        this._patchTimers();
+
         // Route configuration
         this.routes = {
             '/': {
@@ -84,6 +88,67 @@ class TypographyStudioApp {
         this.init();
     }
     
+    _patchTimers() {
+        const self = this;
+
+        // ── Timers ──────────────────────────────────────────────────
+        const _origSetInterval = window.setInterval.bind(window);
+        const _origSetTimeout  = window.setTimeout.bind(window);
+        const _origClearInt    = window.clearInterval.bind(window);
+        const _origClearTo     = window.clearTimeout.bind(window);
+
+        window.setInterval = function(fn, delay, ...args) {
+            const id = _origSetInterval(fn, delay, ...args);
+            if (self._tracking) self._trackedTimers.push({ type: 'interval', id });
+            return id;
+        };
+        window.setTimeout = function(fn, delay, ...args) {
+            const id = _origSetTimeout(fn, delay, ...args);
+            if (self._tracking) self._trackedTimers.push({ type: 'timeout', id });
+            return id;
+        };
+
+        // ── Event listeners on document / window ────────────────────
+        const _origDocAdd  = document.addEventListener.bind(document);
+        const _origDocRem  = document.removeEventListener.bind(document);
+        const _origWinAdd  = window.addEventListener.bind(window);
+        const _origWinRem  = window.removeEventListener.bind(window);
+
+        this._trackedListeners = [];
+
+        document.addEventListener = function(type, handler, options) {
+            if (self._tracking) {
+                self._trackedListeners.push({ target: document, type, handler, options });
+            }
+            return _origDocAdd(type, handler, options);
+        };
+        window.addEventListener = function(type, handler, options) {
+            if (self._tracking) {
+                self._trackedListeners.push({ target: window, type, handler, options });
+            }
+            return _origWinAdd(type, handler, options);
+        };
+
+        // ── Cleanup helper ───────────────────────────────────────────
+        this._tracking = false;
+
+        this._clearAll = () => {
+            // Clear timers
+            self._trackedTimers.forEach(({ type, id }) => {
+                if (type === 'interval') _origClearInt(id);
+                else _origClearTo(id);
+            });
+            self._trackedTimers = [];
+
+            // Remove tracked listeners
+            self._trackedListeners.forEach(({ target, type, handler, options }) => {
+                if (target === document) _origDocRem(type, handler, options);
+                else _origWinRem(type, handler, options);
+            });
+            self._trackedListeners = [];
+        };
+    }
+
     init() {
         // Set up event listeners
         this.setupNavigation();
@@ -155,26 +220,41 @@ class TypographyStudioApp {
         
         // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Reset focus to main content for keyboard/screen reader users
+        this.contentContainer.setAttribute('tabindex', '-1');
+        this.contentContainer.focus({ preventScroll: true });
     }
     
     updateActiveNav(route) {
-        // Remove active class from all nav links
-        document.querySelectorAll('.nav-link').forEach(link => {
+        // Remove active class and aria-current from all nav + mobile links
+        document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
             link.classList.remove('active');
+            link.removeAttribute('aria-current');
         });
-        
-        // Add active class to current route
-        const activeLink = document.querySelector(`[data-route="${route}"]`);
-        if (activeLink && activeLink.classList.contains('nav-link')) {
+
+        // Add active class and aria-current to matching desktop nav link
+        const activeLink = document.querySelector(`.nav-link[data-route="${route}"]`);
+        if (activeLink) {
             activeLink.classList.add('active');
+            activeLink.setAttribute('aria-current', 'page');
+        }
+
+        // Also mark matching mobile nav link
+        const activeMobileLink = document.querySelector(`.mobile-nav-link[data-route="${route}"]`);
+        if (activeMobileLink) {
+            activeMobileLink.setAttribute('aria-current', 'page');
         }
     }
     
     async loadContent(routeConfig) {
         try {
+            // Kill all timers from the previous page before loading new content
+            this._clearAll();
+
             // Show loading indicator
             this.showLoading();
-            
+
             // Fetch content
             let content;
             if (routeConfig.template === 'views/home.html') {
@@ -189,24 +269,32 @@ class TypographyStudioApp {
                 const html = await response.text();
                 content = this.extractContent(html);
             }
-            
-            // Update content container
+
+            // Remove stale page-enter class, force browser reflow, then re-add
+            // so the CSS animation triggers fresh on every navigation
+            this.contentContainer.classList.remove('page-enter');
+            void this.contentContainer.offsetWidth; // force reflow
             this.contentContainer.innerHTML = content;
             this.contentContainer.classList.add('page-enter');
-            
+
+            // Remove animation class after it completes so future adds work
+            this.contentContainer.addEventListener('animationend', () => {
+                this.contentContainer.classList.remove('page-enter');
+            }, { once: true });
+
             // Initialize page-specific scripts
             this.initializePageScripts();
-            
+
             // Initialize hero if needed
             if (routeConfig.showHero) {
                 this.initializeHero();
             } else {
                 this.destroyHero();
             }
-            
+
             // Hide loading indicator
             this.hideLoading();
-            
+
         } catch (error) {
             console.error('Error loading content:', error);
             this.contentContainer.innerHTML = `
@@ -221,28 +309,33 @@ class TypographyStudioApp {
     }
     
     extractContent(html) {
-        // Create a temporary container
+        // Create a temporary container — browser strips <html>/<head>/<body>
+        // tags on innerHTML assignment, leaving body children directly in temp
         const temp = document.createElement('div');
         temp.innerHTML = html;
-        
-        // Remove navigation (we have global nav)
-        const nav = temp.querySelector('nav');
-        if (nav) nav.remove();
-        
-        // Remove footer (we have global footer)
-        const footer = temp.querySelector('footer');
-        if (footer) footer.remove();
-        
-        // Extract main content
-        const pageWrapper = temp.querySelector('.page-wrapper') || 
-                           temp.querySelector('.game-container') ||
-                           temp.querySelector('body > *');
-        
+
+        // Remove duplicated nav/footer (we have global ones)
+        temp.querySelectorAll('nav, footer').forEach(el => el.remove());
+
+        // Also strip <link> and <style> tags whose paths would break
+        // (relative paths like "../design-tokens.css" won't resolve from root)
+        temp.querySelectorAll('link[rel="stylesheet"]').forEach(el => el.remove());
+
+        // Prefer explicit wrapper classes; fall back to ALL remaining children
+        const pageWrapper = temp.querySelector('.page-wrapper') ||
+                            temp.querySelector('.game-container');
+
         if (pageWrapper) {
-            return pageWrapper.outerHTML;
+            // Return the wrapper plus any sibling <script>/<style> tags
+            // (game-over modals, streak indicators etc. outside the wrapper)
+            const siblings = Array.from(temp.children)
+                .filter(el => el !== pageWrapper)
+                .map(el => el.outerHTML)
+                .join('');
+            return pageWrapper.outerHTML + siblings;
         }
-        
-        // Fallback: return body content
+
+        // Fallback: return everything in temp as-is
         return temp.innerHTML;
     }
     
@@ -250,7 +343,7 @@ class TypographyStudioApp {
         return `
             <!-- Hero Section -->
             <section id="hero">
-                <canvas id="hero-canvas"></canvas>
+                <canvas id="hero-canvas" aria-hidden="true"></canvas>
                 <div class="hero-content">
                     <h1>Master the Art<br>of Typography</h1>
                     <p class="subtitle">Interactive learning platform for designers who want to understand type at a professional level</p>
@@ -364,16 +457,37 @@ class TypographyStudioApp {
     }
     
     initializePageScripts() {
-        // Re-execute any inline scripts in the loaded content
-        const scripts = this.contentContainer.querySelectorAll('script');
-        scripts.forEach(oldScript => {
+        // Re-execute inline scripts in loaded content.
+        //
+        // Problem: scripts use top-level `const`/`let` which throw
+        // "already declared" SyntaxErrors when the page is revisited.
+        // Fix: rewrite them to `var`, which allows safe re-declaration.
+        //
+        // `var` inside functions is still function-scoped (no behaviour change).
+        // Global `var` re-declarations are silently ignored — exactly what we need.
+        // Enable listener tracking so page-added document/window listeners
+        // can be automatically removed when navigating away
+        this._tracking = true;
+
+        this.contentContainer.querySelectorAll('script').forEach(oldScript => {
             const newScript = document.createElement('script');
+
+            // Copy attributes (type, src, etc.)
             Array.from(oldScript.attributes).forEach(attr => {
                 newScript.setAttribute(attr.name, attr.value);
             });
-            newScript.textContent = oldScript.textContent;
+
+            if (oldScript.textContent) {
+                // Replace top-level const/let with var so revisits don't crash
+                newScript.textContent = oldScript.textContent
+                    .replace(/\bconst\b/g, 'var')
+                    .replace(/\blet\b/g, 'var');
+            }
+
             oldScript.parentNode.replaceChild(newScript, oldScript);
         });
+
+        this._tracking = false;
     }
     
     initializeHero() {

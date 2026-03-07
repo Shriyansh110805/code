@@ -2,834 +2,976 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Developer Portfolio</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Shriyansh — Indie Game Developer specializing in Unity, Unreal Engine, and WebGL experiences." />
+  <title>Shriyansh GameDev | Portfolio</title>
 
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #0f1419, #1a202c);
-            color: #e2e8f0;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        header {
-            background: rgba(17, 24, 39, 0.95);
-            backdrop-filter: blur(10px);
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            padding: 1rem 0;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #60a5fa;
-            text-decoration: none;
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: #d1d5db;
-            text-decoration: none;
-            transition: color 0.3s ease;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-        }
-
-        .nav-links a:hover {
-            color: #60a5fa;
-            background: rgba(96, 165, 250, 0.1);
-        }
-
-        .resume-btn {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            padding: 0.7rem 1.5rem;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-        }
-
-        .resume-btn:hover {
-            background: linear-gradient(135deg, #059669, #047857);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-        }
-
-        .mobile-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: #d1d5db;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        main {
-            margin-top: 80px;
-        }
-
-        section {
-            padding: 4rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 6rem 2rem;
-            background: linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1));
-            border-radius: 20px;
-            margin: 2rem auto;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #60a5fa, #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            color: #9ca3af;
-        }
-
-        .cta-btn {
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: bold;
-            display: inline-block;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-        }
-
-        .cta-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.4);
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            text-align: center;
-            margin-bottom: 3rem;
-            color: #f9fafb;
-        }
-
-        .about-content {
-            display: flex;
-            align-items: center;
-            gap: 3rem;
-            flex-wrap: wrap;
-        }
-
-        .about-text {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .about-image {
-            flex: 0 0 250px;
-            text-align: center;
-        }
-
-        .profile-img {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid #60a5fa;
-            box-shadow: 0 8px 30px rgba(96, 165, 250, 0.3);
-        }
-
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .skill-card {
-            background: rgba(31, 41, 55, 0.5);
-            padding: 2rem;
-            border-radius: 15px;
-            text-align: center;
-            transition: transform 0.3s ease;
-            border: 1px solid rgba(96, 165, 250, 0.2);
-        }
-
-        .skill-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(96, 165, 250, 0.5);
-        }
-
-        .skill-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .project-card {
-            background: rgba(31, 41, 55, 0.7);
-            border-radius: 15px;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-            border: 1px solid rgba(96, 165, 250, 0.2);
-        }
-
-        .project-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(96, 165, 250, 0.5);
-        }
-
-        .project-img {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(45deg, #374151, #4b5563);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #9ca3af;
-            font-size: 1.2rem;
-        }
-
-        .project-content {
-            padding: 1.5rem;
-        }
-
-        .project-title {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: #f9fafb;
-        }
-
-        .demo-btn {
-            background: #10b981;
-            color: white;
-            padding: 0.7rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-top: 1rem;
-            transition: background 0.3s ease;
-        }
-
-        .demo-btn:hover {
-            background: #059669;
-        }
-
-        .contact-form {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        input,
-        textarea {
-            width: 100%;
-            padding: 1rem;
-            background: rgba(31, 41, 55, 0.7);
-            border: 1px solid #4b5563;
-            border-radius: 8px;
-            color: #f9fafb;
-            font-size: 1rem;
-        }
-
-        input:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #60a5fa;
-            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
-        }
-
-        .submit-btn {
-            background: #3b82f6;
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            transition: background 0.3s ease;
-        }
-
-        .submit-btn:hover {
-            background: #2563eb;
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .social-link {
-            color: #60a5fa;
-            font-size: 2rem;
-            transition: color 0.3s ease;
-            text-decoration: none;
-        }
-
-        .social-link:hover {
-            color: #93c5fd;
-        }
-
-        footer {
-            background: #111827;
-            text-align: center;
-            padding: 2rem;
-            color: #9ca3af;
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background: rgba(17, 24, 39, 0.98);
-                flex-direction: column;
-                padding: 2rem;
-                gap: 1rem;
-            }
-
-            .nav-links.active {
-                display: flex;
-            }
-
-            .mobile-toggle {
-                display: block;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .about-content {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .skills-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-    </style>
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body>
-    <header>
-        <nav>
-            <a href="#" class="logo">Shriyansh GameDev</a>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#about">About</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#projects">Portfolio</a></li>
-                <li><a href="#collaborate">Join Us</a></li>
-                <li><a href="#contact">Connect Now</a></li>
-                <li><a href="#resume.pdf" download="Shriyansh_GameDev_Resume.pdf" class="resume-btn">📄 Resume</a></li>
+
+  <!-- Skip to content — WCAG 2.4.1 Level A -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- ================================================================
+       NAVIGATION
+  ================================================================ -->
+  <header id="siteHeader" role="banner">
+    <nav aria-label="Main navigation">
+      <a href="#home" class="logo" aria-label="Shriyansh GameDev — Home">Shriyansh GameDev</a>
+
+      <ul class="nav-links" id="navLinks" role="list">
+        <li><a href="#about"       class="nav-link">About</a></li>
+        <li><a href="#skills"      class="nav-link">Skills</a></li>
+        <li><a href="#projects"    class="nav-link">Portfolio</a></li>
+        <li><a href="#collaborate" class="nav-link">Collaborate</a></li>
+        <li><a href="#contact"     class="nav-link">Contact</a></li>
+        <li>
+          <a href="Shriyansh_GameDev_Resume.pdf"
+             download="Shriyansh_GameDev_Resume.pdf"
+             class="nav-link resume-btn"
+             aria-label="Download resume PDF">
+            Resume
+          </a>
+        </li>
+      </ul>
+
+      <!-- Portfolio Mode Toggle -->
+      <button
+        class="mode-toggle-btn"
+        id="modeToggle"
+        aria-pressed="false"
+        aria-label="Switch to College Portfolio"
+      >
+        <span class="mode-toggle-btn__icon">🎓</span>
+        <span class="mode-toggle-btn__label">College</span>
+      </button>
+
+      <button
+        class="mobile-toggle"
+        id="mobileToggle"
+        aria-expanded="false"
+        aria-controls="mobileDrawer"
+        aria-label="Toggle navigation menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+
+    <!-- Mobile Drawer -->
+    <nav class="mobile-drawer" id="mobileDrawer" aria-label="Mobile navigation">
+      <a href="#about"       data-drawer>About</a>
+      <a href="#skills"      data-drawer>Skills</a>
+      <a href="#projects"    data-drawer>Portfolio</a>
+      <a href="#collaborate" data-drawer>Collaborate</a>
+      <a href="#contact"     data-drawer>Contact</a>
+      <a href="Shriyansh_GameDev_Resume.pdf"
+         download="Shriyansh_GameDev_Resume.pdf"
+         data-drawer
+         style="color: var(--color-accent); font-weight: 700;"
+         aria-label="Download resume PDF">
+        Resume
+      </a>
+    </nav>
+  </header>
+
+  <main id="main-content">
+
+    <!-- ================================================================
+         HERO
+    ================================================================ -->
+    <section class="hero" id="home" data-view="gamedev" aria-label="Introduction">
+      <div class="hero-content">
+        <h1>Crafting Worlds Through Code</h1>
+        <p>
+          Indie Game Developer specializing in Unity, Unreal Engine, and WebGL experiences.
+          Passionate about storytelling and immersive gameplay.
+        </p>
+        <a href="#projects" class="btn btn-primary">View My Games</a>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         ABOUT
+    ================================================================ -->
+    <section class="section" id="about" aria-labelledby="about-heading">
+      <h2 class="section-title" id="about-heading">About Me</h2>
+      <div class="about-content">
+        <div class="about-text">
+          <p>
+            Hi, I'm <strong style="color: var(--text-bright);">Shriyansh</strong>, a beginner game developer
+            passionate about creating engaging games. I'm working hard to improve my skills across various
+            platforms — from pixel art adventures to immersive 3D experiences, I love exploring the boundaries
+            of interactive entertainment.
+          </p>
+          <br />
+          <p>
+            When not coding, you'll find me sketching game concepts, exploring new tech trends, or playing the
+            latest indie releases for inspiration. I also explore VFX in games and films. My passion lies in
+            creating memorable experiences that players will remember long after they've put down the controller.
+          </p>
+        </div>
+        <div class="about-image">
+          <div class="profile-avatar" role="img" aria-label="Shriyansh's profile avatar">
+            <span aria-hidden="true">SA</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         SKILLS
+    ================================================================ -->
+    <section class="section" id="skills" data-view="gamedev" aria-labelledby="skills-heading">
+      <h2 class="section-title" id="skills-heading">My Skills & Tools</h2>
+      <div class="skills-grid" role="list">
+
+        <article class="skill-card" role="listitem" aria-label="Unity skill">
+          <span class="skill-icon" aria-hidden="true" style="color: var(--color-secondary);">🎮</span>
+          <h3>Unity</h3>
+          <p>2D & 3D game development with C# scripting</p>
+        </article>
+
+        <article class="skill-card" role="listitem" aria-label="Unreal Engine skill">
+          <span class="skill-icon" aria-hidden="true" style="color: var(--color-primary);">🚀</span>
+          <h3>Unreal Engine</h3>
+          <p>AAA-quality experiences with UE5</p>
+        </article>
+
+        <article class="skill-card" role="listitem" aria-label="3D Modelling skill">
+          <span class="skill-icon" aria-hidden="true" style="color: var(--color-accent);">🖼️</span>
+          <h3>Modelling</h3>
+          <p>3D asset creation and optimization</p>
+        </article>
+
+        <article class="skill-card" role="listitem" aria-label="C# programming skill">
+          <span class="skill-icon" aria-hidden="true" style="color: var(--color-error);">💻</span>
+          <h3>C#</h3>
+          <p>Primary language for Unity development</p>
+        </article>
+
+        <article class="skill-card" role="listitem" aria-label="C++ programming skill">
+          <span class="skill-icon" aria-hidden="true" style="color: var(--color-warning);">🔧</span>
+          <h3>C++</h3>
+          <p>Performance-critical engine systems</p>
+        </article>
+
+        <article class="skill-card" role="listitem" aria-label="Blueprint Scripting skill">
+          <span class="skill-icon" aria-hidden="true" style="color: var(--color-secondary-dark);">📝</span>
+          <h3>Blueprint Scripting</h3>
+          <p>Visual scripting in Unreal Engine</p>
+        </article>
+
+        <article class="skill-card" role="listitem" aria-label="Game Design skill">
+          <span class="skill-icon" aria-hidden="true" style="color: var(--color-orange);">🎯</span>
+          <h3>Game Design</h3>
+          <p>Mechanics, systems & player experience</p>
+        </article>
+
+        <article class="skill-card" role="listitem" aria-label="Audio Design skill">
+          <span class="skill-icon" aria-hidden="true" style="color: var(--color-pink);">🎵</span>
+          <h3>Audio Design</h3>
+          <p>Spatial audio and adaptive soundscapes</p>
+        </article>
+
+        <article class="skill-card" role="listitem" aria-label="VFX skill">
+          <span class="skill-icon" aria-hidden="true" style="color: var(--color-warning);">✨</span>
+          <h3>VFX</h3>
+          <p>Particle systems & visual effects</p>
+        </article>
+
+        <article class="skill-card" role="listitem" aria-label="After Effects skill">
+          <span class="skill-icon" aria-hidden="true" style="color: var(--color-error);">🎬</span>
+          <h3>After Effects</h3>
+          <p>Motion graphics & film VFX</p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ================================================================
+         PROJECTS
+    ================================================================ -->
+    <section class="section" id="projects" data-view="gamedev" aria-labelledby="projects-heading">
+      <h2 class="section-title" id="projects-heading">My Game Portfolio</h2>
+      <div class="projects-grid">
+
+        <article class="project-card" aria-label="Project: Cookie Heist">
+          <div class="project-img" aria-hidden="true">🍪 Cookie Heist</div>
+          <div class="project-content">
+            <h3 class="project-title">Cookie Heist</h3>
+            <p>
+              A stealth-adventure single-player game set in a mystical kingdom. Features dual playstyle
+              with stealth and combat mechanics, enchanted cookie system, and choice-driven outcomes.
+            </p>
+            <button
+              class="btn btn-accent"
+              onclick="showDemo('Cookie Heist')"
+              aria-label="View Cookie Heist demo status"
+            >
+              Play Demo
+            </button>
+          </div>
+        </article>
+
+        <article class="project-card" aria-label="Project: The Cure">
+          <div class="project-img" aria-hidden="true">🧟 The Cure</div>
+          <div class="project-content">
+            <h3 class="project-title">The Cure</h3>
+            <p>
+              Open-world zombie shooter survival game. Fight through waves of infected, scavenge for
+              supplies, and uncover the truth behind the outbreak in a post-apocalyptic world.
+            </p>
+            <button
+              class="btn btn-accent"
+              onclick="showDemo('The Cure')"
+              aria-label="View The Cure demo status"
+            >
+              Play Demo
+            </button>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ================================================================
+         GAME DESIGN DOCUMENTS
+    ================================================================ -->
+    <section class="section" id="gdd" data-view="gamedev" aria-labelledby="gdd-heading">
+      <h2 class="section-title" id="gdd-heading">Game Design Documents</h2>
+      <div class="projects-grid">
+
+        <article class="project-card" aria-label="GDD: Cookie Heist">
+          <div class="project-img" style="background: var(--gradient-gdd-1);" aria-hidden="true">🍪 Cookie Heist</div>
+          <div class="project-content">
+            <h3 class="project-title">Cookie Heist</h3>
+            <p><strong>Genre:</strong> Stealth-Adventure Single-Player</p>
+            <p style="margin-top: 0.75rem;">
+              A stealth-adventure game set in a mystical kingdom where the player explores, collects, and
+              trades enchanted cookies for survival and power. Choose stealth or combat — your approach shapes
+              your inventory and outcomes.
+            </p>
+            <div class="highlight-box highlight-box--warning" style="margin-top: 0.75rem;">
+              <p style="font-size: 0.9rem; color: var(--text-secondary); max-width: none;">
+                <strong style="color: var(--color-warning);">Key Features:</strong>
+                Dual playstyle (Stealth/Combat), Enchanted cookie system, Mystical kingdom exploration, Choice-driven outcomes
+              </p>
+            </div>
+            <a
+              href="https://drive.google.com/file/d/1fvAWeSaL2FT0tDHc2VOGQeT72rvFi9gX/view?usp=drive_link"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-accent"
+              aria-label="View Cookie Heist Game Design Document on Google Drive"
+            >
+              View Document
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card" aria-label="GDD: The Cure">
+          <div class="project-img" style="background: var(--gradient-gdd-2);" aria-hidden="true">🧟 The Cure</div>
+          <div class="project-content">
+            <h3 class="project-title">The Cure</h3>
+            <p><strong>Genre:</strong> Open-World | Zombie Shooter | Survival</p>
+            <p><strong>Engine:</strong> Unreal Engine 5 &nbsp;|&nbsp; <strong>Platform:</strong> PC (Prototype)</p>
+            <p style="margin-top: 0.75rem;">
+              In a post-apocalyptic world, survive waves of infected, scavenge supplies, and uncover the
+              hidden truth behind the outbreak. Set in a semi-open world filled with danger, mystery, and exploration.
+            </p>
+            <div class="highlight-box highlight-box--danger" style="margin-top: 0.75rem;">
+              <p style="font-size: 0.9rem; color: var(--text-secondary); max-width: none;">
+                <strong style="color: var(--color-danger);">Development:</strong> 30 Days Playable Demo &nbsp;|&nbsp;
+                <strong style="color: var(--color-danger);">Features:</strong> Semi-open world, Infected waves, Scavenging, Story mystery
+              </p>
+            </div>
+            <a
+              href="https://drive.google.com/file/d/1FSSlzXYL6aYd5H8LpCuyG4si68lmxT7I/view?usp=drive_link"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-accent"
+              aria-label="View The Cure Game Design Document on Google Drive"
+            >
+              View Document
+            </a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ================================================================
+         AI/ML PROJECTS
+    ================================================================ -->
+    <section class="section section-aiml" id="aiml-projects" data-view="gamedev" aria-labelledby="aiml-heading">
+      <h2 class="section-title" id="aiml-heading">AI/ML Project Ideas</h2>
+      <p style="text-align: center; font-size: 1.1rem; color: var(--color-secondary); margin-bottom: var(--space-12); font-weight: 700;">
+        Transforming the Gaming Era
+      </p>
+
+      <div style="max-width: 900px; margin: 0 auto;">
+        <article class="project-card" style="border: 2px solid var(--color-secondary-10); position: relative;" aria-label="AI/ML in Game Development — Ideation Phase">
+          <span class="ideation-badge" aria-label="Project status: Ideation Phase">Ideation Phase</span>
+          <div class="project-img" style="background: var(--gradient-aiml); height: 220px;" aria-hidden="true">
+            <div style="text-align: center;">
+              <div style="font-size: 3.5rem; margin-bottom: var(--space-3);">🤖</div>
+              <div style="font-size: 1.3rem; color: var(--text-bright);">AI/ML in Game Development</div>
+            </div>
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">AI-Powered Gaming Innovation</h3>
+            <p>Ideation for 4 groundbreaking AI/ML projects designed to revolutionize player experiences and game design.</p>
+
+            <div class="highlight-box highlight-box--secondary" style="margin-top: var(--space-4);">
+              <h4 style="color: var(--color-secondary); margin-bottom: var(--space-4);">Featured Projects</h4>
+              <ul style="list-style: none; display: grid; gap: var(--space-3);">
+                <li style="display: flex; gap: var(--space-3); align-items: flex-start;">
+                  <span style="color: var(--color-pink);" aria-hidden="true">1️⃣</span>
+                  <p style="color: var(--text-secondary); margin: 0; max-width: none;"><strong style="color: var(--text-bright);">Adaptive AI Game Companion</strong> — Dynamic NPCs that learn and adapt to player behaviour</p>
+                </li>
+                <li style="display: flex; gap: var(--space-3); align-items: flex-start;">
+                  <span style="color: var(--color-pink);" aria-hidden="true">2️⃣</span>
+                  <p style="color: var(--text-secondary); margin: 0; max-width: none;"><strong style="color: var(--text-bright);">Voice-Controlled RPG Companion</strong> — Natural language interaction with in-game characters</p>
+                </li>
+                <li style="display: flex; gap: var(--space-3); align-items: flex-start;">
+                  <span style="color: var(--color-pink);" aria-hidden="true">3️⃣</span>
+                  <p style="color: var(--text-secondary); margin: 0; max-width: none;"><strong style="color: var(--text-bright);">Emotion-Reactive Difficulty System</strong> — Real-time difficulty adjustment based on player emotions</p>
+                </li>
+                <li style="display: flex; gap: var(--space-3); align-items: flex-start;">
+                  <span style="color: var(--color-pink);" aria-hidden="true">4️⃣</span>
+                  <p style="color: var(--text-secondary); margin: 0; max-width: none;"><strong style="color: var(--text-bright);">Adaptive Tactical Enemy AI+</strong> — Intelligent enemies that strategize and counter player tactics</p>
+                </li>
+              </ul>
+            </div>
+
+            <div class="highlight-box highlight-box--pink" style="margin-top: var(--space-4);">
+              <p style="color: #ec4899; font-weight: 700; margin-bottom: var(--space-2); max-width: none;">Vision</p>
+              <p style="color: var(--text-secondary); margin: 0; max-width: none;">
+                Transforming the Gaming Era through innovative AI/ML integration that creates more immersive,
+                responsive, and personalized gaming experiences.
+              </p>
+            </div>
+
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: var(--space-4); max-width: none;">
+              <strong style="color: var(--color-secondary);">Technologies:</strong> Machine Learning, NLP, Computer Vision, Reinforcement Learning
+            </p>
+            <p style="color: var(--text-muted); font-size: 0.88rem; max-width: none;">
+              <strong style="color: var(--color-secondary);">Status:</strong> Ideation &amp; Research Phase
+            </p>
+
+            <a
+              href="https://drive.google.com/file/d/1HxankP2SHJ2wziPpu7O4jBl_OHCTsPzx/view?usp=drive_link"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn"
+              style="background: var(--gradient-aiml); color: var(--text-on-dark); margin-top: var(--space-6);"
+              aria-label="View full AI/ML documentation on Google Drive"
+            >
+              View Full Documentation
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         COLLABORATE
+    ================================================================ -->
+    <section class="section section-alt" id="collaborate" data-view="gamedev" aria-labelledby="collab-heading">
+      <h2 class="section-title" id="collab-heading">Collaborate With Us</h2>
+      <div style="max-width: 820px; margin: 0 auto; text-align: center;">
+        <p style="font-size: 1.1rem; margin-bottom: var(--space-8); color: var(--text-secondary); margin-inline: auto;">
+          Looking for talented developers, artists, designers, or musicians to collaborate on exciting game
+          projects! Whether you're an indie developer, a creative artist, or someone passionate about game
+          development — let's create something amazing together.
+        </p>
+
+        <div class="collab-grid">
+          <div class="collab-card">
+            <span class="icon" aria-hidden="true">🎨</span>
+            <h3>Artists</h3>
+            <p>2D/3D artists, animators, UI/UX designers</p>
+          </div>
+          <div class="collab-card">
+            <span class="icon" aria-hidden="true">💻</span>
+            <h3>Developers</h3>
+            <p>Programmers, technical artists, engine specialists</p>
+          </div>
+          <div class="collab-card">
+            <span class="icon" aria-hidden="true">🎵</span>
+            <h3>Sound Designers</h3>
+            <p>Music composers, audio engineers, voice actors</p>
+          </div>
+          <div class="collab-card">
+            <span class="icon" aria-hidden="true">📝</span>
+            <h3>Writers</h3>
+            <p>Narrative designers, story writers, quest designers</p>
+          </div>
+        </div>
+
+        <article class="project-card" style="text-align: left; margin-top: var(--space-8);" aria-label="College Life Simulator collaboration">
+          <div class="project-img" style="background: var(--gradient-collab);" aria-hidden="true">🎓 College Life Simulator</div>
+          <div class="project-content">
+            <h3 class="project-title">College Life Simulator</h3>
+            <p><strong>Project Type:</strong> 2D &amp; 3D Hybrid Narrative-Driven Game</p>
+            <p style="margin-top: 0.75rem;">
+              Set in Dehradun, centred around student life and choices. Players navigate branching paths —
+              forming bonds, facing betrayal, and balancing professional ambitions with personal relationships.
+            </p>
+            <ul style="margin: var(--space-4) 0 var(--space-4) var(--space-6); color: var(--text-secondary); line-height: 1.9;">
+              <li>Forming bonds that influence growth, trust, and life choices</li>
+              <li>Facing betrayal or finding genuine connections</li>
+              <li>Balancing professional ambitions with personal relationships</li>
             </ul>
-            <button class="mobile-toggle" id="mobileToggle">☰</button>
-        </nav>
-    </header>
-
-    <main>
-        <section class="hero">
-            <div class="hero-content">
-                <h1>Crafting Worlds Through Code</h1>
-                <p>Indie Game Developer specializing in Unity, Unreal Engine, and WebGL experiences. Passionate about
-                    storytelling and immersive gameplay.</p>
-                <a href="#projects" class="cta-btn">View My Games</a>
+            <div class="highlight-box highlight-box--primary">
+              <p style="color: var(--color-primary); font-weight: 700; margin-bottom: var(--space-3); max-width: none;">Required Team</p>
+              <ul class="team-list">
+                <li>1 Producer / Game Director</li>
+                <li>1 Story &amp; Script Writer</li>
+                <li>1 Game Mechanics Designer</li>
+                <li>2 Asset Designers (2D + 3D)</li>
+                <li>1 Animator / Graphics Designer</li>
+                <li>1 Sound Designer</li>
+                <li>1 Programmer</li>
+              </ul>
             </div>
-        </section>
+            <a
+              href="https://drive.google.com/file/d/12S_aLcQvZgIu9rdGLgKKXioTeILQ8jyP/view?usp=drive_link"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-primary"
+              style="margin-top: var(--space-6);"
+              aria-label="View College Life Simulator full job description on Google Drive"
+            >
+              View Full Job Description
+            </a>
+          </div>
+        </article>
 
-        <section id="about">
-            <h2 class="section-title">About Me</h2>
-            <div class="about-content">
-                <div class="about-text">
-                    <p>Hi, I'm Shriyansh, a beginner game developer passionate about creating engaging games. I'm
-                        working hard to improve my skills in game development across various platforms. From pixel art
-                        adventures to immersive experiences, I love exploring the boundaries of interactive
-                        entertainment.</p>
-                    <br>
-                    <p>When not coding, you'll find me sketching game concepts, exploring new tech trends, or playing
-                        the latest indie releases for inspiration. In my free time, when I don't want to game dev, I
-                        explore VFX in games as well as films. My passion lies in creating memorable experiences that
-                        players will remember long after they've put down the controller.</p>
-                </div>
-                <div class="about-image">
-                    <div class="profile-img"
-                        style="background: linear-gradient(45deg, #60a5fa, #a855f7); display: flex; align-items: center; justify-content: center; font-size: 4rem;">
-                        👨‍💻</div>
-                </div>
+        <p style="font-size: 1rem; margin: var(--space-8) 0 var(--space-4); color: var(--text-muted);">
+          <strong style="color: var(--color-primary);">What We Offer:</strong>
+          Creative freedom, skill development opportunities, portfolio-worthy projects, and a collaborative
+          environment where your ideas matter.
+        </p>
+
+        <a href="#contact" class="btn btn-primary">Join Our Team</a>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         CONTACT
+    ================================================================ -->
+    <section class="section" id="contact" data-view="gamedev" aria-labelledby="contact-heading">
+      <h2 class="section-title" id="contact-heading">Get In Touch</h2>
+
+      <div style="text-align: center; margin-bottom: var(--space-8);">
+        <p style="font-size: 1.05rem; color: var(--text-muted); margin-bottom: var(--space-2); margin-inline: auto;">
+          Have a project in mind or want to collaborate?
+        </p>
+        <p style="font-size: 1.1rem; margin-inline: auto;">
+          <a href="mailto:shriyanshagr@gmail.com" style="color: var(--color-primary);">
+            shriyanshagr@gmail.com
+          </a>
+        </p>
+      </div>
+
+      <div id="formWrapper">
+        <form
+          class="contact-form"
+          id="contactForm"
+          action="https://formsubmit.co/shriyanshagr@gmail.com"
+          method="POST"
+          novalidate
+          aria-label="Contact form"
+        >
+          <input type="hidden" name="_subject" value="New Contact Form Submission from Portfolio" />
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_next"    value="https://shriyansh-agrawal1.itch.io/" />
+
+          <div id="formError" class="form-error" role="alert" aria-live="polite"></div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div>
+                <label class="form-label" for="contactName">
+                  Your Name <span aria-hidden="true" style="color: var(--color-error);">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="contactName"
+                  name="name"
+                  placeholder="Ada Lovelace"
+                  required
+                  aria-required="true"
+                  aria-describedby="formError"
+                  autocomplete="name"
+                />
+              </div>
+              <div>
+                <label class="form-label" for="contactEmail">
+                  Your Email <span aria-hidden="true" style="color: var(--color-error);">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="contactEmail"
+                  name="email"
+                  placeholder="ada@example.com"
+                  required
+                  aria-required="true"
+                  aria-describedby="formError"
+                  autocomplete="email"
+                />
+              </div>
             </div>
-        </section>
+          </div>
 
-        <section id="skills">
-            <h2 class="section-title">My Skills & Tools</h2>
-            <div class="skills-grid">
-                <div class="skill-card">
-                    <div class="skill-icon" style="color: #a855f7;">🎮</div>
-                    <h3>Unity</h3>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon" style="color: #3b82f6;">🚀</div>
-                    <h3>Unreal Engine</h3>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon" style="color: #10b981;">🖼</div>
-                    <h3>Modelling</h3>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon" style="color: #ef4444;">💻</div>
-                    <h3>C#</h3>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon" style="color: #f59e0b;">🔧</div>
-                    <h3>C++</h3>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon" style="color: #8b5cf6;">📝</div>
-                    <h3>Blueprint Scripting</h3>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon" style="color: #f97316;">🎯</div>
-                    <h3>Game Design</h3>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon" style="color: #ec4899;">🎵</div>
-                    <h3>Audio Design</h3>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon" style="color: #f59e0b;">✨</div>
-                    <h3>VFX</h3>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon" style="color: #ef4444;">🎬</div>
-                    <h3>After Effects</h3>
-                </div>
+          <div class="form-group">
+            <label class="form-label" for="contactMessage">
+              Your Message <span aria-hidden="true" style="color: var(--color-error);">*</span>
+            </label>
+            <textarea
+              id="contactMessage"
+              name="message"
+              rows="6"
+              placeholder="Tell me about your project or opportunity..."
+              required
+              aria-required="true"
+              aria-describedby="formError"
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="submitBtn" style="width: 100%; justify-content: center;" aria-label="Send message">
+            Send Message
+          </button>
+        </form>
+
+        <!-- Success state -->
+        <div class="form-success-msg" id="formSuccess" role="status" aria-live="polite">
+          <div class="icon" aria-hidden="true">✅</div>
+          <h3>Message Sent!</h3>
+          <p>Thanks for reaching out. I'll get back to you soon.</p>
+          <button
+            class="btn btn-outline"
+            id="resetFormBtn"
+            style="margin-top: var(--space-6);"
+            aria-label="Send another message"
+          >
+            Send Another Message
+          </button>
+        </div>
+      </div>
+
+      <!-- Social Links -->
+      <nav class="social-links" aria-label="Social media links">
+        <a href="https://github.com/Shriyansh110805"
+           target="_blank" rel="noopener noreferrer"
+           class="social-link"
+           aria-label="Visit GitHub profile">
+          <span class="social-link__icon" aria-hidden="true">🐙</span> GitHub
+        </a>
+        <a href="https://www.instagram.com/shriyanshagrawal4?igsh=Z3Q4eGNoeWgzMGc1&utm_source=qr"
+           target="_blank" rel="noopener noreferrer"
+           class="social-link"
+           aria-label="Visit Instagram profile">
+          <span class="social-link__icon" aria-hidden="true">📷</span> Instagram
+        </a>
+        <a href="https://shriyansh-agrawal1.itch.io/"
+           target="_blank" rel="noopener noreferrer"
+           class="social-link"
+           aria-label="Visit itch.io profile">
+          <span class="social-link__icon" aria-hidden="true">🎮</span> Itch.io
+        </a>
+        <a href="http://www.linkedin.com/in/shriyansh-agrawal-0009782a1"
+           target="_blank" rel="noopener noreferrer"
+           class="social-link"
+           aria-label="Visit LinkedIn profile">
+          <span class="social-link__icon" aria-hidden="true">💼</span> LinkedIn
+        </a>
+      </nav>
+    </section>
+
+    <!-- ================================================================
+         COLLEGE HERO
+    ================================================================ -->
+    <section class="hero college-hero" id="college-home" data-view="college" aria-label="College Portfolio Introduction">
+      <div class="hero-content">
+        <h1>Student. Developer. Creator.</h1>
+        <p>
+          Studying Game Development &amp; Multimedia. Bridging academic theory with
+          hands-on creative projects — from coursework to real-world game design.
+        </p>
+        <a href="#academic-projects" class="btn btn-accent">View Academic Work</a>
+      </div>
+    </section>
+
+
+    <!-- ================================================================
+         LANGUAGES & CONCEPTS
+    ================================================================ -->
+    <section class="section" id="college-skills" data-view="college" aria-labelledby="cskills-heading">
+      <h2 class="section-title" id="cskills-heading">Languages &amp; Core Concepts</h2>
+      <p style="text-align: center; color: var(--text-muted); margin-bottom: var(--space-10); margin-inline: auto;">
+        Click a language to explore my projects built with it.
+      </p>
+
+      <!-- Language Cards -->
+      <div class="lang-grid" role="list">
+
+        <button class="lang-card" data-filter="python" role="listitem" aria-label="View Python projects">
+          <span class="lang-icon" aria-hidden="true">🐍</span>
+          <h3>Python</h3>
+          <span class="lang-cta" aria-hidden="true">View Projects →</span>
+        </button>
+
+        <button class="lang-card" data-filter="c" role="listitem" aria-label="View C projects">
+          <span class="lang-icon" aria-hidden="true">⚙️</span>
+          <h3>C</h3>
+          <span class="lang-cta" aria-hidden="true">View Projects →</span>
+        </button>
+
+        <button class="lang-card" data-filter="cpp" role="listitem" aria-label="View C++ projects">
+          <span class="lang-icon" aria-hidden="true">🔧</span>
+          <h3>C++</h3>
+          <span class="lang-cta" aria-hidden="true">View Projects →</span>
+        </button>
+
+        <button class="lang-card" data-filter="java" role="listitem" aria-label="View Java projects">
+          <span class="lang-icon" aria-hidden="true">☕</span>
+          <h3>Java</h3>
+          <span class="lang-cta" aria-hidden="true">View Projects →</span>
+        </button>
+
+      </div>
+
+      <!-- Core Concept Chips -->
+      <div class="concept-section" aria-label="Core conceptual knowledge">
+        <p class="concept-label">Core Concepts</p>
+        <div class="concept-chips" role="list">
+          <span class="concept-chip" role="listitem">📊 DSA</span>
+          <span class="concept-chip" role="listitem">⚡ DAA</span>
+          <span class="concept-chip" role="listitem">🗄️ DBMS</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         ACADEMIC PROJECTS
+    ================================================================ -->
+    <section class="section" id="academic-projects" data-view="college" aria-labelledby="acad-proj-heading">
+      <h2 class="section-title" id="acad-proj-heading">Academic Projects</h2>
+      <div class="projects-grid">
+
+        <article class="project-card" aria-label="Academic Project: Cookie Heist GDD">
+          <div class="project-img" style="background: var(--gradient-gdd-1);" aria-hidden="true">🍪 Game Design</div>
+          <div class="project-content">
+            <h3 class="project-title">Cookie Heist — Full GDD</h3>
+            <p><strong>Subject:</strong> Game Design &amp; Documentation</p>
+            <p style="margin-top: 0.75rem;">
+              A complete Game Design Document covering mechanics, narrative, level design,
+              UI/UX wireframes, and a full production timeline.
+            </p>
+            <a
+              href="https://drive.google.com/file/d/1fvAWeSaL2FT0tDHc2VOGQeT72rvFi9gX/view?usp=drive_link"
+              target="_blank" rel="noopener noreferrer"
+              class="btn btn-accent"
+              aria-label="View Cookie Heist GDD"
+            >View Document</a>
+          </div>
+        </article>
+
+        <article class="project-card" aria-label="Academic Project: The Cure GDD">
+          <div class="project-img" style="background: var(--gradient-gdd-2);" aria-hidden="true">🧟 Survival Design</div>
+          <div class="project-content">
+            <h3 class="project-title">The Cure — Full GDD</h3>
+            <p><strong>Subject:</strong> Advanced Game Design</p>
+            <p style="margin-top: 0.75rem;">
+              In-depth design document for an open-world zombie survival shooter — world-building,
+              enemy AI systems, survival mechanics, and UE5 prototyping plans.
+            </p>
+            <a
+              href="https://drive.google.com/file/d/1FSSlzXYL6aYd5H8LpCuyG4si68lmxT7I/view?usp=drive_link"
+              target="_blank" rel="noopener noreferrer"
+              class="btn btn-accent"
+              aria-label="View The Cure GDD"
+            >View Document</a>
+          </div>
+        </article>
+
+        <article class="project-card" aria-label="Academic Project: AI/ML Research">
+          <div class="project-img" style="background: var(--gradient-aiml);" aria-hidden="true">🤖 AI Research</div>
+          <div class="project-content">
+            <h3 class="project-title">AI/ML in Gaming — Research</h3>
+            <p><strong>Subject:</strong> Artificial Intelligence</p>
+            <p style="margin-top: 0.75rem;">
+              Research exploring 4 AI/ML applications in game development — adaptive NPCs,
+              voice companions, emotion-reactive difficulty, and tactical enemy AI.
+            </p>
+            <a
+              href="https://drive.google.com/file/d/1HxankP2SHJ2wziPpu7O4jBl_OHCTsPzx/view?usp=drive_link"
+              target="_blank" rel="noopener noreferrer"
+              class="btn"
+              style="background: var(--gradient-aiml); color: var(--text-on-dark);"
+              aria-label="View AI/ML Research"
+            >View Research</a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ================================================================
+         CERTIFICATES
+    ================================================================ -->
+    <section class="section" id="certificates" data-view="college" aria-labelledby="cert-heading">
+      <h2 class="section-title" id="cert-heading">Certificates</h2>
+      <div class="cert-grid">
+
+        <article class="cert-card" aria-label="Internshala Certificate">
+          <div class="cert-badge cert-badge--internshala" aria-hidden="true">🎓</div>
+          <div class="cert-body">
+            <h3 class="cert-title">[Certificate Name]</h3>
+            <p class="cert-issuer">Internshala</p>
+            <p class="cert-date">[Month Year]</p>
+            <a href="#" class="btn btn-outline cert-btn" aria-label="View Internshala certificate">View Certificate</a>
+          </div>
+        </article>
+
+        <article class="cert-card" aria-label="Coursera Certificate">
+          <div class="cert-badge cert-badge--coursera" aria-hidden="true">📘</div>
+          <div class="cert-body">
+            <h3 class="cert-title">[Certificate Name]</h3>
+            <p class="cert-issuer">Coursera</p>
+            <p class="cert-date">[Month Year]</p>
+            <a href="#" class="btn btn-outline cert-btn" aria-label="View Coursera certificate">View Certificate</a>
+          </div>
+        </article>
+
+        <article class="cert-card" aria-label="IxDF Certificate">
+          <div class="cert-badge cert-badge--ixdf" aria-hidden="true">🎨</div>
+          <div class="cert-body">
+            <h3 class="cert-title">[Certificate Name]</h3>
+            <p class="cert-issuer">Interaction Design Foundation (IxDF)</p>
+            <p class="cert-date">[Month Year]</p>
+            <a href="#" class="btn btn-outline cert-btn" aria-label="View IxDF certificate">View Certificate</a>
+          </div>
+        </article>
+
+      </div>
+      <p class="cert-note">More certificates will be added as they are earned.</p>
+    </section>
+
+    <!-- ================================================================
+         CURRENTLY BUILDING
+    ================================================================ -->
+    <section class="section section-alt" id="building" data-view="college" aria-labelledby="building-heading">
+      <h2 class="section-title" id="building-heading">Currently Building</h2>
+      <p style="text-align: center; color: var(--text-muted); margin-bottom: var(--space-12); margin-inline: auto;">
+        Projects I'm actively developing during college — with timelines &amp; progress.
+      </p>
+
+      <div class="build-timeline">
+
+        <div class="build-item">
+          <div class="build-marker build-marker--completed" aria-hidden="true"></div>
+          <div class="build-content">
+            <div class="build-header">
+              <h3>Typography Studio</h3>
+              <span class="build-status build-status--completed">Completed</span>
             </div>
-        </section>
-
-        <section id="projects">
-            <h2 class="section-title">My Game Portfolio</h2>
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-img">🍪 Cookie Heist Screenshot</div>
-                    <div class="project-content">
-                        <h3 class="project-title">Cookie Heist</h3>
-                        <p>A stealth-adventure single-player game set in a mystical kingdom. Features dual playstyle
-                            with stealth and combat mechanics, enchanted cookie system, and choice-driven outcomes.</p>
-                        <button class="demo-btn" onclick="showDemo('Cookie Heist')">Play Demo</button>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-img">🧟 The Cure Screenshot</div>
-                    <div class="project-content">
-                        <h3 class="project-title">The Cure</h3>
-                        <p>Open-world zombie shooter survival game. Fight through waves of infected, scavenge for
-                            supplies, and uncover the truth behind the outbreak in a post-apocalyptic world.</p>
-                        <button class="demo-btn" onclick="showDemo('The Cure')">Play Demo</button>
-                    </div>
-                </div>
+            <p class="build-period">📅 Dec 2024 – Jan 2025</p>
+            <p class="build-desc">
+              A full interactive educational web app covering typography psychology, classification,
+              anatomy, and brand identity — built with pure HTML, CSS &amp; JavaScript across 11 modules.
+            </p>
+            <div class="build-progress-track" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Typography Studio progress: 100%">
+              <div class="build-progress-fill build-progress-fill--completed" style="width: 100%;"></div>
             </div>
-        </section>
-
-        <section id="gdd">
-            <h2 class="section-title">Game Design Documents</h2>
-            <div class="projects-grid" style="grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));">
-                <div class="project-card">
-                    <div class="project-img" style="background: linear-gradient(135deg, #f59e0b, #ea580c);">🍪 Cookie
-                        Heist</div>
-                    <div class="project-content">
-                        <h3 class="project-title">Cookie Heist</h3>
-                        <p><strong>Genre:</strong> Stealth-Adventure Single-Player</p>
-                        <p style="margin-top: 1rem;">Cookie Heist is a stealth-adventure single-player game set in a
-                            mystical kingdom where the player explores, collects, and trades enchanted cookies for
-                            survival and power. You can choose to complete missions through stealth and silence or
-                            combat and chaos — shaping your approach, inventory, and outcomes.</p>
-                        <div
-                            style="background: rgba(245, 158, 11, 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0; border-left: 3px solid #f59e0b;">
-                            <p style="color: #d1d5db; font-size: 0.95rem;"><strong style="color: #f59e0b;">Key
-                                    Features:</strong> Dual playstyle (Stealth/Combat), Enchanted cookie system,
-                                Mystical kingdom exploration, Choice-driven outcomes</p>
-                        </div>
-                        <button class="demo-btn"
-                            onclick="window.open('https://drive.google.com/file/d/1fvAWeSaL2FT0tDHc2VOGQeT72rvFi9gX/view?usp=drive_link', '_blank')">View
-                            Document</button>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-img" style="background: linear-gradient(135deg, #dc2626, #991b1b);">🧟 The Cure
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">The Cure</h3>
-                        <p><strong>Genre:</strong> Open-World | Zombie Shooter | Survival | Mission-Driven</p>
-                        <p><strong>Engine:</strong> Unreal Engine 5 | <strong>Platform:</strong> PC (Prototype)</p>
-                        <p style="margin-top: 1rem;">In a post-apocalyptic world, the player takes on the role of a lone
-                            survivor searching for the last known cure to a deadly virus that wiped out humanity. Set in
-                            a semi-open world filled with danger, mystery, and exploration, the player must survive
-                            waves of infected, scavenge supplies, and uncover the hidden truth behind the outbreak.</p>
-                        <div
-                            style="background: rgba(220, 38, 38, 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0; border-left: 3px solid #dc2626;">
-                            <p style="color: #d1d5db; font-size: 0.95rem;"><strong
-                                    style="color: #dc2626;">Development:</strong> 30 Days Playable Demo | <strong
-                                    style="color: #dc2626;">Features:</strong> Semi-open world, Infected waves, Resource
-                                scavenging, Story-driven mystery</p>
-                        </div>
-                        <button class="demo-btn"
-                            onclick="window.open('https://drive.google.com/file/d/1FSSlzXYL6aYd5H8LpCuyG4si68lmxT7I/view?usp=drive_link', '_blank')">View
-                            Document</button>
-                    </div>
-                </div>
+            <p class="build-progress-label">100% — Shipped</p>
+            <div class="build-tags">
+              <span class="build-tag">HTML/CSS/JS</span>
+              <span class="build-tag">UI/UX</span>
+              <span class="build-tag">Typography</span>
             </div>
-        </section>
+            <a href="Typography_Studio/index.html" target="_blank" rel="noopener" class="btn btn-outline" style="margin-top: var(--space-4); display: inline-block;" aria-label="Open Typography Studio project">View Project →</a>
+          </div>
+        </div>
 
-        <section id="collaborations">
-            <h2 class="section-title">Looking for Collaborate</h2>
-            <div class="projects-grid" style="grid-template-columns: 1fr;">
-                <div class="project-card">
-                    <div class="project-img" style="background: linear-gradient(135deg, #f59e0b, #d97706);">🎓 College
-                        Life Simulator</div>
-                    <div class="project-content">
-                        <h3 class="project-title">College Life Simulator</h3>
-                        <p><strong>Project Type:</strong> 2D & 3D Hybrid Narrative-Driven Game</p>
-                        <p style="margin-top: 1rem;">This project is a 2D & 3D hybrid narrative-driven game set in
-                            Dehradun, centered around student life and choices. Players navigate through branching
-                            paths:</p>
-                        <ul style="margin: 1rem 0 1rem 1.5rem; color: #d1d5db; line-height: 1.8;">
-                            <li>Forming bonds that influence growth, trust, and life choices.</li>
-                            <li>Facing betrayal or finding genuine connections.</li>
-                            <li>Balancing professional ambitions with personal relationships.</li>
-                        </ul>
-
-                        <div
-                            style="background: rgba(59, 130, 246, 0.1); padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0; border-left: 4px solid #60a5fa;">
-                            <p style="color: #60a5fa; font-weight: bold; margin-bottom: 0.5rem;">Required Team:</p>
-                            <ul style="color: #d1d5db; line-height: 1.8;">
-                                <li>1 Producer / Game Director</li>
-                                <li>1 Story & Script Writer</li>
-                                <li>1 Game Mechanics Designer</li>
-                                <li>2 Asset Designers (2D + 3D)</li>
-                                <li>1 Animator / Graphics Designer</li>
-                                <li>1 Sound Designer</li>
-                                <li>1 Programmer</li>
-                            </ul>
-                        </div>
-
-                        <div style="margin-top: 1.5rem;">
-                            <button class="demo-btn"
-                                onclick="window.open('https://drive.google.com/file/d/12S_aLcQvZgIu9rdGLgKKXioTeILQ8jyP/view?usp=drive_link', '_blank')"
-                                style="background: #3b82f6;">📄 View Full Job Description</button>
-                        </div>
-                    </div>
-                </div>
+        <div class="build-item">
+          <div class="build-marker" aria-hidden="true"></div>
+          <div class="build-content">
+            <div class="build-header">
+              <h3>Cookie Heist — Prototype</h3>
+              <span class="build-status build-status--progress">In Progress</span>
             </div>
-        </section>
-
-        <section id="aiml-projects"
-            style="background: linear-gradient(135deg, rgba(147, 51, 234, 0.1), rgba(236, 72, 153, 0.1)); border-radius: 20px; margin: 2rem auto; padding: 4rem 2rem;">
-            <h2 class="section-title">AI/ML Project Ideas</h2>
-            <p style="text-align: center; font-size: 1.2rem; color: #a855f7; margin-bottom: 3rem; font-weight: bold;">🚀
-                Transforming the Gaming Era</p>
-
-            <div class="projects-grid" style="grid-template-columns: 1fr; max-width: 900px; margin: 0 auto;">
-                <div class="project-card"
-                    style="border: 2px solid rgba(168, 85, 247, 0.4); position: relative; overflow: visible;">
-                    <div
-                        style="position: absolute; top: -15px; right: 20px; background: linear-gradient(135deg, #a855f7, #ec4899); padding: 0.5rem 1.5rem; border-radius: 20px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);">
-                        Ideation Phase
-                    </div>
-                    <div class="project-img"
-                        style="background: linear-gradient(135deg, #7c3aed, #ec4899); height: 250px;">
-                        <div style="text-align: center;">
-                            <div style="font-size: 4rem; margin-bottom: 1rem;">🤖</div>
-                            <div style="font-size: 1.5rem; color: #f9fafb;">AI/ML in Game Development</div>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">AI-Powered Gaming Innovation</h3>
-                        <p style="margin-bottom: 1.5rem;">This documentation consists of ideation for 4 groundbreaking
-                            AI/ML projects designed to revolutionize player experiences and game design.</p>
-
-                        <div
-                            style="background: rgba(168, 85, 247, 0.1); padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0; border-left: 4px solid #a855f7;">
-                            <h4 style="color: #a855f7; margin-bottom: 1rem; font-size: 1.1rem;">Featured Projects:</h4>
-                            <div style="display: grid; gap: 0.8rem;">
-                                <div style="display: flex; align-items: start; gap: 0.5rem;">
-                                    <span style="color: #ec4899; font-size: 1.2rem;">1️⃣</span>
-                                    <p style="color: #d1d5db; margin: 0;"><strong style="color: #f9fafb;">Adaptive AI
-                                            Game Companion</strong> - Dynamic NPCs that learn and adapt to player
-                                        behavior</p>
-                                </div>
-                                <div style="display: flex; align-items: start; gap: 0.5rem;">
-                                    <span style="color: #ec4899; font-size: 1.2rem;">2️⃣</span>
-                                    <p style="color: #d1d5db; margin: 0;"><strong
-                                            style="color: #f9fafb;">Voice-Controlled RPG Companion</strong> - Natural
-                                        language interaction with in-game characters</p>
-                                </div>
-                                <div style="display: flex; align-items: start; gap: 0.5rem;">
-                                    <span style="color: #ec4899; font-size: 1.2rem;">3️⃣</span>
-                                    <p style="color: #d1d5db; margin: 0;"><strong
-                                            style="color: #f9fafb;">Emotion-Reactive Difficulty System</strong> -
-                                        Real-time difficulty adjustment based on player emotions</p>
-                                </div>
-                                <div style="display: flex; align-items: start; gap: 0.5rem;">
-                                    <span style="color: #ec4899; font-size: 1.2rem;">4️⃣</span>
-                                    <p style="color: #d1d5db; margin: 0;"><strong style="color: #f9fafb;">Adaptive
-                                            Tactical Enemy AI+</strong> - Intelligent enemies that strategize and
-                                        counter player tactics</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div
-                            style="background: rgba(236, 72, 153, 0.1); padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0; border: 1px solid rgba(236, 72, 153, 0.3);">
-                            <p style="color: #ec4899; font-weight: bold; margin-bottom: 0.5rem; font-size: 1.1rem;">💡
-                                Vision:</p>
-                            <p style="color: #d1d5db; margin: 0;">Transforming the Gaming Era through innovative AI/ML
-                                integration that creates more immersive, responsive, and personalized gaming
-                                experiences.</p>
-                        </div>
-
-                        <div style="margin-top: 1.5rem;">
-                            <p style="color: #9ca3af; font-size: 0.95rem; margin-bottom: 1rem;">
-                                <strong style="color: #a855f7;">Technologies:</strong> Machine Learning, Natural
-                                Language Processing, Computer Vision, Reinforcement Learning
-                            </p>
-                            <p style="color: #9ca3af; font-size: 0.95rem;">
-                                <strong style="color: #a855f7;">Status:</strong> Ideation & Research Phase
-                            </p>
-                        </div>
-
-                        <button class="demo-btn"
-                            style="background: linear-gradient(135deg, #a855f7, #ec4899); margin-top: 1.5rem;"
-                            onclick="window.open('https://drive.google.com/file/d/1HxankP2SHJ2wziPpu7O4jBl_OHCTsPzx/view?usp=drive_link', '_blank')">📄
-                            View Full Documentation</button>
-                    </div>
-                </div>
+            <p class="build-period">📅 Jan 2025 – Present</p>
+            <p class="build-desc">
+              Turning the full GDD into a playable Unity prototype. Implementing stealth mechanics,
+              the enchanted cookie system, and the dual-playstyle combat branch.
+            </p>
+            <div class="build-progress-track" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="Cookie Heist progress: 35%">
+              <div class="build-progress-fill" style="width: 35%;"></div>
             </div>
-        </section>
-
-        <section id="collaborate"
-            style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1)); border-radius: 20px; margin: 2rem auto; padding: 4rem 2rem;">
-            <h2 class="section-title">Collaborate With Us</h2>
-            <div style="max-width: 800px; margin: 0 auto; text-align: center;">
-                <p style="font-size: 1.2rem; margin-bottom: 2rem; color: #d1d5db;">
-                    Looking for talented developers, artists, designers, or musicians to collaborate on exciting game
-                    projects! Whether you're an indie developer, a creative artist, or someone passionate about game
-                    development, let's create something amazing together.
-                </p>
-
-                <div
-                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin: 3rem 0;">
-                    <div
-                        style="background: rgba(31, 41, 55, 0.5); padding: 2rem; border-radius: 15px; border: 1px solid rgba(96, 165, 250, 0.2);">
-                        <div style="font-size: 3rem; margin-bottom: 1rem;">🎨</div>
-                        <h3 style="color: #f9fafb; margin-bottom: 0.5rem;">Artists</h3>
-                        <p style="color: #9ca3af;">2D/3D artists, animators, UI/UX designers</p>
-                    </div>
-
-                    <div
-                        style="background: rgba(31, 41, 55, 0.5); padding: 2rem; border-radius: 15px; border: 1px solid rgba(96, 165, 250, 0.2);">
-                        <div style="font-size: 3rem; margin-bottom: 1rem;">💻</div>
-                        <h3 style="color: #f9fafb; margin-bottom: 0.5rem;">Developers</h3>
-                        <p style="color: #9ca3af;">Programmers, technical artists, engine specialists</p>
-                    </div>
-
-                    <div
-                        style="background: rgba(31, 41, 55, 0.5); padding: 2rem; border-radius: 15px; border: 1px solid rgba(96, 165, 250, 0.2);">
-                        <div style="font-size: 3rem; margin-bottom: 1rem;">🎵</div>
-                        <h3 style="color: #f9fafb; margin-bottom: 0.5rem;">Sound Designers</h3>
-                        <p style="color: #9ca3af;">Music composers, audio engineers, voice actors</p>
-                    </div>
-
-                    <div
-                        style="background: rgba(31, 41, 55, 0.5); padding: 2rem; border-radius: 15px; border: 1px solid rgba(96, 165, 250, 0.2);">
-                        <div style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
-                        <h3 style="color: #f9fafb; margin-bottom: 0.5rem;">Writers</h3>
-                        <p style="color: #9ca3af;">Narrative designers, story writers, quest designers</p>
-                    </div>
-                </div>
-
-                <p style="font-size: 1.1rem; margin: 2rem 0; color: #9ca3af;">
-                    <strong style="color: #60a5fa;">What We Offer:</strong> Creative freedom, skill development
-                    opportunities, portfolio-worthy projects, and a collaborative environment where your ideas matter.
-                </p>
-
-                <a href="#contact" class="cta-btn" style="margin-top: 1rem;">Join Our Team</a>
+            <p class="build-progress-label">35% — Core mechanics in development</p>
+            <div class="build-tags">
+              <span class="build-tag">Unity</span>
+              <span class="build-tag">C#</span>
+              <span class="build-tag">Stealth</span>
             </div>
-        </section>
+          </div>
+        </div>
 
-        <section id="contact">
-            <h2 class="section-title">Get In Touch</h2>
-            <div style="text-align: center; margin-bottom: 2rem;">
-                <p style="font-size: 1.1rem; color: #9ca3af; margin-bottom: 0.5rem;">Have a project in mind or want to
-                    collaborate?</p>
-                <p style="font-size: 1.2rem; color: #60a5fa;">📧 <a href="mailto:shriyanshagr@gmail.com"
-                        style="color: #60a5fa; text-decoration: none;">shriyanshagr@gmail.com</a></p>
+        <div class="build-item">
+          <div class="build-marker" aria-hidden="true"></div>
+          <div class="build-content">
+            <div class="build-header">
+              <h3>The Cure — 30-Day Demo</h3>
+              <span class="build-status build-status--progress">In Progress</span>
             </div>
-            <form class="contact-form" action="https://formsubmit.co/shriyanshagr@gmail.com" method="POST">
-                <input type="hidden" name="_subject" value="New Contact Form Submission from Portfolio">
-                <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_next" value="https://yourdomain.com/thank-you.html">
-                <div class="form-group">
-                    <div class="form-row">
-                        <input type="text" name="name" placeholder="Your Name" required>
-                        <input type="email" name="email" placeholder="Your Email" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <textarea name="message" placeholder="Your Message" rows="6" required></textarea>
-                </div>
-                <button type="submit" class="submit-btn">Send Message</button>
-            </form>
-
-            <div class="social-links">
-                <a href="https://github.com/Shriyansh110805" target="_blank" rel="noopener noreferrer"
-                    class="social-link" title="GitHub" aria-label="GitHub">🐙</a>
-                <a href="https://www.instagram.com/shriyanshagrawal4?igsh=Z3Q4eGNoeWgzMGc1&utm_source=qr"
-                    target="_blank" rel="noopener noreferrer" class="social-link" title="Instagram"
-                    aria-label="Instagram">📷</a>
-                <a href="https://shriyansh-agrawal1.itch.io/" target="_blank" rel="noopener noreferrer"
-                    class="social-link" title="Itch.io" aria-label="Itch.io">🎮</a>
-                <a href="http://www.linkedin.com/in/shriyansh-agrawal-0009782a1" target="_blank"
-                    rel="noopener noreferrer" class="social-link" title="LinkedIn" aria-label="LinkedIn">👔</a>
+            <p class="build-period">📅 Feb 2025 – Present</p>
+            <p class="build-desc">
+              30-day sprint to build a playable UE5 demo of the open-world zombie shooter.
+              Focus on semi-open world traversal, infected wave spawning, and scavenging loop.
+            </p>
+            <div class="build-progress-track" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" aria-label="The Cure progress: 20%">
+              <div class="build-progress-fill" style="width: 20%;"></div>
             </div>
-        </section>
-    </main>
+            <p class="build-progress-label">20% — World layout &amp; movement</p>
+            <div class="build-tags">
+              <span class="build-tag">Unreal Engine 5</span>
+              <span class="build-tag">C++</span>
+              <span class="build-tag">Blueprint</span>
+            </div>
+          </div>
+        </div>
 
-    <footer>
-        <p>&copy; 2024 Shriyansh GameDev. All rights reserved.</p>
-    </footer>
+        <div class="build-item">
+          <div class="build-marker build-marker--planned" aria-hidden="true"></div>
+          <div class="build-content">
+            <div class="build-header">
+              <h3>College Life Simulator</h3>
+              <span class="build-status build-status--planned">Team Forming</span>
+            </div>
+            <p class="build-period">📅 Mid 2025 — Planned Start</p>
+            <p class="build-desc">
+              2D &amp; 3D hybrid narrative game set in Dehradun. Waiting on full team assembly
+              before kicking off production — currently recruiting artists, writers &amp; programmers.
+            </p>
+            <div class="build-progress-track" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" aria-label="College Life Simulator progress: 5%">
+              <div class="build-progress-fill build-progress-fill--planned" style="width: 5%;"></div>
+            </div>
+            <p class="build-progress-label">5% — Pre-production &amp; team recruitment</p>
+            <div class="build-tags">
+              <span class="build-tag">Unity / UE5</span>
+              <span class="build-tag">Narrative Design</span>
+              <span class="build-tag">Team Project</span>
+            </div>
+          </div>
+        </div>
 
-    <script>
-        // Mobile menu toggle
-        const mobileToggle = document.getElementById('mobileToggle');
-        const navLinks = document.getElementById('navLinks');
+      </div>
+    </section>
 
-        mobileToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
+    <!-- Bridge: visual connector between timeline and achievements -->
+    <div class="section-bridge" aria-hidden="true">
+      <div class="section-bridge__line"></div>
+      <span class="section-bridge__label">Achievements &amp; Milestones</span>
+      <div class="section-bridge__line"></div>
+    </div>
 
-        // Close mobile menu when clicking on a link
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-            });
-        });
+    <!-- ================================================================
+         ACHIEVEMENTS
+    ================================================================ -->
+    <section class="section section-alt" id="achievements" data-view="college" aria-labelledby="achievements-heading">
+      <h2 class="section-title" id="achievements-heading">Achievements &amp; Activities</h2>
+      <div class="skills-grid" role="list">
 
-        // Demo button handler
-        function showDemo(gameName) {
-            alert('${gameName}\n\nCurrently working on it. Stay tuned for the demo release!');
-        }
+        <article class="skill-card" role="listitem" aria-label="Academic performance">
+          <span class="skill-icon" aria-hidden="true" style="color: var(--color-accent);">🏆</span>
+          <h3>Academic Excellence</h3>
+          <p>Consistent performance in Game Design &amp; Programming modules</p>
+        </article>
 
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const href = this.getAttribute('href');
-                if (href !== '#' && href !== '#resume.pdf') {
-                    e.preventDefault();
-                    const target = document.querySelector(href);
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                }
-            });
-        });
-    </script>
+        <article class="skill-card" role="listitem" aria-label="Game jam">
+          <span class="skill-icon" aria-hidden="true" style="color: var(--color-primary);">🎮</span>
+          <h3>Game Jam Participant</h3>
+          <p>Built full game prototypes under tight time constraints in collegiate game jams</p>
+        </article>
+
+        <article class="skill-card" role="listitem" aria-label="Published GDDs">
+          <span class="skill-icon" aria-hidden="true" style="color: var(--color-warning);">📁</span>
+          <h3>Published GDDs</h3>
+          <p>Created and published 2 complete Game Design Documents for original IP concepts</p>
+        </article>
+
+        <article class="skill-card" role="listitem" aria-label="Team leadership">
+          <span class="skill-icon" aria-hidden="true" style="color: var(--color-orange);">🤝</span>
+          <h3>Team Leadership</h3>
+          <p>Leading College Life Simulator — recruiting and managing a cross-discipline team</p>
+        </article>
+
+        <article class="skill-card" role="listitem" aria-label="Self-directed learning">
+          <span class="skill-icon" aria-hidden="true" style="color: var(--color-secondary);">📚</span>
+          <h3>Self-Directed Learning</h3>
+          <p>Mastered Unity, Unreal Engine &amp; After Effects alongside coursework</p>
+        </article>
+
+        <article class="skill-card" role="listitem" aria-label="Typography Studio project">
+          <span class="skill-icon" aria-hidden="true" style="color: var(--color-accent);">✏️</span>
+          <h3>Typography Studio</h3>
+          <p>Built a full interactive educational web app on typography psychology &amp; brand identity</p>
+          <a href="Typography_Studio/index.html" target="_blank" rel="noopener" style="display: inline-block; margin-top: var(--space-3); font-size: 0.8rem; color: var(--color-accent); font-weight: 600; text-decoration: none;" aria-label="Open Typography Studio">View Project →</a>
+        </article>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================================================================
+       LANGUAGE PROJECTS MODAL
+  ================================================================ -->
+  <div class="lang-modal-overlay" id="langModalOverlay" role="dialog" aria-modal="true" aria-labelledby="langModalTitle" aria-hidden="true">
+    <div class="lang-modal" id="langModal">
+
+      <div class="lang-modal-header">
+        <div class="lang-modal-title-group">
+          <span class="lang-modal-icon" id="langModalIcon" aria-hidden="true"></span>
+          <h2 class="lang-modal-title" id="langModalTitle"></h2>
+        </div>
+        <button class="lang-modal-close" id="langModalClose" aria-label="Close projects panel">✕</button>
+      </div>
+
+      <div class="lang-modal-body">
+        <div class="projects-grid" id="langModalGrid"></div>
+        <p class="lang-modal-empty" id="langModalEmpty">
+          No projects added yet for this language — check back soon!
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================================================================
+       FOOTER
+  ================================================================ -->
+  <footer role="contentinfo">
+    <p>
+      &copy; <span id="footerYear"></span>
+      <a href="#home">Shriyansh GameDev</a>. All rights reserved.
+    </p>
+  </footer>
+
+  <!-- Back to Top -->
+  <a href="#home" class="back-to-top" id="backToTop" aria-label="Back to top of page">↑</a>
+
+  <!-- JavaScript -->
+  <script src="js/main.js" defer></script>
+
 </body>
-
 </html>

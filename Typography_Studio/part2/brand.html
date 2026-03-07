@@ -131,12 +131,13 @@
             }
         }
         
-        /* Back Button */
+        /* Back Button — sticky so it works inside the SPA scroll container */
         .back-button {
-            position: fixed;
-            top: 30px;
-            left: 40px;
-            z-index: 1000;
+            position: sticky;
+            top: 20px;
+            display: inline-block;
+            margin: 24px 0 0 40px;
+            z-index: 100;
             background: rgba(255,255,255,0.08);
             border: 1px solid rgba(255,255,255,0.15);
             padding: 14px 28px;
@@ -154,21 +155,16 @@
             transform: translateX(-4px);
             border-color: rgba(255,255,255,0.25);
         }
-        
-        /* Breadcrumb */
+
+        /* Breadcrumb — inline bar below the back button */
         .breadcrumb {
-            position: fixed;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 12px 24px;
-            border-radius: 24px;
-            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 40px;
             font-size: 13px;
             color: #888;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
         }
         .breadcrumb-item {
             display: inline;
@@ -1116,15 +1112,17 @@
             }, 300);
         }
         
-        // Keyboard navigation for switcher tabs
+        // Keyboard navigation for switcher tabs — null-guarded for SPA safety
         document.addEventListener('keydown', (e) => {
+            const switcher = document.getElementById('brandSwitcher');
+            if (!switcher || !switcher.classList.contains('active')) return;
+
             const tabs = document.querySelectorAll('.switcher-tab');
             const activeTab = document.querySelector('.switcher-tab.active');
-            
-            if (!activeTab || !document.getElementById('brandSwitcher').classList.contains('active')) return;
-            
+            if (!activeTab || !tabs.length) return;
+
             let currentIndex = Array.from(tabs).indexOf(activeTab);
-            
+
             if (e.key === 'ArrowRight') {
                 e.preventDefault();
                 currentIndex = (currentIndex + 1) % tabs.length;

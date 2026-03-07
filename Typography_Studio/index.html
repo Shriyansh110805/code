@@ -60,14 +60,8 @@
         }
         
         @keyframes pageEnter {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; }
+            to   { opacity: 1; }
         }
         
         /* Hero Section (Home only) */
@@ -172,10 +166,10 @@
     <div class="loading-indicator" id="loading-indicator"></div>
     
     <!-- Global Navigation -->
-    <nav class="nav-global" id="nav">
+    <nav class="nav-global" id="nav" aria-label="Main navigation">
         <div class="nav-content">
-            <a href="#/" class="nav-logo" data-route="/">Typography Studio</a>
-            <ul class="nav-links">
+            <a href="#/" class="nav-logo" data-route="/" aria-label="Typography Studio — Home">Typography Studio</a>
+            <ul class="nav-links" id="navLinks">
                 <li><a href="#/anatomy" class="nav-link" data-route="/anatomy">Anatomy</a></li>
                 <li><a href="#/classification" class="nav-link" data-route="/classification">Classification</a></li>
                 <li><a href="#/comparison" class="nav-link" data-route="/comparison">Comparison</a></li>
@@ -185,7 +179,29 @@
                 <li><a href="#/brand" class="nav-link" data-route="/brand">Brand</a></li>
                 <li><a href="#/poster" class="btn btn-primary" data-route="/poster">View Showcase</a></li>
             </ul>
+            <button
+                class="nav-hamburger"
+                id="navHamburger"
+                aria-expanded="false"
+                aria-controls="mobileNav"
+                aria-label="Toggle navigation menu"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
+    </nav>
+
+    <!-- Mobile Navigation Drawer -->
+    <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+        <a href="#/anatomy" class="mobile-nav-link" data-route="/anatomy">Anatomy</a>
+        <a href="#/classification" class="mobile-nav-link" data-route="/classification">Classification</a>
+        <a href="#/comparison" class="mobile-nav-link" data-route="/comparison">Comparison</a>
+        <a href="#/psychology" class="mobile-nav-link" data-route="/psychology">Psychology</a>
+        <a href="#/expressive" class="mobile-nav-link" data-route="/expressive">Expressive</a>
+        <a href="#/poster" class="mobile-nav-link" data-route="/poster">Showcase</a>
+        <a href="#/brand" class="mobile-nav-link" data-route="/brand">Brand</a>
     </nav>
     
     <!-- App Container -->
@@ -199,6 +215,26 @@
         <p style="color: var(--text-muted); font-size: var(--text-sm);">Typography Studio © 2026 | Professional Design Education</p>
     </footer>
     
+    <!-- Mobile nav toggle -->
+    <script>
+        const hamburger = document.getElementById('navHamburger');
+        const mobileNav = document.getElementById('mobileNav');
+        hamburger.addEventListener('click', () => {
+            const isOpen = hamburger.classList.toggle('open');
+            mobileNav.classList.toggle('open', isOpen);
+            hamburger.setAttribute('aria-expanded', String(isOpen));
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        });
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('open');
+                mobileNav.classList.remove('open');
+                hamburger.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            });
+        });
+    </script>
+
     <!-- App Router & Controller -->
     <script src="app-router.js"></script>
 </body>

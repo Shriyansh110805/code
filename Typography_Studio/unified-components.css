@@ -171,7 +171,8 @@ li {
     color: var(--nav-link-hover);
 }
 
-.nav-link.active::after {
+.nav-link.active::after,
+.nav-link[aria-current="page"]::after {
     content: '';
     position: absolute;
     bottom: -4px;
@@ -179,6 +180,70 @@ li {
     right: 0;
     height: 2px;
     background: var(--accent-primary);
+}
+
+/* Hamburger button */
+.nav-hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: var(--radius-sm);
+}
+
+.nav-hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--text-tertiary);
+    border-radius: 2px;
+    transition: transform var(--transition-base), opacity var(--transition-fast);
+}
+
+.nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.nav-hamburger:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+/* Mobile navigation drawer */
+.mobile-nav {
+    display: none;
+    position: fixed;
+    top: var(--nav-height);
+    left: 0;
+    right: 0;
+    background: var(--nav-bg);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-default);
+    flex-direction: column;
+    padding: var(--space-4) var(--space-6);
+    gap: var(--space-1);
+    z-index: calc(var(--z-fixed) - 1);
+}
+
+.mobile-nav.open { display: flex; }
+
+.mobile-nav-link {
+    color: var(--text-tertiary);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    transition: color var(--transition-fast), background var(--transition-fast);
+    text-decoration: none;
+}
+
+.mobile-nav-link:hover {
+    color: var(--text-primary);
+    background: var(--surface-hover);
+    text-decoration: none;
 }
 
 /* ============================================
@@ -722,7 +787,11 @@ table tbody tr:hover {
     }
 
     .nav-links {
-        gap: var(--space-4);
+        display: none;
+    }
+
+    .nav-hamburger {
+        display: flex;
     }
 
     .section-title {
@@ -749,6 +818,15 @@ table tbody tr:hover {
 *:focus-visible {
     outline: 2px solid var(--accent-primary);
     outline-offset: 2px;
+}
+
+/* Reduced motion — WCAG 2.3.3 */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
 }
 
 /* ============================================

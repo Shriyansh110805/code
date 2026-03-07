@@ -47,6 +47,12 @@
     --accent-primary-active: #4f46e5; /* Active state (6.88:1) */
     --accent-secondary: #8b5cf6;     /* Secondary accent */
     --accent-tertiary: #ec4899;      /* Tertiary accent */
+    --accent: #6366f1;               /* Alias → --accent-primary (quiz compat) */
+
+    /* Primitive aliases used by quiz files */
+    --white: #ffffff;
+    --black: #000000;
+    --light-gray: #f5f5f5;
     
     /* Semantic Color Tokens */
     --color-success: #10b981;        /* Success states (9.45:1) */
