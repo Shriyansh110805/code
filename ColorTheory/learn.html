@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Color Theory — Interactive Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="learn.css">
+
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><div class="aurora-b"></div><div class="aurora-b"></div><div class="aurora-b"></div></div>
+
+<nav>
+  <span class="nav-logo">Color Theory</span>
+  <ul class="nav-pills">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#intro">What is CT</a></li>
+    <li><a href="#wheel">The Wheel</a></li>
+    <li><a href="#properties">Properties</a></li>
+    <li><a href="#harmony">Harmony</a></li>
+    <li><a href="#psychology">Psychology</a></li>
+    <li><a href="#ingames">In Design</a></li>
+    <li><a href="#design">Your Design</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section id="home">
+  <div class="hero-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div><div class="orb orb-2"></div>
+    <div class="orb orb-3"></div><div class="orb orb-4"></div>
+  </div>
+  <div class="eyebrow reveal">Interactive Learning Guide</div>
+  <h1 class="hero-title reveal d1">Color Theory</h1>
+  <p class="hero-sub reveal d2">Every great design starts with understanding color. Learn visually — hover, drag, and interact your way through all 10 core concepts.</p>
+  <div class="hero-tags reveal d3">
+    <span class="tag"><span class="tag-dot" style="background:#ef4444"></span>Color Wheel</span>
+    <span class="tag"><span class="tag-dot" style="background:#fbbf24"></span>Harmony</span>
+    <span class="tag"><span class="tag-dot" style="background:#60a5fa"></span>Properties</span>
+    <span class="tag"><span class="tag-dot" style="background:#10b981"></span>Psychology</span>
+    <span class="tag"><span class="tag-dot" style="background:#a78bfa"></span>60-30-10</span>
+  </div>
+  <a href="game.html" class="btn-play reveal d4"><span>🎮</span> Play ColorQuest Game</a>
+  <div class="scroll-hint"><span>Scroll to explore</span><span>↓</span></div>
+</section>
+
+<!-- ═══════════ WHAT IS COLOR THEORY ═══════════ -->
+<section id="intro">
+  <div class="eyebrow reveal">Chapter 1</div>
+  <h2 class="sec-title reveal d1">What is Color Theory?</h2>
+  <p class="sec-sub reveal d2">A set of rules for how colors interact and affect emotion. Click a mood below — watch the same UI transform completely.</p>
+
+  <div class="mood-cards reveal d2">
+    <div class="mood-card mood-horror" data-mood="horror" role="button" tabindex="0">
+      <div class="mood-icon">👻</div>
+      <div class="mood-label">Horror Game</div>
+      <div class="mood-palette">
+        <div class="mood-dot" style="background:#1a2e0d"></div>
+        <div class="mood-dot" style="background:#2e1212"></div>
+        <div class="mood-dot" style="background:#0d0d0d"></div>
+        <div class="mood-dot" style="background:#4a1a1a"></div>
+      </div>
+      <div class="mood-desc">Dark greens + reds → tension, fear, unease</div>
+    </div>
+    <div class="mood-card mood-happy active-mood" data-mood="happy" role="button" tabindex="0">
+      <div class="mood-icon">🌟</div>
+      <div class="mood-label">Happy Animation</div>
+      <div class="mood-palette">
+        <div class="mood-dot" style="background:#fbbf24"></div>
+        <div class="mood-dot" style="background:#60a5fa"></div>
+        <div class="mood-dot" style="background:#f97316"></div>
+        <div class="mood-dot" style="background:#34d399"></div>
+      </div>
+      <div class="mood-desc">Bright yellows + blues → joy, energy, playfulness</div>
+    </div>
+    <div class="mood-card mood-pro" data-mood="pro" role="button" tabindex="0">
+      <div class="mood-icon">💼</div>
+      <div class="mood-label">Professional UI</div>
+      <div class="mood-palette">
+        <div class="mood-dot" style="background:#1e293b"></div>
+        <div class="mood-dot" style="background:#334155"></div>
+        <div class="mood-dot" style="background:#94a3b8"></div>
+        <div class="mood-dot" style="background:#f97316"></div>
+      </div>
+      <div class="mood-desc">Neutrals + one accent → trust, clarity, focus</div>
+    </div>
+  </div>
+
+  <!-- Live UI Preview — morphs with each mood click -->
+  <div class="mood-preview reveal d3">
+    <div class="mp-ui">
+      <div class="mp-nav" id="mpNav">
+        <div class="mp-nav-logo" id="mpNavLogo"></div>
+        <div class="mp-nav-links">
+          <div class="mp-navl" id="mpNavL1"></div>
+          <div class="mp-navl" id="mpNavL2"></div>
+          <button class="mp-nav-btn" id="mpNavBtn"></button>
+        </div>
+      </div>
+      <div class="mp-hero" id="mpHero">
+        <div class="mp-hero-text">
+          <div class="mp-h1" id="mpH1"></div>
+          <div class="mp-h2" id="mpH2"></div>
+          <button class="mp-cta" id="mpCta"></button>
+        </div>
+        <div class="mp-hero-img" id="mpHeroImg"></div>
+      </div>
+      <div class="mp-cards" id="mpCardsArea">
+        <div class="mp-card" id="mpCard1"><div class="mp-card-icon" id="mpIcon1"></div><div class="mp-card-bar" id="mpCbar1"></div></div>
+        <div class="mp-card" id="mpCard2"><div class="mp-card-icon" id="mpIcon2"></div><div class="mp-card-bar" id="mpCbar2"></div></div>
+        <div class="mp-card" id="mpCard3"><div class="mp-card-icon" id="mpIcon3"></div><div class="mp-card-bar" id="mpCbar3"></div></div>
+      </div>
+    </div>
+    <div class="mp-label">
+      <span class="mp-label-icon" id="mpLabelIcon">🌟</span>
+      <span id="mpLabelText">Happy Animation — bright, energetic, playful palette</span>
+    </div>
+  </div>
+
+  <!-- Before / After: same design, good vs bad color choices -->
+  <div class="ba-wrap reveal d3">
+    <div class="ba-header">
+      <span class="ba-title">Why does it matter?</span>
+      <div class="ba-toggle">
+        <button class="ba-btn" id="baBadBtn">😬 No Color Theory</button>
+        <button class="ba-btn active" id="baGoodBtn">✨ With Color Theory</button>
+      </div>
+    </div>
+    <div class="ba-preview">
+      <div class="ba-mini-nav" id="baMiniNav">
+        <div class="ba-mini-logo" id="baMiniLogo"></div>
+        <button class="ba-mini-btn" id="baMiniBtn">Sign Up</button>
+      </div>
+      <div class="ba-mini-body" id="baMiniBody">
+        <div class="ba-mini-bar ba-mb1" id="baMb1"></div>
+        <div class="ba-mini-bar ba-mb2" id="baMb2"></div>
+        <div class="ba-mini-bar ba-mb3" id="baMb3"></div>
+      </div>
+    </div>
+    <div class="ba-insight" id="baInsight">Color theory applied: dark neutral background · cool blue accent · clear visual hierarchy. Every color is intentional.</div>
+  </div>
+
+  <div class="sec-footer reveal">
+    <div class="qf"><span class="qf-i">💡</span><span class="qf-t"><strong>Did you know?</strong> Humans can distinguish approximately 10 million different colors. Color is the first thing we notice — even before shape or text.</span></div>
+    <a href="#wheel" class="btn-next">Chapter 2: The Wheel →</a>
+  </div>
+</section>
+
+<!-- ═══════════ THE COLOR WHEEL ═══════════ -->
+<section id="wheel">
+  <div class="eyebrow reveal">Chapter 2</div>
+  <h2 class="sec-title reveal d1">The Color Wheel</h2>
+  <p class="sec-sub reveal d2">All colors live on a circular structure. Hover anywhere on the wheel to see the color's name and position.</p>
+
+  <div class="two-col reveal d2" style="max-width:820px;align-items:center;">
+    <div class="wheel-wrap">
+      <div id="wheelTooltip">
+        <span id="ttSwatch" style="width:12px;height:12px;border-radius:3px;display:inline-block;flex-shrink:0;"></span>
+        <span id="ttText"></span>
+      </div>
+      <canvas id="wheelCanvas" width="310" height="310"></canvas>
+      <p style="font-size:.72rem;color:var(--dim);margin-top:.35rem;">🖱 Hover to explore · Click to inspect · P=Primary · S=Secondary</p>
+      <div id="wheelDrawer" class="wheel-drawer">
+        <div class="wd-inner">
+          <div class="wd-row1">
+            <div id="wdSwatch" style="width:52px;height:52px;border-radius:13px;flex-shrink:0;"></div>
+            <div class="wd-meta">
+              <div class="wd-name-text" id="wdName">Red</div>
+              <div class="wd-hex-text" id="wdHex">#ff0000</div>
+              <div id="wdType" class="wd-type-badge wd-type-primary">Primary</div>
+            </div>
+          </div>
+          <div class="wd-row2">
+            <div><div class="wd-mini-label">Complement</div><div id="wdComp" class="wd-mini-swatch"></div></div>
+            <div><div class="wd-mini-label">Analogous</div><div class="wd-analogs-row" id="wdAnalogs"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="legend-section">
+        <p class="legend-title">🔴 Primary — Cannot be mixed (RGB Light)</p>
+        <div class="legend-chips">
+          <div class="lchip"><div class="ldot" style="background:#e60000"></div>Red</div>
+          <div class="lchip"><div class="ldot" style="background:#00cc00"></div>Green</div>
+          <div class="lchip"><div class="ldot" style="background:#0033cc"></div>Blue</div>
+        </div>
+      </div>
+      <div class="legend-section">
+        <p class="legend-title">🟡 Secondary — Two primaries mixed</p>
+        <div class="legend-chips">
+          <div class="lchip"><div class="ldot" style="background:#ffd700"></div>Yellow</div>
+          <div class="lchip"><div class="ldot" style="background:#00cccc"></div>Cyan</div>
+          <div class="lchip"><div class="ldot" style="background:#cc00cc"></div>Magenta</div>
+        </div>
+      </div>
+      <div class="legend-section">
+        <p class="legend-title">🌈 Tertiary — Primary + nearby Secondary</p>
+        <div class="legend-chips">
+          <div class="lchip"><div class="ldot" style="background:#ff6600"></div>Orange</div>
+          <div class="lchip"><div class="ldot" style="background:#88cc00"></div>Chartreuse</div>
+          <div class="lchip"><div class="ldot" style="background:#00cc66"></div>Spring Green</div>
+          <div class="lchip"><div class="ldot" style="background:#0088aa"></div>Azure</div>
+          <div class="lchip"><div class="ldot" style="background:#6600cc"></div>Violet</div>
+          <div class="lchip"><div class="ldot" style="background:#cc0066"></div>Rose</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-footer reveal">
+    <div class="qf"><span class="qf-i">🖥️</span><span class="qf-t"><strong>RGB model (digital screens):</strong> 3 Primary (R, G, B) + 3 Secondary (Y, C, M) + 6 Tertiary = 12 key hues. Screens add light together — all three primaries at full intensity = White.</span></div>
+    <a href="#mixing" class="btn-next">Mixing →</a>
+  </div>
+</section>
+
+<!-- ═══════════ PRIMARY + SECONDARY + TERTIARY ═══════════ -->
+<section id="mixing">
+  <div class="eyebrow reveal">Chapter 2 · cont.</div>
+  <h2 class="sec-title reveal d1">Mixing Colors</h2>
+  <p class="sec-sub reveal d2">Secondary colors are made by mixing two primaries. Hover each card to see the result animate.</p>
+
+  <div class="mix-grid reveal d2">
+    <div class="mix-card">
+      <div class="mix-formula">
+        <div class="mx-dot" style="background:#e60000;box-shadow:0 0 14px rgba(230,0,0,.6)"></div>
+        <span class="mx-op">+</span>
+        <div class="mx-dot" style="background:#00cc00;box-shadow:0 0 14px rgba(0,204,0,.6)"></div>
+        <span class="mx-op">=</span>
+      </div>
+      <div class="mx-res" style="background:#ffd700;box-shadow:0 0 22px rgba(255,215,0,.55)"></div>
+      <div class="mix-name">Yellow</div>
+      <div class="mix-desc">Red + Green → bright yellow. On screens, light adds up — combining red and green light produces yellow in the RGB additive model.</div>
+    </div>
+    <div class="mix-card">
+      <div class="mix-formula">
+        <div class="mx-dot" style="background:#00cc00;box-shadow:0 0 14px rgba(0,204,0,.6)"></div>
+        <span class="mx-op">+</span>
+        <div class="mx-dot" style="background:#0033cc;box-shadow:0 0 14px rgba(0,51,204,.6)"></div>
+        <span class="mx-op">=</span>
+      </div>
+      <div class="mx-res" style="background:#00cccc;box-shadow:0 0 22px rgba(0,204,204,.55)"></div>
+      <div class="mix-name">Cyan</div>
+      <div class="mix-desc">Green + Blue → cool, electric cyan. Used in digital UI highlights, neon effects, and tech branding.</div>
+    </div>
+    <div class="mix-card">
+      <div class="mix-formula">
+        <div class="mx-dot" style="background:#0033cc;box-shadow:0 0 14px rgba(0,51,204,.6)"></div>
+        <span class="mx-op">+</span>
+        <div class="mx-dot" style="background:#e60000;box-shadow:0 0 14px rgba(230,0,0,.6)"></div>
+        <span class="mx-op">=</span>
+      </div>
+      <div class="mx-res" style="background:#cc00cc;box-shadow:0 0 22px rgba(204,0,204,.55)"></div>
+      <div class="mix-name">Magenta</div>
+      <div class="mix-desc">Blue + Red → vibrant magenta. Used in digital gradients, UI accents, and creative digital branding.</div>
+    </div>
+  </div>
+
+  <div class="eyebrow reveal" style="margin-top:2.5rem;">Tertiary Colors</div>
+  <p class="sec-sub reveal" style="margin-bottom:1.25rem;margin-top:.5rem;">Mix a primary with a neighboring secondary for more complex, subtle hues.</p>
+
+  <div class="tertiary-grid reveal d2">
+    <div class="tert-chip"><div class="tert-swatch" style="background:#ff6600"></div><div class="tert-label">Orange (R+Y)</div></div>
+    <div class="tert-chip"><div class="tert-swatch" style="background:#88cc00"></div><div class="tert-label">Chartreuse (Y+G)</div></div>
+    <div class="tert-chip"><div class="tert-swatch" style="background:#00cc66"></div><div class="tert-label">Spring Green (G+C)</div></div>
+    <div class="tert-chip"><div class="tert-swatch" style="background:#0088cc"></div><div class="tert-label">Azure (C+B)</div></div>
+    <div class="tert-chip"><div class="tert-swatch" style="background:#6600cc"></div><div class="tert-label">Violet (B+M)</div></div>
+    <div class="tert-chip"><div class="tert-swatch" style="background:#cc0066"></div><div class="tert-label">Rose (M+R)</div></div>
+  </div>
+
+  <div class="mix-lab reveal d3" id="mixLab">
+    <div class="mix-lab-title">Interactive Mixing Lab — Pick two colors to mix</div>
+    <div class="mix-lab-pickers" id="mixPickers">
+      <div class="mix-lab-btn" id="mA" data-color="none" style="background:var(--panel-b);border:2px dashed var(--bhi);display:flex;align-items:center;justify-content:center;font-size:1.4rem;">?</div>
+      <span class="mix-lab-op">+</span>
+      <div class="mix-lab-btn" id="mB" data-color="none" style="background:var(--panel-b);border:2px dashed var(--bhi);display:flex;align-items:center;justify-content:center;font-size:1.4rem;">?</div>
+      <span class="mix-lab-op">=</span>
+      <div class="mix-lab-result">
+        <div class="mix-lab-res-swatch" id="mixResult" style="background:var(--panel-b);"></div>
+        <div class="mix-lab-res-name" id="mixResultName">?</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:.55rem;flex-wrap:wrap;justify-content:center;">
+      <div class="mix-lab-btn" data-pick="#e60000" style="background:#e60000;" title="Red"></div>
+      <div class="mix-lab-btn" data-pick="#00cc00" style="background:#00cc00;" title="Green"></div>
+      <div class="mix-lab-btn" data-pick="#0033cc" style="background:#0033cc;" title="Blue"></div>
+    </div>
+    <div class="mix-lab-res-hint" id="mixHint">Select two primary colors above to see what they make</div>
+    <button class="mix-lab-mix-btn" id="mixBtn" disabled>Mix!</button>
+  </div>
+
+  <div class="sec-footer reveal">
+    <div class="qf"><span class="qf-i">🖌️</span><span class="qf-t"><strong>More colors = more nuance:</strong> Tertiary colors create subtle, complex palettes used in cinematic and environmental design where natural variety is needed.</span></div>
+    <a href="#properties" class="btn-next">Chapter 3: Properties →</a>
+  </div>
+</section>
+
+<!-- ═══════════ PROPERTIES ═══════════ -->
+<section id="properties">
+  <div class="eyebrow reveal">Chapter 3</div>
+  <h2 class="sec-title reveal d1">Color Properties</h2>
+  <p class="sec-sub reveal d2">Every color has 3 dimensions — Hue, Saturation, and Value. Drag the sliders to see them change live.</p>
+
+  <div class="hsl-picker reveal d2">
+    <div class="picker-sq-wrap">
+      <p class="picker-label">Saturation &amp; Lightness</p>
+      <div style="position:relative;display:inline-block;">
+        <canvas id="pickerSq" width="180" height="180" style="border-radius:10px;display:block;cursor:crosshair;"></canvas>
+        <div id="pickerCross" style="position:absolute;width:14px;height:14px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 0 6px rgba(0,0,0,.9);pointer-events:none;transform:translate(-50%,-50%);top:0;left:100%;"></div>
+      </div>
+    </div>
+    <div class="picker-hue-wrap">
+      <p class="picker-label">Hue</p>
+      <div style="position:relative;display:inline-block;">
+        <canvas id="pickerHue" width="22" height="180" style="border-radius:6px;display:block;cursor:ns-resize;"></canvas>
+        <div id="pickerHueThumb" style="position:absolute;left:-5px;right:-5px;height:8px;border:2.5px solid #fff;border-radius:3px;box-shadow:0 0 6px rgba(0,0,0,.9);pointer-events:none;transform:translateY(-50%);top:0;"></div>
+      </div>
+    </div>
+    <div class="picker-output">
+      <p class="picker-label">Color Output</p>
+      <div id="pickerPreview"></div>
+      <div id="pickerHex">#FF0000</div>
+      <div id="pickerHslVals">H: 0° &nbsp;S: 100% &nbsp;L: 50%</div>
+      <p style="font-size:.7rem;color:var(--dim);margin-top:.2rem;">Click or drag on the square and bar</p>
+    </div>
+  </div>
+
+  <div class="prop-cards reveal d3" style="margin-top:2rem;">
+    <div class="prop-card">
+      <div class="prop-icon">🎨</div>
+      <div class="prop-name">Hue</div>
+      <div class="prop-def">The pure color name — red, blue, green. It's the position on the color wheel. Everything starts here.</div>
+    </div>
+    <div class="prop-card">
+      <div class="prop-icon">⚡</div>
+      <div class="prop-name">Saturation</div>
+      <div class="prop-def">Intensity of the color. High sat = vivid game UI. Low sat = cinematic, realistic environments.</div>
+    </div>
+    <div class="prop-card">
+      <div class="prop-icon">☀️</div>
+      <div class="prop-name">Value / Brightness</div>
+      <div class="prop-def">Lightness vs darkness. Artists use value contrast to create depth, shadows, and visual hierarchy.</div>
+    </div>
+  </div>
+
+  <!-- WARM vs COOL embedded here -->
+  <div class="eyebrow reveal" style="margin-top:3rem;">Warm vs Cool</div>
+  <p class="sec-sub reveal" style="margin-top:.5rem;margin-bottom:1.25rem;">Colors are grouped by the temperature they feel. Hover each color to see where it's used.</p>
+
+  <div class="wc-split reveal d2">
+    <div class="wc-side">
+      <div class="wc-side-title">🔥 Warm Colors</div>
+      <div class="wc-dots">
+        <div class="wc-dot" style="background:#e60000" title="Red — danger, energy, action"></div>
+        <div class="wc-dot" style="background:#ff4400" title="Red-Orange — excitement"></div>
+        <div class="wc-dot" style="background:#ff7700" title="Orange — warmth, adventure"></div>
+        <div class="wc-dot" style="background:#ffaa00" title="Amber — attention, caution"></div>
+        <div class="wc-dot" style="background:#ffd700" title="Yellow — happiness, speed"></div>
+        <div class="wc-dot" style="background:#ffe066" title="Light Yellow — optimism"></div>
+      </div>
+      <div class="wc-uses">
+        <span class="wc-use">🔥 Explosions</span>
+        <span class="wc-use">⚠️ Alerts</span>
+        <span class="wc-use">⚔️ Action scenes</span>
+        <span class="wc-use">🍕 Food brands</span>
+      </div>
+    </div>
+    <div class="wc-side">
+      <div class="wc-side-title">❄️ Cool Colors</div>
+      <div class="wc-dots">
+        <div class="wc-dot" style="background:#0033cc" title="Blue — trust, calm, depth"></div>
+        <div class="wc-dot" style="background:#0066ff" title="Royal Blue — authority, tech"></div>
+        <div class="wc-dot" style="background:#00aacc" title="Cyan — futuristic, clean"></div>
+        <div class="wc-dot" style="background:#22aa44" title="Green — nature, health"></div>
+        <div class="wc-dot" style="background:#6600cc" title="Purple — mystery, luxury"></div>
+        <div class="wc-dot" style="background:#aa44cc" title="Violet — fantasy, magic"></div>
+      </div>
+      <div class="wc-uses">
+        <span class="wc-use">🌌 Sci-fi UI</span>
+        <span class="wc-use">🌊 Water scenes</span>
+        <span class="wc-use">🏥 Health apps</span>
+        <span class="wc-use">🌙 Night environments</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="temp-wrap reveal d3">
+    <div class="temp-labels"><span>❄️ Cool</span><span style="color:var(--text);font-weight:800;">Temperature Slider</span><span>🔥 Warm</span></div>
+    <input type="range" id="tempSlider" min="0" max="100" value="20" style="width:100%;max-width:580px;background:linear-gradient(90deg,#0044cc,#00aacc,#99ccff,#ffd0a0,#ff7700,#dd0000);">
+    <div class="temp-palette">
+      <div class="temp-chip" id="tc0"></div>
+      <div class="temp-chip" id="tc1"></div>
+      <div class="temp-chip" id="tc2"></div>
+      <div class="temp-chip" id="tc3"></div>
+      <div class="temp-chip" id="tc4"></div>
+    </div>
+  </div>
+
+  <div class="sec-footer reveal">
+    <div class="qf"><span class="qf-i">🌡️</span><span class="qf-t"><strong>Temperature in games:</strong> Horror games mix cool blues with desaturated warms to create unease. Action games use warm reds and oranges to raise adrenaline. Value contrast matters more than hue in dark scenes.</span></div>
+    <a href="#tst" class="btn-next">Tint / Shade / Tone →</a>
+  </div>
+</section>
+
+<!-- ═══════════ TINT SHADE TONE ═══════════ -->
+<section id="tst">
+  <div class="eyebrow reveal">Chapter 3 · cont.</div>
+  <h2 class="sec-title reveal d1">Tint, Shade &amp; Tone</h2>
+  <p class="sec-sub reveal d2">Three ways to modify any color. Pick a base color below and watch how it transforms.</p>
+
+  <div class="tst-presets reveal d2" id="tstPresets">
+    <div class="tst-preset active" data-hue="0"   style="background:#e60000"></div>
+    <div class="tst-preset" data-hue="30"  style="background:#ff7700"></div>
+    <div class="tst-preset" data-hue="60"  style="background:#ffd700"></div>
+    <div class="tst-preset" data-hue="120" style="background:#22aa44"></div>
+    <div class="tst-preset" data-hue="220" style="background:#0066cc"></div>
+    <div class="tst-preset" data-hue="270" style="background:#7700cc"></div>
+  </div>
+
+  <div class="tst-row reveal d3" id="tstRow" style="margin-top:1.25rem;"></div>
+
+  <div class="card reveal d3" style="max-width:580px;margin-top:1.5rem;text-align:left;">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;font-size:.8rem;">
+      <div><strong style="color:var(--text)">Tint</strong><br><span style="color:var(--muted)">Color + White → lighter, softer. Used for backgrounds and hover states.</span></div>
+      <div><strong style="color:var(--text)">Shade</strong><br><span style="color:var(--muted)">Color + Black → darker, richer. Used for shadows and depth.</span></div>
+      <div><strong style="color:var(--text)">Tone</strong><br><span style="color:var(--muted)">Color + Gray → muted, subtle. Used for cinematic and sophisticated palettes.</span></div>
+    </div>
+  </div>
+
+  <div class="sec-footer reveal">
+    <div class="qf"><span class="qf-i">🎭</span><span class="qf-t"><strong>Monochromatic palettes</strong> are built entirely from tints and shades of a single hue. This creates a clean, unified look — great for dashboards and SaaS apps.</span></div>
+    <a href="#harmony" class="btn-next">Chapter 4: Harmony →</a>
+  </div>
+</section>
+
+<!-- ═══════════ COLOR HARMONY ═══════════ -->
+<section id="harmony">
+  <div class="eyebrow reveal">Chapter 4</div>
+  <h2 class="sec-title reveal d1">Color Harmony</h2>
+  <p class="sec-sub reveal d2">Harmony defines color combinations that feel visually pleasing. Drag the wheel to explore each scheme at any hue.</p>
+
+  <div class="scheme-tabs reveal d2" id="schemeTabs">
+    <button class="scheme-tab active" data-scheme="complementary">⟺ Complementary</button>
+    <button class="scheme-tab" data-scheme="analogous">〰️ Analogous</button>
+    <button class="scheme-tab" data-scheme="triadic">△ Triadic</button>
+    <button class="scheme-tab" data-scheme="mono">🔘 Monochromatic</button>
+  </div>
+
+  <div class="scheme-layout reveal d3">
+    <div class="scheme-canvas-wrap">
+      <canvas id="schemeCanvas" width="290" height="290"></canvas>
+      <p class="drag-hint">🖱 Drag to rotate the scheme</p>
+    </div>
+    <div class="scheme-info">
+      <div class="scheme-name" id="schemeNameBadge">⟺ Complementary</div>
+      <p class="scheme-desc" id="schemeDesc"></p>
+      <div class="scheme-rule" id="schemeRule"></div>
+      <div>
+        <p style="font-size:.67rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:.55rem;">Live Palette</p>
+        <div class="palette-strip" id="palettePalette"></div>
+      </div>
+      <div id="monoRow" style="display:none;">
+        <p style="font-size:.67rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:.5rem;">Lightness Range</p>
+        <div class="mono-swatches" id="monoSwatches"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-footer reveal">
+    <div class="qf"><span class="qf-i">🎨</span><span class="qf-t"><strong>Designer tip:</strong> Choose your harmony type first, then adjust lightness and saturation. Complementary = high impact. Analogous = calm. Triadic = vibrant. Monochromatic = clean.</span></div>
+    <a href="#psychology" class="btn-next">Chapter 5: Psychology →</a>
+  </div>
+</section>
+
+<!-- ═══════════ PSYCHOLOGY ═══════════ -->
+<section id="psychology">
+  <div class="eyebrow reveal">Chapter 5</div>
+  <h2 class="sec-title reveal d1">Color Psychology</h2>
+  <p class="sec-sub reveal d2">Colors trigger emotions and associations. Hover each color to see what it signals and where it's used.</p>
+
+  <div class="psych-grid reveal d2">
+    <div class="psych-card">
+      <div class="psych-swatch" style="background:#e60000;box-shadow:0 4px 18px rgba(230,0,0,.5)"></div>
+      <div class="psych-name">Red</div>
+      <div class="psych-emotion">Energy · Danger · Passion · Urgency</div>
+      <div class="psych-brands"><span class="brand-tag">YouTube</span><span class="brand-tag">Netflix</span><span class="brand-tag">Coca-Cola</span></div>
+    </div>
+    <div class="psych-card">
+      <div class="psych-swatch" style="background:#ff7700;box-shadow:0 4px 18px rgba(255,119,0,.5)"></div>
+      <div class="psych-name">Orange</div>
+      <div class="psych-emotion">Adventure · Fun · Warmth · Creativity</div>
+      <div class="psych-brands"><span class="brand-tag">Amazon</span><span class="brand-tag">Fanta</span><span class="brand-tag">SoundCloud</span></div>
+    </div>
+    <div class="psych-card">
+      <div class="psych-swatch" style="background:#ffd700;box-shadow:0 4px 18px rgba(255,215,0,.5)"></div>
+      <div class="psych-name">Yellow</div>
+      <div class="psych-emotion">Happiness · Speed · Optimism · Caution</div>
+      <div class="psych-brands"><span class="brand-tag">McDonald's</span><span class="brand-tag">IKEA</span><span class="brand-tag">Snapchat</span></div>
+    </div>
+    <div class="psych-card">
+      <div class="psych-swatch" style="background:#22aa44;box-shadow:0 4px 18px rgba(34,170,68,.5)"></div>
+      <div class="psych-name">Green</div>
+      <div class="psych-emotion">Nature · Health · Growth · Safety</div>
+      <div class="psych-brands"><span class="brand-tag">Spotify</span><span class="brand-tag">WhatsApp</span><span class="brand-tag">Whole Foods</span></div>
+    </div>
+    <div class="psych-card">
+      <div class="psych-swatch" style="background:#0066cc;box-shadow:0 4px 18px rgba(0,102,204,.5)"></div>
+      <div class="psych-name">Blue</div>
+      <div class="psych-emotion">Trust · Calm · Intelligence · Depth</div>
+      <div class="psych-brands"><span class="brand-tag">Facebook</span><span class="brand-tag">Samsung</span><span class="brand-tag">PayPal</span></div>
+    </div>
+    <div class="psych-card">
+      <div class="psych-swatch" style="background:#7700cc;box-shadow:0 4px 18px rgba(119,0,204,.5)"></div>
+      <div class="psych-name">Purple</div>
+      <div class="psych-emotion">Luxury · Mystery · Magic · Wisdom</div>
+      <div class="psych-brands"><span class="brand-tag">Cadbury</span><span class="brand-tag">Twitch</span><span class="brand-tag">Hallmark</span></div>
+    </div>
+    <div class="psych-card">
+      <div class="psych-swatch" style="background:#111111;box-shadow:0 4px 18px rgba(0,0,0,.7)"></div>
+      <div class="psych-name">Black</div>
+      <div class="psych-emotion">Power · Elegance · Sophistication</div>
+      <div class="psych-brands"><span class="brand-tag">Apple</span><span class="brand-tag">Nike</span><span class="brand-tag">Chanel</span></div>
+    </div>
+    <div class="psych-card">
+      <div class="psych-swatch" style="background:#f0f0f0;box-shadow:0 4px 18px rgba(0,0,0,.2)"></div>
+      <div class="psych-name">White</div>
+      <div class="psych-emotion">Purity · Simplicity · Cleanliness</div>
+      <div class="psych-brands"><span class="brand-tag">Apple</span><span class="brand-tag">Tesla</span><span class="brand-tag">Google</span></div>
+    </div>
+  </div>
+
+  <div class="quiz-wrap reveal d3">
+    <div class="eyebrow" style="margin-bottom:1rem;">Quick Quiz — Test Your Knowledge</div>
+    <div class="quiz-card" id="quizCard">
+      <div class="quiz-progress">
+        <div class="quiz-dots" id="quizDots"></div>
+        <span class="quiz-score-text">Score: <span class="quiz-score-num" id="quizScoreNum">0</span></span>
+      </div>
+      <div class="quiz-q" id="quizQ"></div>
+      <div class="quiz-choices" id="quizChoices"></div>
+      <div class="quiz-feedback" id="quizFeedback"></div>
+      <div style="display:flex;justify-content:center;">
+        <button class="quiz-next" id="quizNext">Next →</button>
+      </div>
+    </div>
+    <div class="quiz-done" id="quizDone">
+      <div class="quiz-final-score" id="quizFinalScore">5/5</div>
+      <div style="color:var(--muted);font-size:.88rem;" id="quizFinalMsg"></div>
+      <button class="quiz-restart" id="quizRestart">Try Again</button>
+    </div>
+  </div>
+
+  <div class="sec-footer reveal">
+    <div class="qf"><span class="qf-i">🧠</span><span class="qf-t"><strong>Finance apps use blue</strong> for trust. Food brands use red/yellow to trigger hunger. Tech companies use blue/purple for intelligence. These aren't accidents — they're deliberate psychology.</span></div>
+    <a href="#ingames" class="btn-next">Chapter 6: In Design →</a>
+  </div>
+</section>
+
+<!-- ═══════════ IN GAMES / DESIGN ═══════════ -->
+<section id="ingames">
+  <div class="eyebrow reveal">Chapter 6</div>
+  <h2 class="sec-title reveal d1">Color in Games &amp; Design</h2>
+  <p class="sec-sub reveal d2">Color does heavy lifting in games — it guides players, sets mood, and creates visual hierarchy without any text.</p>
+
+  <div class="guide-chips reveal d2" style="margin-bottom:1.5rem;">
+    <div class="guide-chip"><div class="guide-dot" style="background:#e60000"></div><div class="guide-label"><strong>Red</strong>Enemy / Danger</div></div>
+    <div class="guide-chip"><div class="guide-dot" style="background:#22cc44"></div><div class="guide-label"><strong>Green</strong>Health / Safe</div></div>
+    <div class="guide-chip"><div class="guide-dot" style="background:#ffd700"></div><div class="guide-label"><strong>Yellow</strong>Objective / Reward</div></div>
+    <div class="guide-chip"><div class="guide-dot" style="background:#60a5fa"></div><div class="guide-label"><strong>Blue</strong>Water / Magic</div></div>
+    <div class="guide-chip"><div class="guide-dot" style="background:#f97316"></div><div class="guide-label"><strong>Orange</strong>Fire / Warning</div></div>
+  </div>
+
+  <div class="scene-grid reveal d3">
+    <div class="scene-card scene-horror">
+      <div class="scene-name">👻 Horror</div>
+      <div class="scene-palette">
+        <div class="scene-dot" style="background:#1a2e0d"></div>
+        <div class="scene-dot" style="background:#2e1212"></div>
+        <div class="scene-dot" style="background:#0d0d0d"></div>
+        <div class="scene-dot" style="background:#4a2020"></div>
+        <div class="scene-dot" style="background:#1a3322"></div>
+      </div>
+      <div class="scene-desc">Dark greens + desaturated reds + near-black. Low value, low saturation = tension and unease.</div>
+    </div>
+    <div class="scene-card scene-fantasy">
+      <div class="scene-name">🧙 Fantasy</div>
+      <div class="scene-palette">
+        <div class="scene-dot" style="background:#6600cc"></div>
+        <div class="scene-dot" style="background:#00ccdd"></div>
+        <div class="scene-dot" style="background:#aa44ff"></div>
+        <div class="scene-dot" style="background:#003355"></div>
+        <div class="scene-dot" style="background:#ff88cc"></div>
+      </div>
+      <div class="scene-desc">Purple + cyan + deep blues. Magical, mysterious, otherworldly — high saturation with dark values.</div>
+    </div>
+    <div class="scene-card scene-desert">
+      <div class="scene-name">🏜️ Desert / Action</div>
+      <div class="scene-palette">
+        <div class="scene-dot" style="background:#ff7700"></div>
+        <div class="scene-dot" style="background:#ffd700"></div>
+        <div class="scene-dot" style="background:#cc4400"></div>
+        <div class="scene-dot" style="background:#8b4513"></div>
+        <div class="scene-dot" style="background:#f5deb3"></div>
+      </div>
+      <div class="scene-desc">Orange + yellow + burnt sienna. Warm analogous palette = heat, harsh conditions, survival.</div>
+    </div>
+    <div class="scene-card scene-cyber">
+      <div class="scene-name">🤖 Cyberpunk</div>
+      <div class="scene-palette">
+        <div class="scene-dot" style="background:#ff0088"></div>
+        <div class="scene-dot" style="background:#00ffcc"></div>
+        <div class="scene-dot" style="background:#aa00ff"></div>
+        <div class="scene-dot" style="background:#001a33"></div>
+        <div class="scene-dot" style="background:#ffdd00"></div>
+      </div>
+      <div class="scene-desc">Neon pink + cyan + deep navy. Complementary neons on near-black = futuristic, electric, high-tech.</div>
+    </div>
+  </div>
+
+  <div class="sec-footer reveal">
+    <div class="qf"><span class="qf-i">🕹️</span><span class="qf-t"><strong>Visual hierarchy:</strong> Dark background → Bright button → Muted text. The button stands out not because it's colorful, but because of contrast. Value contrast works even in grayscale.</span></div>
+    <a href="#rule" class="btn-next">60-30-10 Rule →</a>
+  </div>
+</section>
+
+<!-- ═══════════ 60-30-10 ═══════════ -->
+<section id="rule">
+  <div class="eyebrow reveal">Chapter 6 · cont.</div>
+  <h2 class="sec-title reveal d1">The 60-30-10 Rule</h2>
+  <p class="sec-sub reveal d2">Professional designers follow this ratio to keep layouts balanced. Pick a preset or adjust the colors.</p>
+
+  <div class="rule-demo reveal d2">
+    <div class="ui-preview">
+      <div id="ui60" style="flex:6;display:flex;flex-direction:column;gap:8px;padding:12px;">
+        <div class="ui-title-bar" id="uiBar1"></div>
+        <div class="ui-sub-bar" id="uiBar2"></div>
+        <div class="ui-sub-bar2" id="uiBar3"></div>
+      </div>
+      <div id="ui30" style="display:flex;align-items:center;gap:8px;padding:10px 12px;flex-shrink:0;">
+        <div style="width:28px;height:28px;border-radius:50%;" id="uiAvatar"></div>
+        <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
+          <div style="height:6px;border-radius:3px;width:60%;opacity:.6;" id="uiABar"></div>
+          <div style="height:5px;border-radius:3px;width:40%;opacity:.35;" id="uiABar2"></div>
+        </div>
+        <button id="ui10btn">CTA</button>
+      </div>
+    </div>
+
+    <div class="rule-controls">
+      <div style="font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:.25rem;">Preset Palettes</div>
+      <div class="preset-palettes">
+        <button class="palette-preset active" data-c60="#1e293b" data-c30="#334155" data-c10="#f97316">Tech Dark</button>
+        <button class="palette-preset" data-c60="#f8fafc" data-c30="#e2e8f0" data-c10="#3b82f6">Clean Light</button>
+        <button class="palette-preset" data-c60="#0f172a" data-c30="#1e3a5f" data-c10="#fbbf24">Midnight Gold</button>
+        <button class="palette-preset" data-c60="#0d1f0d" data-c30="#1a3a1a" data-c10="#22c55e">Forest</button>
+      </div>
+      <div class="rule-row">
+        <div class="rule-row-label"><span class="rule-pct" style="color:var(--blue)">60% — Primary / Background</span><input type="color" id="c60" value="#1e293b" style="width:32px;height:24px;border:none;background:none;cursor:pointer;border-radius:6px;"></div>
+        <div class="rule-desc">The dominant tone. Usually a neutral — sets the overall mood.</div>
+      </div>
+      <div class="rule-row">
+        <div class="rule-row-label"><span class="rule-pct" style="color:var(--muted)">30% — Secondary / Surface</span><input type="color" id="c30" value="#334155" style="width:32px;height:24px;border:none;background:none;cursor:pointer;border-radius:6px;"></div>
+        <div class="rule-desc">Cards, panels, sidebars. Complements the primary.</div>
+      </div>
+      <div class="rule-row">
+        <div class="rule-row-label"><span class="rule-pct" style="color:var(--gold)">10% — Accent / CTA</span><input type="color" id="c10" value="#f97316" style="width:32px;height:24px;border:none;background:none;cursor:pointer;border-radius:6px;"></div>
+        <div class="rule-desc">Buttons, links, highlights. The star — use it sparingly.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-footer reveal">
+    <div class="qf"><span class="qf-i">📐</span><span class="qf-t"><strong>Example:</strong> 60% dark navy background · 30% slate panels · 10% orange CTA buttons. The ratio keeps designs balanced — too much accent and nothing stands out.</span></div>
+    <a href="#colormodels" class="btn-next">RGB vs CMYK →</a>
+  </div>
+</section>
+
+<!-- ═══════════ RGB vs CMYK vs HSV ═══════════ -->
+<section id="colormodels">
+  <div class="eyebrow reveal">Chapter 7</div>
+  <h2 class="sec-title reveal d1">RGB · CMYK · HSV</h2>
+  <p class="sec-sub reveal d2">Different situations use different color systems. Here's when to use each one.</p>
+
+  <div class="models-grid reveal d2">
+    <div class="model-card model-rgb">
+      <div class="model-title">RGB</div>
+      <div class="model-sub">Red · Green · Blue</div>
+      <div class="model-desc">Additive color model for screens. Mixing light — all three at full = White. Used in games, UI, web, and displays.</div>
+      <div class="model-bars">
+        <div class="mbar-row"><span class="mbar-label" style="color:#ef4444">R</span><div class="mbar-track"><div class="mbar-fill" style="width:100%;background:#ef4444"></div></div></div>
+        <div class="mbar-row"><span class="mbar-label" style="color:#22c55e">G</span><div class="mbar-track"><div class="mbar-fill" style="width:0%;background:#22c55e"></div></div></div>
+        <div class="mbar-row"><span class="mbar-label" style="color:#3b82f6">B</span><div class="mbar-track"><div class="mbar-fill" style="width:0%;background:#3b82f6"></div></div></div>
+      </div>
+      <div style="font-family:monospace;font-size:.72rem;color:var(--dim)">rgb(255, 0, 0) = Red<br>#FF0000</div>
+      <div class="model-use">🖥️ Screens · Games · Web · UI</div>
+    </div>
+
+    <div class="model-card model-cmyk">
+      <div class="model-title">CMYK</div>
+      <div class="model-sub">Cyan · Magenta · Yellow · Key (Black)</div>
+      <div class="model-desc">Subtractive model for printing. Mixing inks — all three C+M+Y together = near Black. Opposite of RGB.</div>
+      <div class="model-bars">
+        <div class="mbar-row"><span class="mbar-label" style="color:#06b6d4;font-size:.6rem">C</span><div class="mbar-track"><div class="mbar-fill" style="width:100%;background:#06b6d4"></div></div></div>
+        <div class="mbar-row"><span class="mbar-label" style="color:#ec4899;font-size:.6rem">M</span><div class="mbar-track"><div class="mbar-fill" style="width:0%;background:#ec4899"></div></div></div>
+        <div class="mbar-row"><span class="mbar-label" style="color:#fbbf24;font-size:.6rem">Y</span><div class="mbar-track"><div class="mbar-fill" style="width:100%;background:#fbbf24"></div></div></div>
+        <div class="mbar-row"><span class="mbar-label" style="color:#1e293b;font-size:.6rem">K</span><div class="mbar-track"><div class="mbar-fill" style="width:0%;background:#94a3b8"></div></div></div>
+      </div>
+      <div style="font-family:monospace;font-size:.72rem;color:var(--dim)">C:100 M:0 Y:100 K:0 = Green</div>
+      <div class="model-use">🖨️ Print · Posters · Packaging</div>
+    </div>
+
+    <div class="model-card model-hsv">
+      <div class="model-title">HSV / HSL</div>
+      <div class="model-sub">Hue · Saturation · Value/Lightness</div>
+      <div class="model-desc">Human-intuitive model used in design tools. Describes color the way artists think: what color, how vivid, how bright.</div>
+      <div style="width:100%;height:14px;border-radius:99px;background:linear-gradient(90deg,#ff0000,#ffff00,#00ff00,#00ffff,#0000ff,#ff00ff,#ff0000);margin:.25rem 0;"></div>
+      <div style="font-family:monospace;font-size:.72rem;color:var(--dim)">hsl(213, 94%, 68%) = Blue<br>hsl(0, 100%, 50%) = Red</div>
+      <div class="model-use">🎨 Figma · Photoshop · CSS</div>
+    </div>
+  </div>
+
+  <div class="sec-footer reveal">
+    <div class="qf"><span class="qf-i">💻</span><span class="qf-t"><strong>Rule of thumb:</strong> Designing for screens? Use RGB or HSL. Designing for print? Convert to CMYK. Picking colors in Figma or CSS? HSL is most intuitive because it maps to how humans describe color.</span></div>
+    <a href="#design" class="btn-next">Chapter 8: Your Design →</a>
+  </div>
+</section>
+
+<!-- ═══════════ YOUR DESIGN ═══════════ -->
+<section id="design">
+  <div class="eyebrow reveal">Chapter 8</div>
+  <h2 class="sec-title reveal d1">Triadic Harmony in Action</h2>
+  <p class="sec-sub reveal d2">The ColorQuest game uses a triadic-inspired scheme — three colors ~120° apart, each with a distinct role.</p>
+
+  <div class="design-layout reveal d2">
+    <div class="design-wheel-wrap">
+      <canvas id="designCanvas" width="250" height="250"></canvas>
+      <p style="font-size:.7rem;color:var(--dim);margin-top:.5rem;">△ Triangle = triadic positions</p>
+    </div>
+    <div class="design-colors">
+      <div class="dc-row">
+        <div class="dc-swatch" style="background:#60a5fa;box-shadow:0 4px 14px rgba(96,165,250,.5)"></div>
+        <div class="dc-info"><div class="dc-name">Electric Blue</div><div class="dc-role">Primary — Buttons, Highlights, CTAs</div><div class="dc-hex">#60a5fa</div></div>
+        <div class="dc-deg">~213°</div>
+      </div>
+      <div class="dc-row">
+        <div class="dc-swatch" style="background:#f0538e;box-shadow:0 4px 14px rgba(240,83,142,.5)"></div>
+        <div class="dc-info"><div class="dc-name">Plasma Pink</div><div class="dc-role">Secondary — Accents, Energy, Warnings</div><div class="dc-hex">#f0538e</div></div>
+        <div class="dc-deg">~337°</div>
+      </div>
+      <div class="dc-row">
+        <div class="dc-swatch" style="background:#10b981;box-shadow:0 4px 14px rgba(16,185,129,.5)"></div>
+        <div class="dc-info"><div class="dc-name">Neon Mint</div><div class="dc-role">Accent — Success, Progress, Positive</div><div class="dc-hex">#10b981</div></div>
+        <div class="dc-deg">~160°</div>
+      </div>
+      <div class="design-verdict">
+        <strong>Why it works:</strong> Three hues spread across the wheel create vibrant balance. Blue builds trust, Pink brings energy, Mint signals success. No single color dominates — and together they cover the full emotional spectrum of the UI.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-footer reveal" style="margin-top:2rem;">
+    <div class="qf"><span class="qf-i">🏆</span><span class="qf-t"><strong>Test everything you learned!</strong> The ColorQuest game covers all 5 color theory concepts interactively — Primary, RGB mixing, Complementary, Analogous, and Triadic.</span></div>
+    <a href="game.html" class="btn-next" style="border-color:var(--pink);color:var(--pink);">🎮 Play ColorQuest →</a>
+  </div>
+</section>
+
+<script src="learn.js" defer></script>
+</body>
+</html>

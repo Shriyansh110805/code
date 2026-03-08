@@ -188,17 +188,36 @@ class TypographyStudioApp {
     }
     
     navigate(route) {
-        // Update URL hash
+        // On file:// protocol, fetch() is blocked by the browser.
+        // Fall back to direct file navigation so sub-pages open standalone.
+        if (window.location.protocol === 'file:') {
+            const routeConfig = this.routes[route];
+            if (routeConfig && routeConfig.template !== 'views/home.html') {
+                window.location.href = routeConfig.template;
+                return;
+            }
+        }
+        // Normal SPA hash navigation (works when served via http://)
         window.location.hash = route;
     }
     
     async handleRoute() {
         // Get current route from hash
         let route = window.location.hash.replace('#', '') || '/';
-        
+
         // Check if route exists
         if (!this.routes[route]) {
             route = '/'; // Fallback to home
+        }
+
+        // On file:// protocol, only the home route renders inline.
+        // All other routes must navigate directly to the HTML file.
+        if (window.location.protocol === 'file:' && route !== '/') {
+            const routeConfig = this.routes[route];
+            if (routeConfig) {
+                window.location.href = routeConfig.template;
+                return;
+            }
         }
         
         // Don't reload if already on this route
