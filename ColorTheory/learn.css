@@ -63,6 +63,8 @@ section{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction
 .hero-sub{font-size:clamp(.95rem,2.5vw,1.15rem);color:var(--muted);max-width:460px;line-height:1.65;}
 .hero-tags{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;}
 .tag{display:inline-flex;align-items:center;gap:.38rem;background:var(--panel);border:1px solid var(--border);border-radius:99px;padding:.35rem .9rem;font-size:.78rem;font-weight:600;color:var(--muted);backdrop-filter:blur(8px);}
+.tag-link{text-decoration:none;cursor:pointer;transition:transform .2s,border-color .2s,background .2s,color .2s,box-shadow .2s;}
+.tag-link:hover{transform:translateY(-3px);border-color:var(--bhi);background:var(--panel-b);color:var(--text);box-shadow:0 8px 24px rgba(0,0,0,.35);}
 .tag-dot{width:7px;height:7px;border-radius:50%;}
 .btn-play{display:inline-flex;align-items:center;gap:.7rem;background:linear-gradient(135deg,#2563eb,#60a5fa 40%,#f0538e 70%,#be185d);border:none;border-radius:99px;padding:1rem 2.6rem;font-family:inherit;font-size:1.05rem;font-weight:800;color:#fff;text-decoration:none;position:relative;overflow:hidden;animation:glow 3s ease-in-out infinite;transition:transform .18s,box-shadow .18s;}
 .btn-play::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.18),transparent 55%);border-radius:inherit;pointer-events:none;}
@@ -210,25 +212,25 @@ input[type=range]::-webkit-slider-thumb:active{cursor:grabbing;transform:scale(1
 #psychology{gap:2rem;}
 .psych-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;max-width:780px;width:100%;}
 @media(max-width:640px){.psych-grid{grid-template-columns:repeat(2,1fr);}}
-.psych-card{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:1.1rem .8rem;display:flex;flex-direction:column;align-items:center;gap:.6rem;cursor:pointer;transition:transform .22s,border-color .22s,box-shadow .22s;text-align:center;}
-.psych-card:hover{transform:translateY(-5px);border-color:var(--bhi);box-shadow:0 16px 40px rgba(0,0,0,.3);}
+.psych-card{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:1.1rem .8rem;display:flex;flex-direction:column;align-items:center;gap:.6rem;cursor:pointer;transition:transform .22s,border-color .22s,box-shadow .22s,background .22s;text-align:center;}
+.psych-card:hover{transform:translateY(-5px);border-color:rgba(255,255,255,.35);box-shadow:0 16px 40px rgba(0,0,0,.4);background:rgba(255,255,255,.18);}
 .psych-swatch{width:52px;height:52px;border-radius:14px;transition:transform .22s;box-shadow:0 4px 16px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.15);}
 .psych-card:hover .psych-swatch{transform:scale(1.15);}
-.psych-name{font-size:.85rem;font-weight:800;}
-.psych-emotion{font-size:.7rem;color:var(--muted);line-height:1.5;}
+.psych-name{font-size:.85rem;font-weight:800;color:#ffffff;}
+.psych-emotion{font-size:.7rem;color:#e2e8f0;line-height:1.5;font-weight:500;}
 .psych-brands{display:flex;gap:.3rem;flex-wrap:wrap;justify-content:center;}
-.brand-tag{font-size:.62rem;background:var(--panel-b);border:1px solid var(--border);border-radius:99px;padding:.18rem .5rem;color:var(--dim);}
+.brand-tag{font-size:.62rem;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:99px;padding:.18rem .5rem;color:#cbd5e1;font-weight:600;}
 
 /* ── IN GAMES ── */
 #ingames{gap:2rem;}
 .scene-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;max-width:760px;width:100%;}
 @media(max-width:580px){.scene-grid{grid-template-columns:1fr;}}
-.scene-card{border-radius:18px;padding:1.25rem;display:flex;flex-direction:column;gap:.75rem;border:1px solid var(--border);transition:transform .22s,box-shadow .22s;cursor:default;}
+.scene-card{border-radius:18px;padding:1.25rem;display:flex;flex-direction:column;gap:.75rem;border:1px solid rgba(255,255,255,.18);transition:transform .22s,box-shadow .22s;cursor:default;}
 .scene-card:hover{transform:translateY(-4px);box-shadow:0 18px 44px rgba(0,0,0,.4);}
-.scene-name{font-size:.95rem;font-weight:800;display:flex;align-items:center;gap:.5rem;}
+.scene-name{font-size:.95rem;font-weight:800;display:flex;align-items:center;gap:.5rem;color:#ffffff;}
 .scene-palette{display:flex;gap:.4rem;}
 .scene-dot{width:32px;height:32px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.4);}
-.scene-desc{font-size:.74rem;color:var(--muted);line-height:1.55;}
+.scene-desc{font-size:.74rem;color:#e2e8f0;line-height:1.55;font-weight:500;}
 .scene-horror{background:linear-gradient(135deg,#0d1a0d,#1a0808);}
 .scene-fantasy{background:linear-gradient(135deg,#0d0a1f,#160d2e);}
 .scene-desert{background:linear-gradient(135deg,#1f1200,#2e1800);}
@@ -236,10 +238,10 @@ input[type=range]::-webkit-slider-thumb:active{cursor:grabbing;transform:scale(1
 
 /* Player guidance */
 .guide-chips{display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center;}
-.guide-chip{display:flex;align-items:center;gap:.55rem;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:.6rem .9rem;}
+.guide-chip{display:flex;align-items:center;gap:.55rem;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:.6rem .9rem;}
 .guide-dot{width:28px;height:28px;border-radius:8px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.35);}
-.guide-label{font-size:.78rem;font-weight:600;color:var(--muted);}
-.guide-label strong{color:var(--text);display:block;}
+.guide-label{font-size:.78rem;font-weight:600;color:#e2e8f0;}
+.guide-label strong{color:#ffffff;display:block;}
 
 /* ── 60-30-10 ── */
 #rule{gap:2rem;}
