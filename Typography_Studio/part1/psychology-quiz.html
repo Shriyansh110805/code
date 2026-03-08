@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Font Personality Matcher - Typography Studio</title>
+    <link rel="stylesheet" href="../design-tokens.css">
+    <link rel="stylesheet" href="../unified-components.css">
+    <style>
+        .game-board {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 40px 0;
+        }
+        
+        .scenarios-panel {
+            background: var(--white);
+            border: 2px solid var(--light-gray);
+            padding: 40px;
+        }
+        
+        .scenario-card {
+            background: #f9f9f9;
+            border: 2px solid var(--light-gray);
+            padding: 25px;
+            margin: 15px 0;
+            border-radius: 0;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 1.1em;
+            transition: all 0.3s;
+        }
+        
+        .scenario-card.drag-over {
+            background: #e3f2fd;
+            border-color: var(--accent);
+        }
+        
+        .scenario-card.filled {
+            background: var(--black);
+            color: var(--white);
+        }
+        
+        .scenario-card.correct {
+            background: #4caf50;
+            color: var(--white);
+            border-color: #4caf50;
+            animation: match-success 0.6s;
+        }
+        
+        @keyframes match-success {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); box-shadow: 0 0 30px rgba(76, 175, 80, 0.6); }
+        }
+        
+        .scenario-card.wrong {
+            background: #f44336;
+            color: var(--white);
+            border-color: #f44336;
+            animation: shake 0.5s;
+        }
+        
+        .fonts-panel {
+            background: var(--white);
+            border: 2px solid var(--light-gray);
+            padding: 40px;
+        }
+        
+        .font-card {
+            background: var(--white);
+            border: 3px solid var(--light-gray);
+            padding: 30px;
+            margin: 15px 0;
+            cursor: move;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .font-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            border-color: var(--accent);
+        }
+        
+        .font-card.dragging {
+            opacity: 0.5;
+        }
+        
+        .font-name {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .font-times { font-family: 'Times New Roman', serif; }
+        .font-helvetica { font-family: Arial, Helvetica, sans-serif; }
+        .font-comic { font-family: 'Comic Sans MS', cursive; }
+        
+        .game-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            padding: 30px;
+            background: var(--white);
+            border: 2px solid var(--light-gray);
+        }
+        
+        .stat-value {
+            font-size: 3em;
+            font-weight: 300;
+        }
+        
+        .timer {
+            color: var(--accent);
+        }
+        
+        .timer.warning {
+            color: #f44336;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .instruction {
+            background: #fffbea;
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .perfect-match {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4em;
+            font-weight: 700;
+            color: #4caf50;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1500;
+        }
+        
+        .perfect-match.show {
+            animation: perfect-pop 1s;
+        }
+        
+        @keyframes perfect-pop {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5) rotate(-15deg); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2) rotate(5deg); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <a href="#/" class="logo">Typography Studio</a>
+            <ul class="nav-links">
+                <li><a href="../index.html#fundamentals">Fundamentals</a></li>
+                <li><a href="../index.html#tools">Design Tools</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="game-container">
+            <a href="#/psychology" class="back-btn">← Back to Psychology</a>
+            
+            <div style="padding: 80px 0 60px; border-bottom: 1px solid var(--light-gray);">
+                <h1 style="font-size: 4em; color: var(--black); margin-bottom: 20px; font-weight: 300;">Font Personality Matcher</h1>
+                <p style="font-size: 1.2em; color: var(--mid-gray);">Drag fonts to their matching scenarios!</p>
+            </div>
+
+            <div class="instruction">
+                <strong>How to Play:</strong> Drag each font from the right panel to the matching scenario on the left. Match all 6 correctly before time runs out!
+            </div>
+
+            <div class="game-stats">
+                <div class="stat">
+                    <div class="stat-value" id="score">0</div>
+                    <div class="stat-label">Score</div>
+                </div>
+                <div class="stat">
+                    <div class="timer" id="timer">75</div>
+                    <div class="stat-label">Seconds</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="matched">0/6</div>
+                    <div class="stat-label">Matched</div>
+                </div>
+            </div>
+
+            <div class="game-board">
+                <div class="scenarios-panel">
+                    <h3 style="margin-bottom: 30px; font-size: 1.5em; font-weight: 400;">Scenarios:</h3>
+                    <div class="scenario-card" data-font="times" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                        Legal Document
+                    </div>
+                    <div class="scenario-card" data-font="comic" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                        Children's Toy
+                    </div>
+                    <div class="scenario-card" data-font="helvetica" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                        Tech Startup
+                    </div>
+                    <div class="scenario-card" data-font="times" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                        Academic Paper
+                    </div>
+                    <div class="scenario-card" data-font="helvetica" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                        Modern App
+                    </div>
+                    <div class="scenario-card" data-font="comic" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                        Birthday Party
+                    </div>
+                </div>
+
+                <div class="fonts-panel">
+                    <h3 style="margin-bottom: 30px; font-size: 1.5em; font-weight: 400;">Drag these fonts:</h3>
+                    <div class="font-card" draggable="true" data-font="times" ondragstart="drag(event)">
+                        <div class="font-name font-times">Times</div>
+                        <div style="font-size: 0.9em; color: var(--mid-gray);">Times New Roman</div>
+                    </div>
+                    <div class="font-card" draggable="true" data-font="helvetica" ondragstart="drag(event)">
+                        <div class="font-name font-helvetica">Helvetica</div>
+                        <div style="font-size: 0.9em; color: var(--mid-gray);">Sans-serif</div>
+                    </div>
+                    <div class="font-card" draggable="true" data-font="comic" ondragstart="drag(event)">
+                        <div class="font-name font-comic">Comic Sans</div>
+                        <div style="font-size: 0.9em; color: var(--mid-gray);">Casual Script</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-over" id="game-over" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 2000;">
+        <div style="background: var(--white); padding: 80px; text-align: center; max-width: 600px;">
+            <h2 id="game-result" style="font-size: 3em; margin-bottom: 20px; font-weight: 300;"></h2>
+            <div style="font-size: 5em; color: var(--accent); font-weight: 300; margin: 30px 0;" id="final-score"></div>
+            <p style="font-size: 1.2em; color: var(--mid-gray); margin-bottom: 30px;" id="result-message"></p>
+            <button class="btn" onclick="location.reload()">Play Again</button>
+            <a href="#/psychology" class="btn" style="background: var(--white); color: var(--black); text-decoration: none; display: inline-block; margin-left: 10px;">Back to Learning</a>
+        </div>
+    </div>
+    
+    <div class="perfect-match" id="perfect-match"></div>
+
+    <script>
+        let score = 0;
+        let matched = 0;
+        let timeLeft = 75;
+        let gameActive = true;
+        let timerInterval;
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (!gameActive) return;
+                
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+                
+                if (timeLeft <= 15) {
+                    document.getElementById('timer').classList.add('warning');
+                }
+                
+                if (timeLeft <= 0) {
+                    endGame(false);
+                }
+            }, 1000);
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("font", ev.target.dataset.font);
+            ev.target.classList.add('dragging');
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+            ev.target.classList.add('drag-over');
+        }
+
+        function dragLeave(ev) {
+            ev.target.classList.remove('drag-over');
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            const font = ev.dataTransfer.getData("font");
+            const scenario = ev.target;
+            
+            scenario.classList.remove('drag-over');
+            
+            if (scenario.classList.contains('filled')) return;
+            
+            if (font === scenario.dataset.font) {
+                // Correct!
+                score += 100 + (timeLeft * 2);
+                matched++;
+                scenario.classList.add('correct', 'filled');
+                scenario.textContent += ` ✓`;
+                
+                // Show celebration
+                if (matched === 3) {
+                    showPerfectMatch('Halfway! 🎯');
+                }
+                
+                document.getElementById('score').textContent = score;
+                document.getElementById('matched').textContent = `${matched}/6`;
+                
+                if (matched === 6) {
+                    showPerfectMatch('Perfect! 🎉');
+                    setTimeout(() => endGame(true), 1000);
+                }
+            } else {
+                // Wrong!
+                score = Math.max(0, score - 30);
+                scenario.classList.add('wrong');
+                setTimeout(() => scenario.classList.remove('wrong'), 500);
+                document.getElementById('score').textContent = score;
+            }
+            
+            document.querySelectorAll('.font-card').forEach(card => {
+                card.classList.remove('dragging');
+            });
+        }
+
+        function showPerfectMatch(text) {
+            const perfectEl = document.getElementById('perfect-match');
+            perfectEl.textContent = text;
+            perfectEl.classList.add('show');
+            setTimeout(() => perfectEl.classList.remove('show'), 1000);
+        }
+        
+        function endGame(won) {
+            gameActive = false;
+            clearInterval(timerInterval);
+            
+            document.getElementById('final-score').textContent = score;
+            
+            if (won) {
+                document.getElementById('game-result').textContent = '🎉 Perfect Match!';
+                document.getElementById('result-message').textContent = `You matched all fonts correctly with ${timeLeft} seconds remaining!`;
+            } else {
+                document.getElementById('game-result').textContent = '⏰ Time\'s Up!';
+                document.getElementById('result-message').textContent = `You matched ${matched} out of 6 scenarios. Try again!`;
+            }
+            
+            document.getElementById('game-over').style.display = 'flex';
+        }
+
+        startTimer();
+    </script>
+<script src="../back-nav.js"></script>
+</body>
+</html>

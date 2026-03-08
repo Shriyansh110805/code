@@ -1,0 +1,2068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serif vs Sans-serif: A Comprehensive Study - Typography Studio</title>
+    <link rel="stylesheet" href="../design-tokens.css">
+    <link rel="stylesheet" href="../unified-components.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0a0a0a; color: #fff; font-family: -apple-system, sans-serif; }
+        
+        /* Hero Section - Reduced height */
+        .hero { 
+            padding: 60px 24px 40px; 
+            text-align: center; 
+            background: linear-gradient(180deg, #0a0a0a 0%, #111 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(99,102,241,0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero h1 { 
+            font-size: clamp(40px, 6vw, 64px); 
+            font-weight: 300; 
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff 0%, #6366f1 50%, #fff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+        .hero .subtitle { 
+            font-size: 18px; 
+            color: #999; 
+            max-width: 700px; 
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* Quick Preview Section - NEW */
+        .quick-preview {
+            background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+            border: 2px solid #6366f1;
+            border-radius: 20px;
+            padding: 40px;
+            margin: -20px auto 40px;
+            max-width: 1200px;
+            position: relative;
+            z-index: 10;
+        }
+        .preview-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #6366f1;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .preview-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        .preview-box {
+            background: #000;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .preview-box:hover {
+            border-color: #6366f1;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(99,102,241,0.3);
+        }
+        .preview-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        .preview-box.serif .preview-label { color: #e74c3c; }
+        .preview-box.sans .preview-label { color: #3498db; }
+        .preview-text {
+            font-size: 48px;
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+        .preview-box.serif .preview-text {
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+        .preview-box.sans .preview-text {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .preview-desc {
+            font-size: 14px;
+            color: #666;
+        }
+        .preview-cta {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 14px;
+            color: #888;
+        }
+        .preview-cta strong {
+            color: #6366f1;
+        }
+        
+        /* Container */
+        .container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            padding: 0 24px 80px; 
+        }
+        
+        /* Section Styling - Improved spacing */
+        .section { 
+            margin: 60px 0; 
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.6s ease;
+        }
+        .section.visible { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .section-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #6366f1;
+            margin-bottom: 12px;
+        }
+        .section-title {
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 300;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff 0%, #999 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .section-description {
+            font-size: 16px;
+            color: #aaa;
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+        
+        /* Section Divider */
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, #6366f1 50%, transparent 100%);
+            margin: 80px auto;
+            max-width: 600px;
+        }
+        
+        /* Timeline Split Layout - Improved */
+        .timeline-wrapper {
+            display: grid;
+            grid-template-columns: 45% 55%;
+            gap: 0;
+            max-width: 1600px;
+            margin: 40px auto;
+            min-height: 700px;
+            position: relative;
+        }
+        
+        /* Left Side - Timeline Cards */
+        .timeline-sidebar {
+            padding: 32px;
+            overflow-y: auto;
+            max-height: 700px;
+            position: sticky;
+            top: 80px;
+        }
+        .timeline-sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .timeline-sidebar::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+        }
+        .timeline-sidebar::-webkit-scrollbar-thumb {
+            background: #6366f1;
+            border-radius: 4px;
+        }
+        
+        .timeline-card {
+            background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: slideInLeft 0.5s ease forwards;
+        }
+        .timeline-card:nth-child(1) { animation-delay: 0.1s; }
+        .timeline-card:nth-child(2) { animation-delay: 0.2s; }
+        .timeline-card:nth-child(3) { animation-delay: 0.3s; }
+        .timeline-card:nth-child(4) { animation-delay: 0.4s; }
+        .timeline-card:nth-child(5) { animation-delay: 0.5s; }
+        .timeline-card:nth-child(6) { animation-delay: 0.6s; }
+        .timeline-card:nth-child(7) { animation-delay: 0.7s; }
+        .timeline-card:nth-child(8) { animation-delay: 0.8s; }
+        
+        @keyframes slideInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .timeline-card:hover {
+            border-color: #6366f1;
+            transform: translateX(8px);
+            box-shadow: 0 8px 24px rgba(99,102,241,0.2);
+        }
+        .timeline-card.active {
+            border-color: #6366f1;
+            box-shadow: 0 12px 32px rgba(99,102,241,0.4);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            transform: translateX(8px);
+        }
+        .timeline-card.serif {
+            border-left: 4px solid #e74c3c;
+        }
+        .timeline-card.sans {
+            border-left: 4px solid #3498db;
+        }
+        .timeline-card-year {
+            font-size: 18px;
+            font-weight: 700;
+            color: #6366f1;
+            margin-bottom: 8px;
+        }
+        .timeline-card-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        .timeline-card-preview {
+            font-size: 14px;
+            color: #888;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .timeline-card-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(99,102,241,0.2);
+            border: 1px solid rgba(99,102,241,0.4);
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6366f1;
+            margin-top: 12px;
+        }
+        .timeline-card::after {
+            content: '→';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: #6366f1;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        .timeline-card:hover::after,
+        .timeline-card.active::after {
+            opacity: 1;
+            right: 16px;
+        }
+        
+        /* Right Side - Detail Panel */
+        .timeline-detail {
+            background: linear-gradient(135deg, #0a0a0a 0%, #111 100%);
+            border-left: 2px solid #222;
+            padding: 60px;
+            position: sticky;
+            top: 100px;
+            height: 800px;
+            overflow-y: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .timeline-detail::-webkit-scrollbar {
+            width: 8px;
+        }
+        .timeline-detail::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+        }
+        .timeline-detail::-webkit-scrollbar-thumb {
+            background: #6366f1;
+            border-radius: 4px;
+        }
+        
+        .detail-placeholder {
+            text-align: center;
+            color: #666;
+            max-width: 400px;
+        }
+        .detail-placeholder-icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+            opacity: 0.3;
+        }
+        .detail-placeholder-text {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        
+        .detail-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        .detail-content.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .detail-header {
+            margin-bottom: 40px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .detail-year {
+            font-size: 56px;
+            font-weight: 700;
+            color: #6366f1;
+            margin-bottom: 16px;
+            line-height: 1;
+        }
+        .detail-title {
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        .detail-category {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(99,102,241,0.2);
+            border: 1px solid #6366f1;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #6366f1;
+        }
+        .detail-section {
+            margin: 32px 0;
+        }
+        .detail-section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #6366f1;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .detail-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #ccc;
+            margin-bottom: 16px;
+        }
+        .detail-list {
+            list-style: none;
+            padding: 0;
+        }
+        .detail-list li {
+            padding: 12px 0;
+            padding-left: 28px;
+            position: relative;
+            color: #ccc;
+            line-height: 1.6;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .detail-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #6366f1;
+            font-weight: bold;
+        }
+        .detail-specimen {
+            background: #000;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 40px;
+            margin: 32px 0;
+            text-align: center;
+        }
+        .detail-specimen-text {
+            font-size: 72px;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+        .detail-specimen-text.serif {
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+        .detail-specimen-text.sans {
+            font-family: Arial, 'Helvetica Neue', sans-serif;
+        }
+        .detail-specimen-label {
+            font-size: 14px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .detail-highlight {
+            background: rgba(99,102,241,0.1);
+            border-left: 3px solid #6366f1;
+            padding: 24px;
+            border-radius: 8px;
+            margin: 24px 0;
+        }
+        .detail-highlight p {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #ddd;
+            margin: 0;
+        }
+        
+        /* Comparison Grid */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin: 60px 0;
+        }
+        .comparison-card {
+            background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+            border: 1px solid #222;
+            border-radius: 20px;
+            padding: 40px;
+            transition: all 0.4s ease;
+        }
+        .comparison-card:hover {
+            transform: translateY(-8px);
+            border-color: #6366f1;
+            box-shadow: 0 20px 60px rgba(99,102,241,0.2);
+        }
+        .serif-card { border-top: 4px solid #e74c3c; }
+        .sans-card { border-top: 4px solid #3498db; }
+        .card-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+        .card-subtitle {
+            font-size: 16px;
+            font-weight: 600;
+            color: #6366f1;
+            margin: 24px 0 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .card-list {
+            list-style: none;
+            padding: 0;
+        }
+        .card-list li {
+            padding: 12px 0;
+            padding-left: 32px;
+            position: relative;
+            color: #ccc;
+            line-height: 1.6;
+        }
+        .card-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #6366f1;
+            font-weight: bold;
+        }
+        
+        /* Interactive Toggle */
+        .interactive-panel {
+            background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+            border: 2px solid #6366f1;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+        }
+        .panel-instruction {
+            text-align: center;
+            font-size: 16px;
+            color: #6366f1;
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+        .toggle-controls {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 40px;
+            justify-content: center;
+        }
+        .toggle-btn {
+            flex: 1;
+            max-width: 300px;
+            padding: 24px 32px;
+            background: rgba(255,255,255,0.03);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .toggle-btn:hover {
+            background: rgba(255,255,255,0.05);
+            transform: translateY(-4px);
+        }
+        .toggle-btn.active {
+            background: #6366f1;
+            border-color: #6366f1;
+            box-shadow: 0 8px 24px rgba(99,102,241,0.4);
+        }
+        .toggle-btn .btn-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.7;
+            margin-bottom: 8px;
+        }
+        .toggle-btn .btn-title {
+            font-size: 20px;
+        }
+        
+        /* Sample Display */
+        .sample-display {
+            background: #000;
+            border: 1px solid #222;
+            border-radius: 16px;
+            padding: 48px;
+            margin: 32px 0;
+            min-height: 300px;
+        }
+        .sample-text {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #fff;
+            transition: font-family 0.3s ease;
+        }
+        .sample-text.serif {
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+        .sample-text.sans {
+            font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        /* Custom Text Input - Enhanced */
+        .custom-input-group {
+            margin: 32px 0;
+            position: relative;
+        }
+        .input-wrapper {
+            position: relative;
+        }
+        .custom-input {
+            width: 100%;
+            padding: 20px 24px;
+            padding-right: 120px;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        .custom-input:focus {
+            outline: none;
+            border-color: #6366f1;
+            background: rgba(255,255,255,0.08);
+            box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
+        }
+        .custom-input::placeholder {
+            color: #666;
+        }
+        .input-controls {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .char-count {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+            min-width: 50px;
+            text-align: right;
+        }
+        .reset-btn {
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #888;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 600;
+        }
+        .reset-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: #6366f1;
+            border-color: #6366f1;
+        }
+        .input-hint {
+            font-size: 13px;
+            color: #666;
+            margin-top: 8px;
+            text-align: center;
+        }
+        
+        /* Sample Display - Enhanced */
+        .sample-display {
+            background: #000;
+            border: 1px solid #222;
+            border-radius: 16px;
+            padding: 48px;
+            margin: 32px 0;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .sample-display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(99,102,241,0.05) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .sample-display:hover::before {
+            opacity: 1;
+        }
+        .sample-text {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #fff;
+            transition: all 0.3s ease;
+            text-align: center;
+            max-width: 100%;
+            word-wrap: break-word;
+            position: relative;
+            z-index: 2;
+        }
+        .sample-text.serif {
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+        .sample-text.sans {
+            font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+        }
+        .sample-text.empty {
+            color: #444;
+            font-style: italic;
+        }
+        
+        /* Size Controls */
+        .size-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .size-label {
+            font-size: 12px;
+            color: #888;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .size-btn {
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .size-btn:hover {
+            background: rgba(99,102,241,0.2);
+            border-color: #6366f1;
+        }
+        .size-display {
+            font-size: 14px;
+            color: #6366f1;
+            font-weight: 600;
+            min-width: 50px;
+            text-align: center;
+        }
+        
+        /* Comparison Slider */
+        .slider-container {
+            position: relative;
+            background: #000;
+            border: 1px solid #222;
+            border-radius: 16px;
+            overflow: hidden;
+            height: 400px;
+            margin: 40px 0;
+        }
+        .slider-side {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px;
+            transition: width 0.3s ease;
+        }
+        .slider-left {
+            left: 0;
+            background: linear-gradient(90deg, #1a0a0a 0%, #0a0a0a 100%);
+            border-right: 2px solid #e74c3c;
+        }
+        .slider-right {
+            right: 0;
+            background: linear-gradient(90deg, #0a0a0a 0%, #0a1a1a 100%);
+        }
+        .slider-content {
+            text-align: center;
+        }
+        .slider-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 16px;
+            opacity: 0.7;
+        }
+        .slider-text {
+            font-size: 48px;
+            font-weight: 300;
+            line-height: 1.3;
+        }
+        .slider-handle {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #6366f1;
+            cursor: ew-resize;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+        .slider-handle::before {
+            content: '⟷';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 48px;
+            height: 48px;
+            background: #6366f1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 16px rgba(99,102,241,0.4);
+        }
+        
+        /* Feature Comparison */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin: 40px 0;
+        }
+        .feature-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .feature-card:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: #6366f1;
+            transform: translateY(-4px);
+        }
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+        .feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .feature-text {
+            font-size: 14px;
+            color: #aaa;
+            line-height: 1.6;
+        }
+        
+        /* Diagram Section */
+        .diagram-container {
+            background: #000;
+            border: 1px solid #222;
+            border-radius: 20px;
+            padding: 48px;
+            margin: 60px 0;
+            text-align: center;
+        }
+        .diagram-letter {
+            font-size: 200px;
+            line-height: 1;
+            margin: 40px 0;
+            position: relative;
+            display: inline-block;
+        }
+        .diagram-letter.serif {
+            font-family: Georgia, serif;
+        }
+        .diagram-letter.sans {
+            font-family: Arial, sans-serif;
+        }
+        
+        /* Case Studies */
+        .case-study {
+            background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+            border: 1px solid #222;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 32px 0;
+            transition: all 0.4s ease;
+        }
+        .case-study:hover {
+            transform: translateX(8px);
+            border-color: #6366f1;
+        }
+        .case-study-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .case-study-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(99,102,241,0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+        .case-study-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .case-study-subtitle {
+            font-size: 14px;
+            color: #888;
+        }
+        .case-study-content {
+            font-size: 15px;
+            color: #aaa;
+            line-height: 1.7;
+        }
+        
+        /* Key Takeaways */
+        .takeaway-box {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 2px solid #6366f1;
+            border-radius: 20px;
+            padding: 48px;
+            margin: 60px 0;
+        }
+        .takeaway-title {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 32px;
+            text-align: center;
+            color: #6366f1;
+        }
+        .takeaway-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        .takeaway-item {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 24px;
+        }
+        .takeaway-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: #6366f1;
+            opacity: 0.3;
+            line-height: 1;
+            margin-bottom: 16px;
+        }
+        .takeaway-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #ccc;
+        }
+        
+        /* Navigation */
+        .nav-section {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            padding: 60px 24px;
+        }
+        .nav-btn {
+            padding: 16px 32px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 12px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        .nav-btn:hover {
+            background: #222;
+            border-color: #6366f1;
+            transform: translateY(-2px);
+        }
+        .nav-btn.primary {
+            background: #6366f1;
+            border-color: #6366f1;
+        }
+        .nav-btn.primary:hover {
+            background: #5558e3;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 40px 20px 30px;
+            }
+            .hero h1 {
+                font-size: 36px;
+            }
+            .quick-preview {
+                padding: 24px;
+                margin: -10px 20px 30px;
+            }
+            .preview-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .preview-text {
+                font-size: 36px;
+            }
+            .timeline-wrapper {
+                grid-template-columns: 1fr;
+                gap: 32px;
+                min-height: auto;
+            }
+            .timeline-sidebar {
+                max-height: none;
+                position: relative;
+                top: 0;
+            }
+            .timeline-detail {
+                position: relative;
+                top: 0;
+                height: auto;
+                min-height: 500px;
+                border-left: none;
+                border-top: 2px solid #222;
+                padding: 40px 24px;
+            }
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            .toggle-controls {
+                flex-direction: column;
+            }
+            .toggle-btn {
+                max-width: 100%;
+            }
+            .diagram-letter {
+                font-size: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <h1>Serif vs Sans-serif</h1>
+        <p class="subtitle">Explore the fundamental differences between typography's two most important categories through interactive comparison and historical analysis.</p>
+    </section>
+
+    <!-- Quick Preview Section -->
+    <div class="container">
+        <div class="quick-preview">
+            <h2 class="preview-title">👁️ See the Difference</h2>
+            <div class="preview-grid">
+                <div class="preview-box serif">
+                    <div class="preview-label">Serif</div>
+                    <div class="preview-text">Typography</div>
+                    <p class="preview-desc">Traditional • Authoritative • Print-optimized</p>
+                </div>
+                <div class="preview-box sans">
+                    <div class="preview-label">Sans-serif</div>
+                    <div class="preview-text">Typography</div>
+                    <p class="preview-desc">Modern • Clean • Screen-optimized</p>
+                </div>
+            </div>
+            <p class="preview-cta"><strong>↓ Scroll down</strong> to explore their history, psychology, and real-world applications</p>
+        </div>
+    </div>
+    
+    <div class="section-divider"></div>
+
+    <div class="container">
+        
+        <!-- SECTION 1: HISTORICAL DEVELOPMENT -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-label">Chapter 01 • Interactive Timeline</div>
+                <h2 class="section-title">Historical Development</h2>
+                <p class="section-description"><strong>Click any timeline event</strong> to explore detailed historical information in the panel on the right.</p>
+            </div>
+            
+            <div class="timeline-wrapper">
+                <!-- Left Side: Timeline Cards -->
+                <div class="timeline-sidebar">
+                    <div class="timeline-card serif" data-event="roman">
+                        <div class="timeline-card-year">100 AD</div>
+                        <h3 class="timeline-card-title">Roman Inscriptions</h3>
+                        <p class="timeline-card-preview">Serifs originated from Roman stone carving. Stonemasons added finishing strokes to letter terminals...</p>
+                        <span class="timeline-card-badge">Serif Origins</span>
+                    </div>
+                    
+                    <div class="timeline-card serif" data-event="gutenberg">
+                        <div class="timeline-card-year">1455</div>
+                        <h3 class="timeline-card-title">Gutenberg's Movable Type</h3>
+                        <p class="timeline-card-preview">Johannes Gutenberg's printing press introduced the first serif typefaces to mass production...</p>
+                        <span class="timeline-card-badge">Printing Revolution</span>
+                    </div>
+                    
+                    <div class="timeline-card serif" data-event="caslon">
+                        <div class="timeline-card-year">1734</div>
+                        <h3 class="timeline-card-title">Transitional Serifs</h3>
+                        <p class="timeline-card-preview">William Caslon created refined serif typefaces with improved legibility...</p>
+                        <span class="timeline-card-badge">Old Style Evolution</span>
+                    </div>
+                    
+                    <div class="timeline-card serif" data-event="bodoni">
+                        <div class="timeline-card-year">1784</div>
+                        <h3 class="timeline-card-title">Modern Serifs Emerge</h3>
+                        <p class="timeline-card-preview">Firmin Didot and Giambattista Bodoni developed "Modern" serifs with extreme contrast...</p>
+                        <span class="timeline-card-badge">Neoclassical Design</span>
+                    </div>
+                    
+                    <div class="timeline-card sans" data-event="first-sans">
+                        <div class="timeline-card-year">1816</div>
+                        <h3 class="timeline-card-title">First Sans-serif</h3>
+                        <p class="timeline-card-preview">William Caslon IV introduced the first sans-serif typeface in England...</p>
+                        <span class="timeline-card-badge">Industrial Innovation</span>
+                    </div>
+                    
+                    <div class="timeline-card sans" data-event="futura">
+                        <div class="timeline-card-year">1927</div>
+                        <h3 class="timeline-card-title">Bauhaus & Geometric Sans</h3>
+                        <p class="timeline-card-preview">Paul Renner designed Futura, embodying Bauhaus principles of geometric simplicity...</p>
+                        <span class="timeline-card-badge">Modernist Movement</span>
+                    </div>
+                    
+                    <div class="timeline-card sans" data-event="helvetica">
+                        <div class="timeline-card-year">1957</div>
+                        <h3 class="timeline-card-title">Helvetica Revolution</h3>
+                        <p class="timeline-card-preview">Max Miedinger created Helvetica, which became the most influential sans-serif...</p>
+                        <span class="timeline-card-badge">Swiss Design</span>
+                    </div>
+                    
+                    <div class="timeline-card sans" data-event="digital">
+                        <div class="timeline-card-year">1984-Present</div>
+                        <h3 class="timeline-card-title">Digital Typography Era</h3>
+                        <p class="timeline-card-preview">Desktop publishing and screen displays favored sans-serif for its clarity...</p>
+                        <span class="timeline-card-badge">Screen Revolution</span>
+                    </div>
+                </div>
+                
+                <!-- Right Side: Detail Panel -->
+                <div class="timeline-detail" id="timelineDetail">
+                    <div class="detail-placeholder">
+                        <div class="detail-placeholder-icon">📜</div>
+                        <p class="detail-placeholder-text">Select a timeline event to explore its historical context, key figures, and lasting impact on typography.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <div class="section-divider"></div>
+
+        <!-- SECTION 2: INTERACTIVE COMPARISON -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-label">Chapter 02 • Live Demo</div>
+                <h2 class="section-title">Interactive Comparison</h2>
+                <p class="section-description">Experience the visual and functional differences between serif and sans-serif typefaces through interactive demonstrations.</p>
+            </div>
+            
+            <div class="interactive-panel">
+                <p class="panel-instruction">👆 Click a button to switch typefaces • ✍️ Type your own text below</p>
+                
+                <div class="toggle-controls">
+                    <button class="toggle-btn active" data-type="serif">
+                        <div class="btn-label">Traditional</div>
+                        <div class="btn-title">Serif</div>
+                    </button>
+                    <button class="toggle-btn" data-type="sans">
+                        <div class="btn-label">Modern</div>
+                        <div class="btn-title">Sans-serif</div>
+                    </button>
+                </div>
+                
+                <div class="custom-input-group">
+                    <div class="input-wrapper">
+                        <input type="text" class="custom-input" id="customText" placeholder="Try typing a sentence or headline..." maxlength="200" autocomplete="off">
+                        <div class="input-controls">
+                            <span class="char-count" id="charCount">0/200</span>
+                            <button class="reset-btn" id="resetBtn">Clear</button>
+                        </div>
+                    </div>
+                    <p class="input-hint">💡 Type to see how your text looks in different typefaces</p>
+                </div>
+                
+                <div class="sample-display">
+                    <div class="sample-text serif" id="sampleText">
+                        Typography is the art and technique of arranging type to make written language legible, readable, and appealing when displayed. The arrangement of type involves selecting typefaces, point sizes, line lengths, line-spacing (leading), and letter-spacing (tracking), and adjusting the space between pairs of letters (kerning). Typography is performed by typesetters, compositors, typographers, graphic designers, art directors, and clerical workers. Until the Digital Age, typography was a specialized occupation.
+                    </div>
+                </div>
+                
+                <div class="size-controls">
+                    <button class="size-btn" id="decreaseSize">−</button>
+                    <span class="size-label">Size</span>
+                    <span class="size-display" id="sizeDisplay">18px</span>
+                    <button class="size-btn" id="increaseSize">+</button>
+                </div>
+                
+                <div style="text-align: center; color: #888; font-size: 14px; margin-top: 16px;">
+                    <p>Notice how the typeface affects readability, tone, and visual rhythm</p>
+                </div>
+            </div>
+        </section>
+        
+        <div class="section-divider"></div>
+
+        <!-- SECTION 3: COMPARISON SLIDER -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-label">Interactive Tool</div>
+                <h2 class="section-title">Side-by-Side Slider</h2>
+                <p class="section-description">Drag the slider to directly compare serif and sans-serif letterforms</p>
+            </div>
+            
+            <div class="slider-container" id="sliderContainer">
+                <div class="slider-side slider-left" id="sliderLeft">
+                    <div class="slider-content">
+                        <div class="slider-label" style="color: #e74c3c;">Serif</div>
+                        <div class="slider-text" style="font-family: Georgia, serif;">Typography</div>
+                    </div>
+                </div>
+                <div class="slider-side slider-right" id="sliderRight">
+                    <div class="slider-content">
+                        <div class="slider-label" style="color: #3498db;">Sans-serif</div>
+                        <div class="slider-text" style="font-family: Arial, sans-serif;">Typography</div>
+                    </div>
+                </div>
+                <div class="slider-handle" id="sliderHandle"></div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: READABILITY & LEGIBILITY -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-label">Chapter 03</div>
+                <h2 class="section-title">Readability & Legibility</h2>
+                <p class="section-description">Understanding how typeface choice affects reading comprehension, eye movement, and user experience across different media.</p>
+            </div>
+            
+            <div class="comparison-grid">
+                <div class="comparison-card serif-card">
+                    <h3 class="card-title">Serif Readability</h3>
+                    
+                    <h4 class="card-subtitle">Advantages</h4>
+                    <ul class="card-list">
+                        <li>Serifs create horizontal flow, guiding the eye along text lines</li>
+                        <li>Excellent for extended reading in print (books, newspapers)</li>
+                        <li>Stroke contrast aids character differentiation</li>
+                        <li>Conveys authority, tradition, and formality</li>
+                        <li>Reduces eye fatigue in long-form print reading</li>
+                    </ul>
+                    
+                    <h4 class="card-subtitle">Considerations</h4>
+                    <ul class="card-list">
+                        <li>Fine serifs can blur at small sizes on low-resolution screens</li>
+                        <li>May appear cluttered in dense digital layouts</li>
+                        <li>Requires higher print quality for optimal rendering</li>
+                        <li>Can feel outdated in modern digital contexts</li>
+                    </ul>
+                    
+                    <h4 class="card-subtitle">Best Use Cases</h4>
+                    <ul class="card-list">
+                        <li>Print books and long-form articles</li>
+                        <li>Academic and scholarly publications</li>
+                        <li>Traditional newspapers and magazines</li>
+                        <li>Formal documents and certificates</li>
+                        <li>High-resolution digital reading (e-readers, tablets)</li>
+                    </ul>
+                </div>
+                
+                <div class="comparison-card sans-card">
+                    <h3 class="card-title">Sans-serif Readability</h3>
+                    
+                    <h4 class="card-subtitle">Advantages</h4>
+                    <ul class="card-list">
+                        <li>Clean, simple letterforms enhance screen legibility</li>
+                        <li>Maintains clarity at all sizes and resolutions</li>
+                        <li>Uniform stroke weight reduces visual noise</li>
+                        <li>Conveys modernity, clarity, and approachability</li>
+                        <li>Optimal for user interfaces and digital navigation</li>
+                    </ul>
+                    
+                    <h4 class="card-subtitle">Considerations</h4>
+                    <ul class="card-list">
+                        <li>Lack of serifs may reduce reading speed in long print texts</li>
+                        <li>Can appear impersonal or sterile in some contexts</li>
+                        <li>Similar letterforms (I, l, 1) may cause confusion</li>
+                        <li>May lack the gravitas needed for formal documents</li>
+                    </ul>
+                    
+                    <h4 class="card-subtitle">Best Use Cases</h4>
+                    <ul class="card-list">
+                        <li>Websites and mobile applications</li>
+                        <li>User interface elements and navigation</li>
+                        <li>Digital signage and wayfinding</li>
+                        <li>Modern branding and corporate identity</li>
+                        <li>Social media and short-form digital content</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: ANATOMICAL FEATURES -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-label">Chapter 04</div>
+                <h2 class="section-title">Anatomical Features</h2>
+                <p class="section-description">Examine the structural differences that define serif and sans-serif letterforms</p>
+            </div>
+            
+            <div class="comparison-grid">
+                <div class="diagram-container">
+                    <h3 style="color: #e74c3c; margin-bottom: 24px;">Serif Anatomy</h3>
+                    <div class="diagram-letter serif">A</div>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">📐</div>
+                            <div class="feature-title">Serifs</div>
+                            <div class="feature-text">Small decorative strokes at letter terminals, bracketed or unbracketed</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">〰️</div>
+                            <div class="feature-title">Stroke Contrast</div>
+                            <div class="feature-text">Variation between thick and thin strokes creates visual rhythm</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🎯</div>
+                            <div class="feature-title">Stress Axis</div>
+                            <div class="feature-text">Diagonal or vertical stress in curved strokes</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="diagram-container">
+                    <h3 style="color: #3498db; margin-bottom: 24px;">Sans-serif Anatomy</h3>
+                    <div class="diagram-letter sans">A</div>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">✂️</div>
+                            <div class="feature-title">No Serifs</div>
+                            <div class="feature-text">Clean, abrupt terminals without decorative strokes</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">━</div>
+                            <div class="feature-title">Uniform Stroke</div>
+                            <div class="feature-text">Minimal or no variation in stroke weight</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">○</div>
+                            <div class="feature-title">Geometric Forms</div>
+                            <div class="feature-text">Often based on simple geometric shapes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: REAL-WORLD APPLICATIONS -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-label">Chapter 05</div>
+                <h2 class="section-title">Real-World Applications</h2>
+                <p class="section-description">Explore how leading organizations leverage serif and sans-serif typefaces to communicate their brand identity and values</p>
+            </div>
+            
+            <h3 style="font-size: 28px; margin: 60px 0 32px; color: #e74c3c;">Serif Case Studies</h3>
+            
+            <div class="case-study">
+                <div class="case-study-header">
+                    <div class="case-study-icon">📰</div>
+                    <div>
+                        <h4 class="case-study-title">The New York Times</h4>
+                        <p class="case-study-subtitle">Editorial Publishing</p>
+                    </div>
+                </div>
+                <div class="case-study-content">
+                    <p><strong>Typeface:</strong> Custom serif (NYT Cheltenham, Georgia for web)</p>
+                    <p><strong>Rationale:</strong> Serif typefaces convey journalistic authority, tradition, and credibility. The Times uses serifs to establish trust and gravitas in news reporting. The stroke contrast and serifs enhance readability in dense text columns, both in print and digital formats.</p>
+                    <p><strong>Impact:</strong> The serif choice reinforces the publication's 170-year heritage and commitment to serious journalism.</p>
+                </div>
+            </div>
+            
+            <div class="case-study">
+                <div class="case-study-header">
+                    <div class="case-study-icon">📚</div>
+                    <div>
+                        <h4 class="case-study-title">Book Publishing Industry</h4>
+                        <p class="case-study-subtitle">Long-form Reading</p>
+                    </div>
+                </div>
+                <div class="case-study-content">
+                    <p><strong>Typefaces:</strong> Garamond, Baskerville, Caslon, Minion</p>
+                    <p><strong>Rationale:</strong> Serif typefaces dominate book publishing because serifs guide horizontal eye movement, reducing fatigue during extended reading. The stroke contrast creates visual rhythm that aids comprehension and maintains reader engagement over hundreds of pages.</p>
+                    <p><strong>Impact:</strong> Studies show readers can sustain attention longer with well-set serif text in print formats.</p>
+                </div>
+            </div>
+            
+            <div class="case-study">
+                <div class="case-study-header">
+                    <div class="case-study-icon">🏛️</div>
+                    <div>
+                        <h4 class="case-study-title">Legal & Financial Documents</h4>
+                        <p class="case-study-subtitle">Formal Communication</p>
+                    </div>
+                </div>
+                <div class="case-study-content">
+                    <p><strong>Typefaces:</strong> Times New Roman, Century Schoolbook</p>
+                    <p><strong>Rationale:</strong> Serif typefaces communicate formality, authority, and permanence—essential qualities for legal contracts, financial reports, and official documents. The traditional appearance signals seriousness and institutional legitimacy.</p>
+                    <p><strong>Impact:</strong> Serif usage in legal contexts is so established that many courts specify serif typefaces in filing requirements.</p>
+                </div>
+            </div>
+            
+            <h3 style="font-size: 28px; margin: 80px 0 32px; color: #3498db;">Sans-serif Case Studies</h3>
+            
+            <div class="case-study">
+                <div class="case-study-header">
+                    <div class="case-study-icon">🍎</div>
+                    <div>
+                        <h4 class="case-study-title">Apple</h4>
+                        <p class="case-study-subtitle">Technology & Design</p>
+                    </div>
+                </div>
+                <div class="case-study-content">
+                    <p><strong>Typeface:</strong> San Francisco (custom sans-serif)</p>
+                    <p><strong>Rationale:</strong> Apple uses sans-serif exclusively to communicate simplicity, modernity, and technological sophistication. The clean letterforms align with their minimalist design philosophy and ensure optimal legibility across all screen sizes and resolutions.</p>
+                    <p><strong>Impact:</strong> San Francisco's design includes optical sizes optimized for different display contexts, demonstrating how sans-serif can be both functional and expressive.</p>
+                </div>
+            </div>
+            
+            <div class="case-study">
+                <div class="case-study-header">
+                    <div class="case-study-icon">🚇</div>
+                    <div>
+                        <h4 class="case-study-title">NYC Subway System</h4>
+                        <p class="case-study-subtitle">Wayfinding & Signage</p>
+                    </div>
+                </div>
+                <div class="case-study-content">
+                    <p><strong>Typeface:</strong> Helvetica</p>
+                    <p><strong>Rationale:</strong> Sans-serif typefaces excel in wayfinding because they remain legible at distance, in motion, and under poor lighting. Helvetica's neutral, unambiguous letterforms enable split-second recognition—critical for navigation in busy public spaces.</p>
+                    <p><strong>Impact:</strong> The 1970 NYC subway redesign using Helvetica became a landmark in information design, influencing transit systems worldwide.</p>
+                </div>
+            </div>
+            
+            <div class="case-study">
+                <div class="case-study-header">
+                    <div class="case-study-icon">🌐</div>
+                    <div>
+                        <h4 class="case-study-title">Google & Web Platforms</h4>
+                        <p class="case-study-subtitle">Digital Interfaces</p>
+                    </div>
+                </div>
+                <div class="case-study-content">
+                    <p><strong>Typeface:</strong> Roboto, Google Sans</p>
+                    <p><strong>Rationale:</strong> Sans-serif typefaces dominate web and app interfaces because they render clearly at all screen resolutions and sizes. The uniform stroke weight reduces visual complexity, allowing users to focus on content and functionality rather than typography.</p>
+                    <p><strong>Impact:</strong> Google's Material Design system established sans-serif as the standard for modern UI design, influencing millions of applications.</p>
+                </div>
+            </div>
+            
+            <div class="case-study">
+                <div class="case-study-header">
+                    <div class="case-study-icon">✈️</div>
+                    <div>
+                        <h4 class="case-study-title">Airlines & Transportation</h4>
+                        <p class="case-study-subtitle">Brand Identity</p>
+                    </div>
+                </div>
+                <div class="case-study-content">
+                    <p><strong>Typefaces:</strong> Helvetica, Frutiger, custom sans-serifs</p>
+                    <p><strong>Rationale:</strong> Airlines use sans-serif typefaces to project efficiency, modernity, and international accessibility. The clean, neutral appearance transcends cultural boundaries and maintains legibility in diverse contexts—from boarding passes to airport signage.</p>
+                    <p><strong>Impact:</strong> American Airlines' adoption of Helvetica in the 1960s set the standard for corporate sans-serif usage in transportation.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 7: KEY TAKEAWAYS -->
+        <section class="section">
+            <div class="takeaway-box">
+                <h2 class="takeaway-title">Key Takeaways</h2>
+                <div class="takeaway-grid">
+                    <div class="takeaway-item">
+                        <div class="takeaway-number">01</div>
+                        <div class="takeaway-text">
+                            <strong>Historical Context Matters:</strong> Serif typefaces carry 2,000 years of tradition from Roman inscriptions, while sans-serif represents 200 years of modernist innovation. Understanding this history informs appropriate usage.
+                        </div>
+                    </div>
+                    <div class="takeaway-item">
+                        <div class="takeaway-number">02</div>
+                        <div class="takeaway-text">
+                            <strong>Medium Determines Choice:</strong> Serif excels in high-resolution print for extended reading. Sans-serif dominates digital screens and user interfaces. Modern high-DPI displays are blurring these boundaries.
+                        </div>
+                    </div>
+                    <div class="takeaway-item">
+                        <div class="takeaway-number">03</div>
+                        <div class="takeaway-text">
+                            <strong>Context Over Rules:</strong> Neither category is inherently superior. Effective typography requires matching typeface characteristics to communication goals, audience expectations, and medium constraints.
+                        </div>
+                    </div>
+                    <div class="takeaway-item">
+                        <div class="takeaway-number">04</div>
+                        <div class="takeaway-text">
+                            <strong>Readability is Complex:</strong> Factors like x-height, letter-spacing, line length, and contrast affect readability more than serif presence alone. Test typefaces in actual use contexts.
+                        </div>
+                    </div>
+                    <div class="takeaway-item">
+                        <div class="takeaway-number">05</div>
+                        <div class="takeaway-text">
+                            <strong>Brand Personality:</strong> Serif conveys tradition, authority, and formality. Sans-serif projects modernity, efficiency, and approachability. Choose based on desired brand perception.
+                        </div>
+                    </div>
+                    <div class="takeaway-item">
+                        <div class="takeaway-number">06</div>
+                        <div class="takeaway-text">
+                            <strong>Hybrid Approaches Work:</strong> Many successful designs combine serif headlines with sans-serif body text (or vice versa) to balance tradition and modernity, creating visual hierarchy and interest.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <nav class="nav-section">
+        <a href="#/" class="nav-btn">← Back to Home</a>
+        <a href="#/comparison-quiz" class="nav-btn primary">Test Your Knowledge →</a>
+    </nav>
+
+
+    <script>
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section, .timeline-item').forEach(el => {
+            observer.observe(el);
+        });
+        
+        // Immediately show first section on page load
+        setTimeout(() => {
+            const firstSection = document.querySelector('.section');
+            if (firstSection) {
+                firstSection.classList.add('visible');
+            }
+        }, 100);
+
+        // Toggle buttons for interactive comparison
+        const toggleBtns = document.querySelectorAll('.toggle-btn');
+        const sampleText = document.getElementById('sampleText');
+
+        toggleBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                toggleBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const type = btn.dataset.type;
+                sampleText.className = `sample-text ${type}`;
+            });
+        });
+
+        // ========================================
+        // ENHANCED CUSTOM TEXT INPUT
+        // ========================================
+        
+        const customInput = document.getElementById('customText');
+        // sampleText already declared above
+        const charCount = document.getElementById('charCount');
+        const resetBtn = document.getElementById('resetBtn');
+        const decreaseSize = document.getElementById('decreaseSize');
+        const increaseSize = document.getElementById('increaseSize');
+        const sizeDisplay = document.getElementById('sizeDisplay');
+        
+        const defaultText = sampleText.textContent.trim();
+        let currentSize = 18;
+        const minSize = 12;
+        const maxSize = 48;
+        
+        // Update text with smooth transition
+        function updateSampleText(text) {
+            const displayText = text.trim() || defaultText;
+            
+            // Add empty class if using default text
+            if (!text.trim()) {
+                sampleText.classList.add('empty');
+            } else {
+                sampleText.classList.remove('empty');
+            }
+            
+            // Smooth transition
+            sampleText.style.opacity = '0.7';
+            sampleText.style.transform = 'scale(0.98)';
+            
+            setTimeout(() => {
+                sampleText.textContent = displayText;
+                sampleText.style.opacity = '1';
+                sampleText.style.transform = 'scale(1)';
+            }, 150);
+        }
+        
+        // Input event with debouncing for performance
+        let inputTimeout;
+        customInput.addEventListener('input', (e) => {
+            const text = e.target.value;
+            const count = text.length;
+            
+            // Update character count
+            charCount.textContent = `${count}/200`;
+            charCount.style.color = count > 180 ? '#e74c3c' : count > 150 ? '#f39c12' : '#666';
+            
+            // Debounce for smooth performance
+            clearTimeout(inputTimeout);
+            inputTimeout = setTimeout(() => {
+                updateSampleText(text);
+            }, 100);
+        });
+        
+        // Reset button
+        resetBtn.addEventListener('click', () => {
+            customInput.value = '';
+            charCount.textContent = '0/200';
+            charCount.style.color = '#666';
+            updateSampleText('');
+            customInput.focus();
+            
+            // Visual feedback
+            resetBtn.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                resetBtn.style.transform = 'scale(1)';
+            }, 100);
+        });
+        
+        // Size controls
+        function updateSize(newSize) {
+            currentSize = Math.max(minSize, Math.min(maxSize, newSize));
+            sampleText.style.fontSize = currentSize + 'px';
+            sizeDisplay.textContent = currentSize + 'px';
+            
+            // Disable buttons at limits
+            decreaseSize.style.opacity = currentSize <= minSize ? '0.3' : '1';
+            decreaseSize.style.cursor = currentSize <= minSize ? 'not-allowed' : 'pointer';
+            increaseSize.style.opacity = currentSize >= maxSize ? '0.3' : '1';
+            increaseSize.style.cursor = currentSize >= maxSize ? 'not-allowed' : 'pointer';
+        }
+        
+        decreaseSize.addEventListener('click', () => {
+            if (currentSize > minSize) {
+                updateSize(currentSize - 2);
+            }
+        });
+        
+        increaseSize.addEventListener('click', () => {
+            if (currentSize < maxSize) {
+                updateSize(currentSize + 2);
+            }
+        });
+        
+        // Keyboard shortcuts
+        customInput.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + Backspace to clear
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Backspace') {
+                e.preventDefault();
+                resetBtn.click();
+            }
+        });
+        
+        // Focus effects
+        customInput.addEventListener('focus', () => {
+            customInput.parentElement.style.transform = 'scale(1.01)';
+        });
+        
+        customInput.addEventListener('blur', () => {
+            customInput.parentElement.style.transform = 'scale(1)';
+        });
+        
+        // Initialize
+        updateSize(currentSize);
+
+        // Comparison slider
+        const sliderContainer = document.getElementById('sliderContainer');
+        const sliderHandle = document.getElementById('sliderHandle');
+        const sliderLeft = document.getElementById('sliderLeft');
+        let isDragging = false;
+
+        sliderHandle.addEventListener('mousedown', () => {
+            isDragging = true;
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            const rect = sliderContainer.getBoundingClientRect();
+            let x = e.clientX - rect.left;
+            x = Math.max(0, Math.min(x, rect.width));
+            
+            const percentage = (x / rect.width) * 100;
+            sliderLeft.style.width = percentage + '%';
+            sliderHandle.style.left = percentage + '%';
+        });
+
+        // Touch support for slider
+        sliderHandle.addEventListener('touchstart', () => {
+            isDragging = true;
+        });
+
+        document.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            
+            const touch = e.touches[0];
+            const rect = sliderContainer.getBoundingClientRect();
+            let x = touch.clientX - rect.left;
+            x = Math.max(0, Math.min(x, rect.width));
+            
+            const percentage = (x / rect.width) * 100;
+            sliderLeft.style.width = percentage + '%';
+            sliderHandle.style.left = percentage + '%';
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href.length > 1 && href.startsWith('#/')) {
+                    return; // Let router handle it
+                }
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Feature card hover effects
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Case study expand on click
+        document.querySelectorAll('.case-study').forEach(study => {
+            study.addEventListener('click', () => {
+                study.style.transform = study.style.transform === 'scale(1.02)' ? 'scale(1)' : 'scale(1.02)';
+            });
+        });
+
+        // ========================================
+        // DETAIL PANEL INTERACTION
+        // ========================================
+        
+        const detailPanel = document.getElementById('detailPanel');
+        const detailOverlay = document.getElementById('detailOverlay');
+        const detailClose = document.getElementById('detailClose');
+        const detailContent = document.getElementById('detailContent');
+        
+        // Timeline event data with detailed information
+        const timelineData = {
+            'roman': {
+                year: '100 AD',
+                title: 'Roman Inscriptions',
+                category: 'Serif Origins',
+                type: 'serif',
+                description: 'Serifs originated from Roman stone carving. Stonemasons added finishing strokes (serifs) to letter terminals, both for aesthetic refinement and to prevent stone chipping.',
+                context: 'The Roman Empire\'s monumental inscriptions, particularly the Trajan Column (113 AD), represent the pinnacle of classical letterform design. These inscriptions were carved into stone using a chisel, and the serifs served both practical and aesthetic purposes.',
+                keyFigures: [
+                    'Roman Stonemasons - Developed the technique of adding finishing strokes',
+                    'Emperor Trajan - Commissioned the iconic Trajan Column',
+                    'Imperial Scribes - Standardized letterforms across the empire'
+                ],
+                impact: [
+                    'Established serifs as a fundamental typographic element',
+                    'Created proportions still used in modern typefaces',
+                    'Influenced 2,000 years of Western typography',
+                    'Trajan Column became the gold standard for serif design'
+                ],
+                examples: 'Trajan, Perpetua, Optima (inspired by Roman inscriptions)',
+                specimen: 'SPQR'
+            },
+            'gutenberg': {
+                year: '1455',
+                title: 'Gutenberg\'s Movable Type',
+                category: 'Printing Revolution',
+                type: 'serif',
+                description: 'Johannes Gutenberg\'s printing press introduced the first serif typefaces to mass production. His Blackletter style mimicked manuscript calligraphy.',
+                context: 'Gutenberg\'s invention of movable type printing revolutionized information dissemination in Europe. His 42-line Bible, printed in Mainz, Germany, used a Blackletter typeface (Textura) that replicated the handwritten manuscripts of medieval scribes.',
+                keyFigures: [
+                    'Johannes Gutenberg - Inventor of movable type printing',
+                    'Peter Schöffer - Gutenberg\'s assistant, refined typeface design',
+                    'Nicolas Jenson - Created the first Roman-style typeface (1470)'
+                ],
+                impact: [
+                    'Made books affordable and accessible',
+                    'Standardized letterforms across printed materials',
+                    'Sparked the Renaissance and Reformation',
+                    'Established printing as an industry',
+                    'Led to development of distinct typeface styles'
+                ],
+                examples: 'Blackletter, Textura, Fraktur, early Roman types',
+                specimen: 'Biblia'
+            },
+            'caslon': {
+                year: '1734',
+                title: 'Transitional Serifs',
+                category: 'Old Style Evolution',
+                type: 'serif',
+                description: 'William Caslon created refined serif typefaces with improved legibility. This era saw the development of Old Style serifs with moderate stroke contrast.',
+                context: 'The 18th century saw typography evolve from Old Style to Transitional designs. William Caslon\'s typefaces bridged medieval and modern aesthetics, offering improved readability while maintaining classical proportions.',
+                keyFigures: [
+                    'William Caslon - Created Caslon typeface (1734)',
+                    'John Baskerville - Developed Baskerville (1757)',
+                    'Pierre Simon Fournier - Pioneered type measurement systems'
+                ],
+                impact: [
+                    'Improved legibility in printed materials',
+                    'Balanced tradition with innovation',
+                    'Became the standard for English printing',
+                    'Used in the U.S. Declaration of Independence',
+                    'Influenced modern serif design'
+                ],
+                examples: 'Caslon, Baskerville, Fournier',
+                specimen: 'Typography'
+            },
+            'bodoni': {
+                year: '1784',
+                title: 'Modern Serifs Emerge',
+                category: 'Neoclassical Design',
+                type: 'serif',
+                description: 'Firmin Didot and Giambattista Bodoni developed "Modern" serifs with extreme contrast between thick and thin strokes.',
+                context: 'The Enlightenment\'s emphasis on reason and geometry influenced typography. Bodoni and Didot created "Modern" or "Didone" typefaces with mathematical precision, vertical stress, and dramatic stroke contrast—reflecting neoclassical aesthetics.',
+                keyFigures: [
+                    'Giambattista Bodoni - Created Bodoni typeface (1798)',
+                    'Firmin Didot - Developed Didot typeface (1784)',
+                    'Justus Erich Walbaum - Designed Walbaum (1800)'
+                ],
+                impact: [
+                    'Represented Enlightenment rationalism in design',
+                    'Influenced fashion and luxury branding',
+                    'Created dramatic visual impact in headlines',
+                    'Established "Modern" as a distinct classification',
+                    'Still used in high-fashion publications (Vogue, Harper\'s Bazaar)'
+                ],
+                examples: 'Bodoni, Didot, Walbaum, Modern No. 20',
+                specimen: 'Elegance'
+            },
+            'first-sans': {
+                year: '1816',
+                title: 'First Sans-serif',
+                category: 'Industrial Innovation',
+                type: 'sans',
+                description: 'William Caslon IV introduced the first sans-serif typeface in England. Initially called "grotesque" or "gothic," it was considered radical.',
+                context: 'The Industrial Revolution demanded bold, attention-grabbing typefaces for advertising. William Caslon IV\'s sans-serif was initially met with skepticism—critics called it "grotesque" for lacking traditional serifs. It was used primarily for posters and display purposes.',
+                keyFigures: [
+                    'William Caslon IV - Created first sans-serif (1816)',
+                    'Vincent Figgins - Developed early sans-serif designs',
+                    'Robert Thorne - Pioneered "fat face" display types'
+                ],
+                impact: [
+                    'Challenged 400 years of serif dominance',
+                    'Enabled bold, legible advertising',
+                    'Sparked debate about typographic aesthetics',
+                    'Laid groundwork for modernist typography',
+                    'Introduced functional, utilitarian design'
+                ],
+                examples: 'Caslon Sans, Grotesque, Akzidenz-Grotesk',
+                specimen: 'MODERN'
+            },
+            'futura': {
+                year: '1927',
+                title: 'Bauhaus & Geometric Sans',
+                category: 'Modernist Movement',
+                type: 'sans',
+                description: 'Paul Renner designed Futura, embodying Bauhaus principles of geometric simplicity and functionalism.',
+                context: 'The Bauhaus school revolutionized design with its "form follows function" philosophy. Paul Renner\'s Futura used pure geometric shapes—circles, triangles, and squares—to create a typeface that rejected historical ornamentation in favor of modernist clarity.',
+                keyFigures: [
+                    'Paul Renner - Designed Futura (1927)',
+                    'Herbert Bayer - Created Universal typeface',
+                    'Jan Tschichold - Advocated for modernist typography',
+                    'Walter Gropius - Founded Bauhaus school'
+                ],
+                impact: [
+                    'Defined modernist typography',
+                    'Influenced corporate identity design',
+                    'Used on Apollo 11 moon plaque',
+                    'Became symbol of progress and innovation',
+                    'Inspired countless geometric sans-serifs'
+                ],
+                examples: 'Futura, Avant Garde, Geometric 415, Spartan',
+                specimen: 'BAUHAUS'
+            },
+            'helvetica': {
+                year: '1957',
+                title: 'Helvetica Revolution',
+                category: 'Swiss Design',
+                type: 'sans',
+                description: 'Max Miedinger created Helvetica, which became the most influential sans-serif of the 20th century.',
+                context: 'Helvetica emerged from the Swiss International Style, emphasizing clarity, objectivity, and neutrality. Originally named Neue Haas Grotesk, it was renamed Helvetica (Latin for "Swiss") for international marketing. Its balanced proportions and neutral appearance made it universally applicable.',
+                keyFigures: [
+                    'Max Miedinger - Designed Helvetica (1957)',
+                    'Eduard Hoffmann - Commissioned the typeface',
+                    'Massimo Vignelli - Championed Helvetica in design',
+                    'Josef Müller-Brockmann - Swiss Style pioneer'
+                ],
+                impact: [
+                    'Became the world\'s most used typeface',
+                    'Defined corporate modernism (IBM, American Airlines)',
+                    'Used in NYC Subway signage',
+                    'Featured in documentary film (2007)',
+                    'Symbolizes clarity and professionalism',
+                    'Influenced Arial and countless imitations'
+                ],
+                examples: 'Helvetica, Helvetica Neue, Arial, Univers',
+                specimen: 'CLARITY'
+            },
+            'digital': {
+                year: '1984-Present',
+                title: 'Digital Typography Era',
+                category: 'Screen Revolution',
+                type: 'sans',
+                description: 'Desktop publishing and screen displays favored sans-serif for its clarity at low resolutions.',
+                context: 'The Macintosh (1984) and desktop publishing democratized typography. Early screen resolutions (72 dpi) made serif details blur, favoring sans-serif. The web (1990s) and mobile devices (2000s) cemented sans-serif dominance. High-resolution Retina displays (2010s) revived serif usage online.',
+                keyFigures: [
+                    'Susan Kare - Designed original Mac system fonts',
+                    'Matthew Carter - Created Verdana and Georgia for screens',
+                    'Jonathan Hoefler & Tobias Frere-Jones - Screen-optimized typefaces',
+                    'Christian Robertson - Designed Roboto for Android'
+                ],
+                impact: [
+                    'Made typography accessible to non-professionals',
+                    'Prioritized screen legibility over print aesthetics',
+                    'Created demand for web fonts and font services',
+                    'Enabled responsive typography',
+                    'Blurred boundaries between serif and sans-serif usage',
+                    'Introduced variable fonts and dynamic typography'
+                ],
+                examples: 'Verdana, Georgia, Roboto, San Francisco, Inter, System fonts',
+                specimen: 'DIGITAL'
+            }
+        };
+        
+        // ========================================
+        // SPLIT-SCREEN TIMELINE INTERACTION
+        // ========================================
+        
+        const timelineDetail = document.getElementById('timelineDetail');
+        const timelineCards = document.querySelectorAll('.timeline-card');
+        
+        // Add click handlers to timeline cards
+        timelineCards.forEach(card => {
+            const eventKey = card.getAttribute('data-event');
+            
+            card.setAttribute('role', 'button');
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('aria-label', `View details about ${timelineData[eventKey].title}`);
+            
+            card.addEventListener('click', () => loadDetailContent(eventKey, card));
+            card.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    loadDetailContent(eventKey, card);
+                }
+            });
+        });
+        
+        // Load detail content into right panel
+        function loadDetailContent(eventKey, clickedCard) {
+            const data = timelineData[eventKey];
+            if (!data) return;
+            
+            // Remove active class from all cards
+            timelineCards.forEach(card => card.classList.remove('active'));
+            
+            // Add active class to clicked card
+            clickedCard.classList.add('active');
+            
+            // Fade out current content
+            const currentContent = timelineDetail.querySelector('.detail-content');
+            if (currentContent) {
+                currentContent.classList.remove('active');
+                setTimeout(() => {
+                    updateDetailContent(data);
+                }, 300);
+            } else {
+                updateDetailContent(data);
+            }
+        }
+        
+        // Update detail panel content
+        function updateDetailContent(data) {
+            timelineDetail.innerHTML = `
+                <div class="detail-content">
+                    <div class="detail-header">
+                        <div class="detail-year">${data.year}</div>
+                        <h2 class="detail-title">${data.title}</h2>
+                        <span class="detail-category">${data.category}</span>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">Overview</h3>
+                        <p class="detail-text">${data.description}</p>
+                    </div>
+                    
+                    <div class="detail-specimen">
+                        <div class="detail-specimen-text ${data.type}">${data.specimen}</div>
+                        <div class="detail-specimen-label">Type Specimen</div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">Historical Context</h3>
+                        <p class="detail-text">${data.context}</p>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">Key Figures</h3>
+                        <ul class="detail-list">
+                            ${data.keyFigures.map(figure => `<li>${figure}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">Impact & Legacy</h3>
+                        <ul class="detail-list">
+                            ${data.impact.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-highlight">
+                        <p><strong>Notable Examples:</strong> ${data.examples}</p>
+                    </div>
+                </div>
+            `;
+            
+            // Fade in new content
+            setTimeout(() => {
+                const newContent = timelineDetail.querySelector('.detail-content');
+                if (newContent) {
+                    newContent.classList.add('active');
+                }
+            }, 50);
+        }
+    </script>
+<script src="../back-nav.js"></script>
+</body>
+</html>

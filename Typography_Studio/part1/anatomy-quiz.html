@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typography Anatomy Game - Typography Studio</title>
+    <link rel="stylesheet" href="../design-tokens.css">
+    <link rel="stylesheet" href="../unified-components.css">
+    <style>
+        body {
+            overflow-x: hidden;
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            position: absolute;
+            animation: confetti-fall 3s linear;
+            pointer-events: none;
+        }
+        
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .game-board {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 40px 0;
+        }
+        
+        .letter-display {
+            background: var(--white);
+            border: 2px solid var(--light-gray);
+            padding: 60px;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .letter-display .big-letter {
+            font-size: 300px;
+            font-family: Georgia, serif;
+            color: var(--black);
+            position: relative;
+            user-select: none;
+        }
+        
+        .hotspot {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 3px dashed var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+        
+        .hotspot:hover {
+            background: rgba(0, 102, 255, 0.2);
+            transform: scale(1.2);
+            box-shadow: 0 0 20px rgba(0, 102, 255, 0.5);
+        }
+        
+        .hotspot.found {
+            background: #4caf50;
+            border-color: #4caf50;
+            animation: none;
+        }
+        
+        .terms-panel {
+            background: var(--white);
+            border: 2px solid var(--light-gray);
+            padding: 40px;
+        }
+        
+        .term-option {
+            background: var(--white);
+            border: 2px solid var(--light-gray);
+            padding: 20px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1em;
+        }
+        
+        .term-option:hover {
+            background: var(--black);
+            color: var(--white);
+            transform: translateX(10px);
+        }
+        
+        .term-option.selected {
+            background: var(--accent);
+            color: var(--white);
+            border-color: var(--accent);
+        }
+        
+        .term-option.correct {
+            background: #4caf50;
+            color: var(--white);
+            border-color: #4caf50;
+            pointer-events: none;
+        }
+        
+        .term-option.wrong {
+            background: #f44336;
+            color: var(--white);
+            border-color: #f44336;
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            padding: 20px;
+            background: var(--white);
+            border: 2px solid var(--light-gray);
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: 300;
+            color: var(--black);
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: var(--mid-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .timer {
+            font-size: 3em;
+            font-weight: 300;
+            color: var(--accent);
+        }
+        
+        .timer.warning {
+            color: #f44336;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .game-over {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .game-over.show {
+            display: flex;
+        }
+        
+        .game-over-content {
+            background: var(--white);
+            padding: 80px;
+            text-align: center;
+            max-width: 600px;
+        }
+        
+        .game-over-content h2 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+        
+        .final-score {
+            font-size: 5em;
+            color: var(--accent);
+            font-weight: 300;
+            margin: 30px 0;
+        }
+        
+        .instruction {
+            background: #fffbea;
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 1.1em;
+        }
+        
+        .achievement {
+            position: fixed;
+            top: 100px;
+            right: -400px;
+            background: var(--black);
+            color: var(--white);
+            padding: 20px 30px;
+            border-radius: 0;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 1500;
+            transition: right 0.5s;
+            min-width: 300px;
+        }
+        
+        .achievement.show {
+            right: 30px;
+        }
+        
+        .achievement-title {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+        
+        .achievement-desc {
+            font-size: 0.9em;
+            color: var(--light-gray);
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <a href="#/" class="logo">Typography Studio</a>
+            <ul class="nav-links">
+                <li><a href="../index.html#fundamentals">Fundamentals</a></li>
+                <li><a href="../index.html#tools">Design Tools</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="game-container">
+            <a href="#/anatomy" class="back-btn">← Back to Anatomy</a>
+            
+            <div style="padding: 80px 0 60px; border-bottom: 1px solid var(--light-gray);">
+                <h1 style="font-size: 4em; color: var(--black); margin-bottom: 20px; font-weight: 300; letter-spacing: -0.02em;">Typography Anatomy Game</h1>
+                <p style="font-size: 1.2em; color: var(--mid-gray);">Click the glowing spots on the letter and match them with the correct term!</p>
+            </div>
+
+            <div class="instruction">
+                <strong>How to Play:</strong> Click on a glowing spot on the letter, then click the matching term. Get all 5 correct before time runs out!
+            </div>
+
+            <div class="game-stats">
+                <div class="stat">
+                    <div class="stat-value" id="score">0</div>
+                    <div class="stat-label">Score</div>
+                </div>
+                <div class="stat">
+                    <div class="timer" id="timer">60</div>
+                    <div class="stat-label">Seconds</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="found">0/5</div>
+                    <div class="stat-label">Found</div>
+                </div>
+            </div>
+
+            <div class="game-board">
+                <div class="letter-display" id="letter-display">
+                    <div class="big-letter">h</div>
+                    <!-- Ascender: top of the h -->
+                    <div class="hotspot" style="top: 8%; left: 25%;" data-term="ascender" onclick="selectHotspot('ascender')"></div>
+                    <!-- Stem: main vertical stroke -->
+                    <div class="hotspot" style="top: 40%; left: 25%;" data-term="stem" onclick="selectHotspot('stem')"></div>
+                    <!-- Counter: enclosed space in h -->
+                    <div class="hotspot" style="top: 50%; left: 55%;" data-term="counter" onclick="selectHotspot('counter')"></div>
+                    <!-- Baseline: bottom line -->
+                    <div class="hotspot" style="bottom: 8%; left: 50%;" data-term="baseline" onclick="selectHotspot('baseline')"></div>
+                    <!-- X-height: height of the bowl -->
+                    <div class="hotspot" style="top: 35%; left: 75%;" data-term="x-height" onclick="selectHotspot('x-height')"></div>
+                </div>
+
+                <div class="terms-panel">
+                    <h3 style="margin-bottom: 30px; font-size: 1.5em; font-weight: 400;">Click a glowing spot, then select:</h3>
+                    <div class="term-option" onclick="selectTerm('baseline')">Baseline</div>
+                    <div class="term-option" onclick="selectTerm('x-height')">X-height</div>
+                    <div class="term-option" onclick="selectTerm('ascender')">Ascender</div>
+                    <div class="term-option" onclick="selectTerm('stem')">Stem</div>
+                    <div class="term-option" onclick="selectTerm('counter')">Counter</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-over" id="game-over">
+        <div class="game-over-content">
+            <h2 id="game-result">Game Over!</h2>
+            <div class="final-score" id="final-score">0</div>
+            <p style="font-size: 1.2em; color: var(--mid-gray); margin-bottom: 30px;" id="result-message"></p>
+            <div id="achievements-display" style="margin: 20px 0;"></div>
+            <button class="btn" onclick="restartGame()" style="margin-right: 10px;">Play Again</button>
+            <a href="#/anatomy" class="btn" style="background: var(--white); color: var(--black); text-decoration: none; display: inline-block;">Back to Learning</a>
+        </div>
+    </div>
+    
+    <div class="achievement" id="achievement">
+        <div class="achievement-title" id="achievement-title"></div>
+        <div class="achievement-desc" id="achievement-desc"></div>
+    </div>
+
+    <script>
+        let score = 0;
+        let found = 0;
+        let timeLeft = 60;
+        let selectedHotspot = null;
+        let gameActive = true;
+        let timerInterval;
+        let achievements = [];
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (!gameActive) return;
+                
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+                
+                if (timeLeft <= 10) {
+                    document.getElementById('timer').classList.add('warning');
+                }
+                
+                if (timeLeft <= 0) {
+                    endGame(false);
+                }
+            }, 1000);
+        }
+
+        function selectHotspot(term) {
+            if (!gameActive) return;
+            
+            const hotspot = document.querySelector(`[data-term="${term}"]`);
+            if (hotspot.classList.contains('found')) return;
+            
+            // Deselect previous
+            document.querySelectorAll('.hotspot').forEach(h => h.style.border = '3px dashed var(--accent)');
+            
+            // Select this one
+            hotspot.style.border = '3px solid var(--accent)';
+            hotspot.style.background = 'rgba(0, 102, 255, 0.3)';
+            selectedHotspot = term;
+        }
+
+        function selectTerm(term) {
+            if (!gameActive || !selectedHotspot) {
+                alert('Click on a glowing spot first!');
+                return;
+            }
+            
+            const termElement = event.target;
+            const hotspot = document.querySelector(`[data-term="${selectedHotspot}"]`);
+            
+            if (term === selectedHotspot) {
+                // Correct!
+                const bonus = 100 + (timeLeft * 2);
+                score += bonus;
+                found++;
+                
+                termElement.classList.add('correct');
+                hotspot.classList.add('found');
+                hotspot.style.animation = 'none';
+                
+                // Visual celebration
+                createConfetti(hotspot);
+                
+                // Check achievements
+                if (found === 1) showAchievement('🎯 First Match!', 'You found your first anatomy element');
+                if (found === 3) showAchievement('🔥 On Fire!', 'Halfway there!');
+                if (timeLeft > 50 && found === 1) showAchievement('⚡ Speed Demon!', 'Lightning fast first match');
+                
+                document.getElementById('score').textContent = score;
+                document.getElementById('found').textContent = `${found}/5`;
+                
+                selectedHotspot = null;
+                
+                if (found === 5) {
+                    if (timeLeft > 45) showAchievement('🏆 Master!', 'Completed with 45+ seconds left');
+                    endGame(true);
+                }
+            } else {
+                // Wrong!
+                score = Math.max(0, score - 20);
+                termElement.classList.add('wrong');
+                setTimeout(() => termElement.classList.remove('wrong'), 500);
+                document.getElementById('score').textContent = score;
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 15; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = rect.left + rect.width / 2 + 'px';
+                confetti.style.top = rect.top + rect.height / 2 + 'px';
+                confetti.style.background = ['#0066ff', '#4caf50', '#f59e0b', '#f44336'][Math.floor(Math.random() * 4)];
+                confetti.style.animationDelay = Math.random() * 0.3 + 's';
+                confetti.style.transform = `translateX(${(Math.random() - 0.5) * 200}px)`;
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+        
+        function showAchievement(title, desc) {
+            if (achievements.includes(title)) return;
+            achievements.push(title);
+            
+            document.getElementById('achievement-title').textContent = title;
+            document.getElementById('achievement-desc').textContent = desc;
+            document.getElementById('achievement').classList.add('show');
+            
+            setTimeout(() => {
+                document.getElementById('achievement').classList.remove('show');
+            }, 3000);
+        }
+        
+        function endGame(won) {
+            gameActive = false;
+            clearInterval(timerInterval);
+            
+            document.getElementById('final-score').textContent = score;
+            
+            if (won) {
+                document.getElementById('game-result').textContent = '🎉 Perfect!';
+                document.getElementById('result-message').textContent = `You found all anatomy elements with ${timeLeft} seconds remaining!`;
+                
+                // Show achievements
+                if (achievements.length > 0) {
+                    document.getElementById('achievements-display').innerHTML = 
+                        '<h3 style="font-size: 1.2em; margin-bottom: 10px;">Achievements Unlocked:</h3>' +
+                        achievements.map(a => `<div style="background: #f0f0f0; padding: 10px; margin: 5px 0;">${a}</div>`).join('');
+                }
+            } else {
+                document.getElementById('game-result').textContent = '⏰ Time\'s Up!';
+                document.getElementById('result-message').textContent = `You found ${found} out of 5 elements. Try again!`;
+            }
+            
+            document.getElementById('game-over').classList.add('show');
+        }
+
+        function restartGame() {
+            score = 0;
+            found = 0;
+            timeLeft = 60;
+            selectedHotspot = null;
+            gameActive = true;
+            achievements = [];
+            
+            document.getElementById('score').textContent = '0';
+            document.getElementById('found').textContent = '0/5';
+            document.getElementById('timer').textContent = '60';
+            document.getElementById('timer').classList.remove('warning');
+            document.getElementById('game-over').classList.remove('show');
+            
+            document.querySelectorAll('.term-option').forEach(t => {
+                t.classList.remove('correct', 'wrong');
+            });
+            
+            document.querySelectorAll('.hotspot').forEach(h => {
+                h.classList.remove('found');
+                h.style.border = '3px dashed var(--accent)';
+                h.style.background = '';
+            });
+            
+            startTimer();
+        }
+
+        // Start the game
+        startTimer();
+    </script>
+<script src="../back-nav.js"></script>
+</body>
+</html>

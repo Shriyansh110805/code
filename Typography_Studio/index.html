@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typography Studio — Master the Art of Type</title>
+    
+    <!-- Design System -->
+    <link rel="stylesheet" href="design-tokens.css">
+    <link rel="stylesheet" href="unified-components.css">
+    
+    <!-- Three.js for hero animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <style>
+        /* App Shell Specific Styles */
+        #app-container {
+            min-height: 100vh;
+            padding-top: var(--nav-height);
+        }
+        
+        #content-container {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+        
+        #content-container.loading {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        /* Loading Indicator */
+        .loading-indicator {
+            position: fixed;
+            top: var(--nav-height);
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+            z-index: var(--z-fixed);
+        }
+        
+        .loading-indicator.active {
+            animation: loading 1s ease-in-out infinite;
+        }
+        
+        @keyframes loading {
+            0% { transform: scaleX(0); transform-origin: left; }
+            50% { transform: scaleX(1); transform-origin: left; }
+            51% { transform: scaleX(1); transform-origin: right; }
+            100% { transform: scaleX(0); transform-origin: right; }
+        }
+        
+        /* Page Transitions */
+        .page-enter {
+            animation: pageEnter 0.4s ease;
+        }
+        
+        @keyframes pageEnter {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        
+        /* Hero Section (Home only) */
+        #hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-top: calc(-1 * var(--nav-height));
+        }
+        
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 1200px;
+            padding: 0 var(--space-10);
+        }
+        
+        .hero-content h1 {
+            font-size: clamp(48px, 8vw, 120px);
+            font-weight: var(--font-light);
+            letter-spacing: var(--tracking-tighter);
+            line-height: var(--leading-tight);
+            margin-bottom: var(--space-8);
+            background: linear-gradient(135deg, #ffffff 0%, #d0d0d0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-content .subtitle {
+            font-size: clamp(18px, 2vw, 24px);
+            color: var(--text-tertiary);
+            margin-bottom: var(--space-12);
+            font-weight: var(--font-normal);
+        }
+        
+        .hero-cta {
+            display: inline-flex;
+            gap: var(--space-4);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            animation: bounce 2s infinite;
+        }
+        
+        .scroll-indicator span {
+            display: block;
+            width: 24px;
+            height: 40px;
+            border: 2px solid var(--border-medium);
+            border-radius: 12px;
+            position: relative;
+        }
+        
+        .scroll-indicator span::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 8px;
+            background: var(--text-muted);
+            border-radius: 2px;
+            animation: scroll 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+        
+        @keyframes scroll {
+            0% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(16px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Indicator -->
+    <div class="loading-indicator" id="loading-indicator"></div>
+    
+    <!-- Global Navigation -->
+    <nav class="nav-global" id="nav" aria-label="Main navigation">
+        <div class="nav-content">
+            <a href="#/" class="nav-logo" data-route="/" aria-label="Typography Studio — Home">Typography Studio</a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#/anatomy" class="nav-link" data-route="/anatomy">Anatomy</a></li>
+                <li><a href="#/classification" class="nav-link" data-route="/classification">Classification</a></li>
+                <li><a href="#/comparison" class="nav-link" data-route="/comparison">Comparison</a></li>
+                <li><a href="#/psychology" class="nav-link" data-route="/psychology">Psychology</a></li>
+                <li><a href="#/expressive" class="nav-link" data-route="/expressive">Expressive</a></li>
+                <li><a href="#/poster" class="nav-link" data-route="/poster">Showcase</a></li>
+                <li><a href="#/brand" class="nav-link" data-route="/brand">Brand</a></li>
+                <li><a href="#/poster" class="btn btn-primary" data-route="/poster">View Showcase</a></li>
+            </ul>
+            <button
+                class="nav-hamburger"
+                id="navHamburger"
+                aria-expanded="false"
+                aria-controls="mobileNav"
+                aria-label="Toggle navigation menu"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation Drawer -->
+    <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+        <a href="#/anatomy" class="mobile-nav-link" data-route="/anatomy">Anatomy</a>
+        <a href="#/classification" class="mobile-nav-link" data-route="/classification">Classification</a>
+        <a href="#/comparison" class="mobile-nav-link" data-route="/comparison">Comparison</a>
+        <a href="#/psychology" class="mobile-nav-link" data-route="/psychology">Psychology</a>
+        <a href="#/expressive" class="mobile-nav-link" data-route="/expressive">Expressive</a>
+        <a href="#/poster" class="mobile-nav-link" data-route="/poster">Showcase</a>
+        <a href="#/brand" class="mobile-nav-link" data-route="/brand">Brand</a>
+    </nav>
+    
+    <!-- App Container -->
+    <div id="app-container">
+        <!-- Dynamic Content Container -->
+        <div id="content-container"></div>
+    </div>
+    
+    <!-- Global Footer -->
+    <footer style="padding: var(--space-20) var(--space-10) var(--space-10); border-top: 1px solid var(--border-default); text-align: center;">
+        <p style="color: var(--text-muted); font-size: var(--text-sm);">Typography Studio © 2026 | Professional Design Education</p>
+    </footer>
+    
+    <!-- Mobile nav toggle -->
+    <script>
+        const hamburger = document.getElementById('navHamburger');
+        const mobileNav = document.getElementById('mobileNav');
+        hamburger.addEventListener('click', () => {
+            const isOpen = hamburger.classList.toggle('open');
+            mobileNav.classList.toggle('open', isOpen);
+            hamburger.setAttribute('aria-expanded', String(isOpen));
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        });
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('open');
+                mobileNav.classList.remove('open');
+                hamburger.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            });
+        });
+    </script>
+
+    <!-- App Router & Controller -->
+    <script src="app-router.js"></script>
+</body>
+</html>
