@@ -399,11 +399,17 @@ function loseLife(reason) {
   setTimeout(() => document.getElementById('gameArea').classList.remove('flash-wrong'), 450);
 
   setTimeout(() => {
-    document.getElementById('goSub').textContent =
-      reason + (state.lives > 0 ? ` (${state.lives} ${state.lives === 1 ? 'life' : 'lives'} remaining)` : '');
-    document.getElementById('goScore').textContent = state.score;
-    document.getElementById('retryBtn').onclick = retryLevel;
-    showScreen('gameOverScreen');
+    if (state.lives <= 0) {
+      state.lives = 3;
+      state.score = 0;
+      showScreen('homeScreen');
+    } else {
+      document.getElementById('goSub').textContent =
+        reason + ` (${state.lives} ${state.lives === 1 ? 'life' : 'lives'} remaining)`;
+      document.getElementById('goScore').textContent = state.score;
+      document.getElementById('retryBtn').onclick = retryLevel;
+      showScreen('gameOverScreen');
+    }
   }, 500);
 }
 
