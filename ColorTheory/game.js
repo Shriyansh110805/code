@@ -232,6 +232,11 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
 }
 
+function goHome() {
+  clearInterval(state.timerInterval);
+  showScreen('homeScreen');
+}
+
 function showHow() {
   const box = document.getElementById('howToBox');
   box.style.display = box.style.display === 'block' ? 'none' : 'block';

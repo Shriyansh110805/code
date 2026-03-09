@@ -247,6 +247,7 @@ body {
   transition: border-color 0.18s, color 0.18s;
 }
 .btn-how:hover { border-color: var(--border-hi); color: var(--text); }
+a.btn-how { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
 
 .how-box {
   display: none;
@@ -396,6 +397,37 @@ body {
 }
 .btn-hint:hover:not(:disabled) { background: rgba(251,191,36,0.16); border-color: rgba(251,191,36,0.5); }
 .btn-hint:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.btn-hud-home {
+  flex-shrink: 0;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 0.35rem 0.55rem;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+}
+.btn-hud-home:hover { background: var(--glass-b); border-color: var(--border-hi); color: var(--text); }
+
+.btn-hud-learn {
+  flex-shrink: 0;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 0.35rem 0.55rem;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--muted);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+}
+.btn-hud-learn:hover { background: var(--glass-b); border-color: var(--border-hi); color: var(--text); }
 
 /* Level progress dots */
 .level-progress {
