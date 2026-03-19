@@ -4,6 +4,35 @@
 function hslToHex(h,s,l){s/=100;l/=100;const a=s*Math.min(l,1-l);const f=n=>{const k=(n+h/30)%12;const c=l-a*Math.max(Math.min(k-3,9-k,1),-1);return Math.round(255*c).toString(16).padStart(2,'0');};return`#${f(0)}${f(8)}${f(4)}`;}
 function getLabel(h){const L=[[0,'Red'],[30,'Red-Orange'],[60,'Yellow'],[90,'Yellow-Green'],[120,'Green'],[150,'Green-Cyan'],[180,'Cyan'],[210,'Azure'],[240,'Blue'],[270,'Violet'],[300,'Magenta'],[330,'Rose']];let b=L[0],d=361;for(const[deg,n]of L){let dd=Math.abs(h-deg);if(dd>180)dd=360-dd;if(dd<d){d=dd;b=[deg,n];}}return b[1];}
 
+/* ═══════════════════════════════════
+   FIX H1 + Quick Win #3: global toast
+   ═══════════════════════════════════ */
+function showToast(msg) {
+  const toast = document.getElementById('copyToast');
+  if (!toast) return;
+  toast.textContent = '✓ ' + msg;
+  toast.classList.add('show');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+/* ═══════════════════════════════════════════
+   FIX H1 + Quick Win #2: chapter progress labels
+   Inserts "1 of 8" after each "Chapter N" eyebrow
+   ═══════════════════════════════════════════ */
+(function() {
+  document.querySelectorAll('.eyebrow').forEach(el => {
+    const m = el.textContent.trim().match(/^Chapter (\d+)$/);
+    if (!m) return;
+    const num = parseInt(m[1]);
+    const prog = document.createElement('span');
+    prog.className = 'ch-prog';
+    prog.textContent = num + ' of 8';
+    // Insert right after the eyebrow div
+    el.insertAdjacentElement('afterend', prog);
+  });
+})();
+
 /* ─── INTRO: MOOD LIVE UI PREVIEW ─── */
 (function(){
   const MOODS = {
@@ -54,50 +83,88 @@ function getLabel(h){const L=[[0,'Red'],[30,'Red-Orange'],[60,'Yellow'],[90,'Yel
 
   document.querySelectorAll('.mood-card[data-mood]').forEach(card => {
     card.addEventListener('click', () => applyMood(card.dataset.mood));
-    card.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' ') applyMood(card.dataset.mood); });
+    card.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' ') { e.preventDefault(); applyMood(card.dataset.mood); } });
   });
   applyMood('happy');
 })();
 
-/* ─── INTRO: BEFORE / AFTER ─── */
+/* ═══════════════════════════════════════════════════════════════
+   FIX Quick Win #8: Drag Reveal — replaces BA toggle buttons
+   Slider controls clip-path on the bad layer overlay
+   ═══════════════════════════════════════════════════════════════ */
 (function(){
-  const GOOD = {
-    nav:'#0f172a', logo:'#60a5fa', btnBg:'#3b82f6', btnC:'#fff',
-    body:'#1e293b', b1:'#60a5fa', b2:'#94a3b8', b3:'#475569',
-    insight:'Color theory applied: dark neutral background · cool blue accent · subtle hierarchy. Every color has a purpose.',
-  };
-  const BAD = {
-    nav:'#ff6600', logo:'#00ffff', btnBg:'#ff00ff', btnC:'#ffff00',
-    body:'#cc0099', b1:'#00ff44', b2:'#ff2200', b3:'#9900ff',
-    insight:'No color theory: random hues fighting each other, no hierarchy, nothing stands out. Visually exhausting.',
-  };
-  function apply(p) {
-    const $=id=>document.getElementById(id);
-    $('baMiniNav').style.background = p.nav;
-    $('baMiniLogo').style.background = p.logo;
-    const btn = $('baMiniBtn'); btn.style.background = p.btnBg; btn.style.color = p.btnC;
-    $('baMiniBody').style.background = p.body;
-    $('baMb1').style.background = p.b1;
-    $('baMb2').style.background = p.b2;
-    $('baMb3').style.background = p.b3;
-    $('baInsight').textContent = p.insight;
+  const slider = document.getElementById('baRevealSlider');
+  const badLayer = document.getElementById('baBadLayer');
+  const divLine = document.getElementById('baDividerLine');
+  if (!slider || !badLayer) return;
+
+  function updateReveal(val) {
+    // val 0 = all good (bad hidden), val 100 = all bad (bad visible)
+    // bad layer clips from LEFT: at val=50, shows right 50%
+    const showFrom = 100 - val; // percentage from left where bad starts
+    badLayer.style.clipPath = `inset(0 0 0 ${showFrom}%)`;
+    divLine.style.left = (100 - showFrom) + '%';
   }
-  document.getElementById('baBadBtn').addEventListener('click', function(){
-    this.classList.add('active'); document.getElementById('baGoodBtn').classList.remove('active'); apply(BAD);
-  });
-  document.getElementById('baGoodBtn').addEventListener('click', function(){
-    this.classList.add('active'); document.getElementById('baBadBtn').classList.remove('active'); apply(GOOD);
-  });
-  apply(GOOD);
+
+  slider.addEventListener('input', () => updateReveal(+slider.value));
+  // Drag on the reveal container also moves the slider
+  const outer = document.getElementById('baRevealOuter');
+  if (outer) {
+    function dragReveal(e) {
+      const rect = outer.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const pct = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+      slider.value = pct;
+      updateReveal(pct);
+    }
+    let dragging = false;
+    outer.addEventListener('mousedown', e => { dragging = true; dragReveal(e); });
+    window.addEventListener('mousemove', e => { if (dragging) dragReveal(e); });
+    window.addEventListener('mouseup', () => dragging = false);
+    outer.addEventListener('touchstart', e => { dragging = true; dragReveal(e); }, {passive:true});
+    window.addEventListener('touchmove', e => { if (dragging) dragReveal(e); }, {passive:true});
+    window.addEventListener('touchend', () => dragging = false);
+  }
+
+  // Initialize at default value
+  updateReveal(+slider.value);
 })();
 
 /* ─── NAV ACTIVE ─── */
-const secEls=document.querySelectorAll('section[id]');
-const navAs=document.querySelectorAll('.nav-pills a');
-new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)navAs.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id));});},{threshold:.4}).observe&&secEls.forEach(s=>new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)navAs.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id));});},{threshold:.4}).observe(s));
+const secEls = document.querySelectorAll('section[id]');
+const navAs = document.querySelectorAll('.nav-pills a');
+
+// Active state (which section is currently in view)
+secEls.forEach(s => new IntersectionObserver(es => {
+  es.forEach(e => {
+    if (e.isIntersecting) {
+      navAs.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+    }
+  });
+}, {threshold: .4}).observe(s));
+
+/* ═══════════════════════════════════════════════
+   FIX Quick Win #7: nav checkmark on scroll past
+   Marks sections as ✓ once scrolled past upward
+   ═══════════════════════════════════════════════ */
+secEls.forEach(s => new IntersectionObserver(es => {
+  es.forEach(e => {
+    if (!e.isIntersecting && e.boundingClientRect.top < 0) {
+      const navA = document.querySelector(`.nav-pills a[href="#${e.target.id}"]`);
+      if (navA) navA.classList.add('done');
+    }
+    // Remove done if user scrolls back into the section
+    if (e.isIntersecting) {
+      const navA = document.querySelector(`.nav-pills a[href="#${e.target.id}"]`);
+      if (navA) navA.classList.remove('done');
+    }
+  });
+}, {threshold: 0, rootMargin: '0px 0px -95% 0px'}).observe(s));
 
 /* ─── REVEAL ─── */
-new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});},{threshold:.1}).observe&&document.querySelectorAll('.reveal').forEach(el=>new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});},{threshold:.1}).observe(el));
+document.querySelectorAll('.reveal').forEach(el => new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, {threshold: .1}).observe(el));
 
 /* ─── COLOR WHEEL (Chapter 2) ─── */
 (function(){
@@ -109,8 +176,8 @@ new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classL
   const S=canvas.width,cx=S/2,cy=S/2,R=S/2-4;
   for(let d=0;d<360;d++){const g=ctx.createRadialGradient(cx,cy,R*.28,cx,cy,R);g.addColorStop(0,`hsl(${d},10%,96%)`);g.addColorStop(.45,`hsl(${d},100%,62%)`);g.addColorStop(1,`hsl(${d},100%,36%)`);ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,R,(d-.5)*Math.PI/180-Math.PI/2,(d+.5)*Math.PI/180-Math.PI/2);ctx.closePath();ctx.fillStyle=g;ctx.fill();}
   function marker(hue,label,color){const a=(hue-90)*Math.PI/180,mr=R*.72,mx=cx+Math.cos(a)*mr,my=cy+Math.sin(a)*mr;ctx.beginPath();ctx.arc(mx,my,9,0,Math.PI*2);ctx.fillStyle=color||'#000';ctx.globalAlpha=.5;ctx.fill();ctx.globalAlpha=1;ctx.fillStyle='#fff';ctx.font='bold 7px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,mx,my);}
-  [[0,'P'],[120,'P'],[240,'P']].forEach(([h,l])=>marker(h,l));   // RGB primaries: Red, Green, Blue
-  [[60,'S'],[180,'S'],[300,'S']].forEach(([h,l])=>marker(h,l,'#333')); // RGB secondaries: Yellow, Cyan, Magenta
+  [[0,'P'],[120,'P'],[240,'P']].forEach(([h,l])=>marker(h,l));
+  [[60,'S'],[180,'S'],[300,'S']].forEach(([h,l])=>marker(h,l,'#333'));
   canvas.addEventListener('mousemove',e=>{const rect=canvas.getBoundingClientRect();const sc=S/rect.width;const px=(e.clientX-rect.left)*sc-cx,py=(e.clientY-rect.top)*sc-cy;const dist=Math.sqrt(px*px+py*py);if(dist>R||dist<R*.28){tt.style.opacity='0';return;}let hue=Math.atan2(py,px)*180/Math.PI+90;hue=((hue%360)+360)%360;const hex=hslToHex(hue,100,50);ttSw.style.background=hex;ttTx.textContent=getLabel(hue)+' · '+Math.round(hue)+'° · '+hex;tt.style.opacity='1';tt.style.left=Math.min(Math.max(0,(e.clientX-rect.left)-80),canvas.offsetWidth-210)+'px';});
   canvas.addEventListener('mouseleave',()=>tt.style.opacity='0');
 })();
@@ -129,57 +196,36 @@ new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classL
   const W=sqC.width,H=sqC.height;
   let pH=0,sqX=W,sqY=H/2,hueY=0,sqDrag=false,hueDrag=false;
 
-  function drawHueBar(){
-    const g=hCtx.createLinearGradient(0,0,0,H);
-    for(let i=0;i<=12;i++)g.addColorStop(i/12,`hsl(${i*30},100%,50%)`);
-    hCtx.fillStyle=g;hCtx.fillRect(0,0,hC.width,H);
-  }
-  function drawSq(){
-    const sg=sqCtx.createLinearGradient(0,0,W,0);
-    sg.addColorStop(0,'#fff');sg.addColorStop(1,`hsl(${pH},100%,50%)`);
-    sqCtx.fillStyle=sg;sqCtx.fillRect(0,0,W,H);
-    const dg=sqCtx.createLinearGradient(0,0,0,H);
-    dg.addColorStop(0,'rgba(0,0,0,0)');dg.addColorStop(1,'rgba(0,0,0,1)');
-    sqCtx.fillStyle=dg;sqCtx.fillRect(0,0,W,H);
-  }
-  function updateOutput(){
-    const sx=Math.max(0,Math.min(W,sqX))/W;
-    const sy=Math.max(0,Math.min(H,sqY))/H;
-    const s=Math.round(sx*100);
-    const l=Math.round((1-sy)*(100-sx*50));
-    const hex=hslToHex(pH,s,l);
-    previewEl.style.background=hex;
-    previewEl.style.boxShadow=`0 6px 30px ${hex}77,inset 0 1px 0 rgba(255,255,255,.15)`;
-    hexEl.textContent=hex;
-    hslEl.textContent=`H: ${Math.round(pH)}°  S: ${s}%  L: ${l}%`;
-    cross.style.left=Math.max(0,Math.min(W,sqX))+'px';
-    cross.style.top=Math.max(0,Math.min(H,sqY))+'px';
-  }
+  function drawHueBar(){const g=hCtx.createLinearGradient(0,0,0,H);for(let i=0;i<=12;i++)g.addColorStop(i/12,`hsl(${i*30},100%,50%)`);hCtx.fillStyle=g;hCtx.fillRect(0,0,hC.width,H);}
+  function drawSq(){const sg=sqCtx.createLinearGradient(0,0,W,0);sg.addColorStop(0,'#fff');sg.addColorStop(1,`hsl(${pH},100%,50%)`);sqCtx.fillStyle=sg;sqCtx.fillRect(0,0,W,H);const dg=sqCtx.createLinearGradient(0,0,0,H);dg.addColorStop(0,'rgba(0,0,0,0)');dg.addColorStop(1,'rgba(0,0,0,1)');sqCtx.fillStyle=dg;sqCtx.fillRect(0,0,W,H);}
+  function updateOutput(){const sx=Math.max(0,Math.min(W,sqX))/W;const sy=Math.max(0,Math.min(H,sqY))/H;const s=Math.round(sx*100);const l=Math.round((1-sy)*(100-sx*50));const hex=hslToHex(pH,s,l);previewEl.style.background=hex;previewEl.style.boxShadow=`0 6px 30px ${hex}77,inset 0 1px 0 rgba(255,255,255,.15)`;hexEl.textContent=hex;hslEl.textContent=`H: ${Math.round(pH)}°  S: ${s}%  L: ${l}%`;cross.style.left=Math.max(0,Math.min(W,sqX))+'px';cross.style.top=Math.max(0,Math.min(H,sqY))+'px';}
   function pickSq(cx,cy){sqX=cx;sqY=cy;updateOutput();}
-  function pickHue(cy){
-    hueY=Math.max(0,Math.min(H,cy));
-    pH=(hueY/H)*360;
-    hThumb.style.top=hueY+'px';
-    drawSq();updateOutput();
-  }
+  function pickHue(cy){hueY=Math.max(0,Math.min(H,cy));pH=(hueY/H)*360;hThumb.style.top=hueY+'px';drawSq();updateOutput();}
   function sqCoords(e,rect){return[(e.clientX-rect.left)*(W/rect.width),(e.clientY-rect.top)*(H/rect.height)];}
   function hCoord(e,rect){return(e.clientY-rect.top)*(H/rect.height);}
   sqC.addEventListener('mousedown',e=>{sqDrag=true;const r=sqC.getBoundingClientRect();const[x,y]=sqCoords(e,r);pickSq(x,y);});
   hC.addEventListener('mousedown',e=>{hueDrag=true;const r=hC.getBoundingClientRect();pickHue(hCoord(e,r));});
-  window.addEventListener('mousemove',e=>{
-    if(sqDrag){const r=sqC.getBoundingClientRect();const[x,y]=sqCoords(e,r);pickSq(x,y);}
-    if(hueDrag){const r=hC.getBoundingClientRect();pickHue(hCoord(e,r));}
-  });
+  window.addEventListener('mousemove',e=>{if(sqDrag){const r=sqC.getBoundingClientRect();const[x,y]=sqCoords(e,r);pickSq(x,y);}if(hueDrag){const r=hC.getBoundingClientRect();pickHue(hCoord(e,r));}});
   window.addEventListener('mouseup',()=>{sqDrag=false;hueDrag=false;});
   sqC.addEventListener('touchstart',e=>{sqDrag=true;const t=e.touches[0];const r=sqC.getBoundingClientRect();pickSq((t.clientX-r.left)*(W/r.width),(t.clientY-r.top)*(H/r.height));},{passive:true});
   hC.addEventListener('touchstart',e=>{hueDrag=true;const t=e.touches[0];const r=hC.getBoundingClientRect();pickHue((t.clientY-r.top)*(H/r.height));},{passive:true});
-  window.addEventListener('touchmove',e=>{
-    const t=e.touches[0];
-    if(sqDrag){const r=sqC.getBoundingClientRect();pickSq((t.clientX-r.left)*(W/r.width),(t.clientY-r.top)*(H/r.height));}
-    if(hueDrag){const r=hC.getBoundingClientRect();pickHue((t.clientY-r.top)*(H/r.height));}
-  },{passive:true});
+  window.addEventListener('touchmove',e=>{const t=e.touches[0];if(sqDrag){const r=sqC.getBoundingClientRect();pickSq((t.clientX-r.left)*(W/r.width),(t.clientY-r.top)*(H/r.height));}if(hueDrag){const r=hC.getBoundingClientRect();pickHue((t.clientY-r.top)*(H/r.height));}},{passive:true});
   window.addEventListener('touchend',()=>{sqDrag=false;hueDrag=false;});
   drawHueBar();drawSq();pickSq(W,H/2);
+
+  /* FIX H7 + Quick Win #3: click-to-copy hex code */
+  const copyBtn = document.getElementById('hexCopyBtn');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', () => {
+      const hex = hexEl.textContent;
+      navigator.clipboard.writeText(hex).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = hex; document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta);
+      });
+      showToast('Copied ' + hex);
+    });
+  }
 })();
 
 /* ─── TINT SHADE TONE (Chapter 3b) ─── */
@@ -188,7 +234,6 @@ new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classL
   const row=document.getElementById('tstRow');
   function build(){
     row.innerHTML='';
-    // Tints (+ white)
     const tintLine=document.createElement('div');tintLine.className='tst-line';
     const tintLabel=document.createElement('div');tintLabel.className='tst-line-label';tintLabel.textContent='Tints — Color + White';
     const tintSws=document.createElement('div');tintSws.className='tst-swatches';
@@ -196,7 +241,6 @@ new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classL
     const base1=document.createElement('div');base1.className='tst-sw';base1.style.background=hslToHex(baseHue,100,45);base1.dataset.lbl='Base';tintSws.appendChild(base1);
     tintLine.appendChild(tintLabel);tintLine.appendChild(tintSws);row.appendChild(tintLine);
 
-    // Shades (+ black)
     const shadeLine=document.createElement('div');shadeLine.className='tst-line';
     const shadeLabel=document.createElement('div');shadeLabel.className='tst-line-label';shadeLabel.textContent='Shades — Color + Black';
     const shadeSws=document.createElement('div');shadeSws.className='tst-swatches';
@@ -204,7 +248,6 @@ new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classL
     [38,30,22,14,7].forEach(l=>{const sw=document.createElement('div');sw.className='tst-sw';sw.style.background=hslToHex(baseHue,90,l);sw.dataset.lbl=hslToHex(baseHue,90,l);shadeSws.appendChild(sw);});
     shadeLine.appendChild(shadeLabel);shadeLine.appendChild(shadeSws);row.appendChild(shadeLine);
 
-    // Tones (+ gray)
     const toneLine=document.createElement('div');toneLine.className='tst-line';
     const toneLabel=document.createElement('div');toneLabel.className='tst-line-label';toneLabel.textContent='Tones — Color + Gray';
     const toneSws=document.createElement('div');toneSws.className='tst-swatches';
@@ -214,8 +257,7 @@ new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classL
   document.getElementById('tstPresets').addEventListener('click',e=>{
     const p=e.target.closest('.tst-preset');if(!p)return;
     document.querySelectorAll('.tst-preset').forEach(x=>x.classList.remove('active'));
-    p.classList.add('active');
-    baseHue=+p.dataset.hue;build();
+    p.classList.add('active');baseHue=+p.dataset.hue;build();
   });
   build();
 })();
@@ -229,14 +271,30 @@ new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classL
 
   const SCHEMES={
     complementary:{name:'⟺ Complementary',desc:'Two colors directly opposite on the wheel (180° apart). Maximum contrast — they make each other more vivid.',rule:'📐 Pick any color. Go 180° across the wheel for its complement.',getHues:h=>[h,(h+180)%360],getLights:()=>[50,50]},
-    analogous:{name:'〰️ Analogous',desc:'Three colors sitting side by side (within 90°). Creates a natural, harmonious, calming feel.',rule:'📐 Pick any color. Take ±30° neighbors on either side.',getHues:h=>[(h-30+360)%360,h,(h+30)%360],getLights:()=>[50,50,50]},
-    triadic:{name:'△ Triadic',desc:'Three colors equally spaced at 120° intervals. Vibrant and balanced — like Red, Green, Blue (the RGB primaries) or Yellow, Cyan, Magenta (the secondaries).',rule:'📐 Pick any color. Add 120° and 240° to find the triadic trio.',getHues:h=>[h,(h+120)%360,(h+240)%360],getLights:()=>[50,50,50]},
+    analogous:{name:'〰 Analogous',desc:'Three colors sitting side by side (within 90°). Creates a natural, harmonious, calming feel.',rule:'📐 Pick any color. Take ±30° neighbors on either side.',getHues:h=>[(h-30+360)%360,h,(h+30)%360],getLights:()=>[50,50,50]},
+    triadic:{name:'△ Triadic',desc:'Three colors equally spaced at 120° intervals. Vibrant and balanced — like Red, Green, Blue (the RGB primaries).',rule:'📐 Pick any color. Add 120° and 240° to find the triadic trio.',getHues:h=>[h,(h+120)%360,(h+240)%360],getLights:()=>[50,50,50]},
     mono:{name:'🔘 Monochromatic',desc:'One hue in different lightness and saturation levels. Clean, unified, professional.',rule:'📐 Pick one hue. Vary brightness and saturation — never change the hue.',getHues:h=>[h],getLights:()=>[50]},
   };
 
   function drawWheelBase(){const off=document.createElement('canvas');off.width=off.height=S;const oc=off.getContext('2d');for(let d=0;d<360;d++){const g=oc.createRadialGradient(cx,cy,Rw*.28,cx,cy,Rw);g.addColorStop(0,`hsl(${d},10%,95%)`);g.addColorStop(.45,`hsl(${d},100%,60%)`);g.addColorStop(1,`hsl(${d},100%,34%)`);oc.beginPath();oc.moveTo(cx,cy);oc.arc(cx,cy,Rw,(d-.5)*Math.PI/180-Math.PI/2,(d+.5)*Math.PI/180-Math.PI/2);oc.closePath();oc.fillStyle=g;oc.fill();}wImg=oc.getImageData(0,0,S,S);}
-
   function hueXY(h,r){const a=(h-90)*Math.PI/180;return[cx+Math.cos(a)*r,cy+Math.sin(a)*r];}
+
+  /* FIX H6 + Quick Win #6: update mini dots on each harmony tab */
+  function updateTabDots() {
+    const hueMap = {
+      complementary: [baseHue, (baseHue+180)%360],
+      analogous: [(baseHue-30+360)%360, baseHue, (baseHue+30)%360],
+      triadic: [baseHue, (baseHue+120)%360, (baseHue+240)%360],
+      mono: [baseHue],
+    };
+    Object.entries(hueMap).forEach(([scheme, hues]) => {
+      const el = document.getElementById('sdots-' + scheme);
+      if (!el) return;
+      el.innerHTML = hues.map(h =>
+        `<span class="stab-dot" style="background:${hslToHex(h,90,50)};"></span>`
+      ).join('');
+    });
+  }
 
   function drawScheme(){
     ctx.putImageData(wImg,0,0);
@@ -249,6 +307,7 @@ new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classL
     ctx.restore();ctx.setLineDash([]);
     hues.forEach(h=>{const[x,y]=hueXY(h,dr);ctx.beginPath();ctx.arc(x,y,11,0,Math.PI*2);ctx.fillStyle=hslToHex(h,100,50);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.stroke();});
     updateInfo(hues,sc);
+    updateTabDots();
   }
 
   function updateInfo(hues,sc){
@@ -265,6 +324,7 @@ new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classL
   document.getElementById('schemeTabs').addEventListener('click',e=>{const t=e.target.closest('[data-scheme]');if(!t)return;document.querySelectorAll('.scheme-tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');currentScheme=t.dataset.scheme;drawScheme();});
 
   function getHueFrom(e){const rect=canvas.getBoundingClientRect();const sc=S/rect.width,sy=S/rect.height;const src=e.touches||e.changedTouches?(e.touches[0]||e.changedTouches[0]):e;const px=(src.clientX-rect.left)*sc-cx,py=(src.clientY-rect.top)*sy-cy;let h=Math.atan2(py,px)*180/Math.PI+90;return((h%360)+360)%360;}
+
   canvas.addEventListener('mousedown',e=>{dragging=true;baseHue=getHueFrom(e);drawScheme();});
   canvas.addEventListener('mousemove',e=>{if(dragging){baseHue=getHueFrom(e);drawScheme();}});
   window.addEventListener('mouseup',()=>dragging=false);
@@ -272,7 +332,34 @@ new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classL
   canvas.addEventListener('touchmove',e=>{if(dragging){baseHue=getHueFrom(e);drawScheme();}},{passive:true});
   window.addEventListener('touchend',()=>dragging=false);
 
+  /* FIX H7 + Quick Win #5: keyboard arrow key support on harmony wheel */
+  canvas.addEventListener('keydown', e => {
+    let delta = 0;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') delta = 2;
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') delta = -2;
+    if (delta !== 0) {
+      e.preventDefault();
+      baseHue = ((baseHue + delta) % 360 + 360) % 360;
+      drawScheme();
+    }
+  });
+
   drawWheelBase();drawScheme();
+
+  /* FIX H3 + Quick Win #4: save/copy palette button */
+  const saveBtn = document.getElementById('savePaletteBtn');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', () => {
+      const hexEls = document.querySelectorAll('#palettePalette .pal-hex');
+      const hexes = Array.from(hexEls).map(el => el.textContent).join('  ');
+      navigator.clipboard.writeText(hexes).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = hexes; document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta);
+      });
+      showToast('Palette copied! (' + hexes + ')');
+    });
+  }
 })();
 
 /* ─── 60-30-10 RULE ─── */
@@ -318,8 +405,8 @@ new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classL
   const S=canvas.width,cx=S/2,cy=S/2,R=S/2-4;
   function getColorType(h){
     const norm=((h%360)+360)%360;
-    const PRIMARY=[[0,18],[120,18],[240,18]]; // Red±18, Green±18, Blue±18 (RGB model)
-    const SECONDARY=[[60,18],[180,18],[300,18]]; // Yellow, Cyan, Magenta
+    const PRIMARY=[[0,18],[120,18],[240,18]];
+    const SECONDARY=[[60,18],[180,18],[300,18]];
     for(const[c,d]of PRIMARY){let dd=Math.abs(norm-c);if(dd>180)dd=360-dd;if(dd<=d)return'primary';}
     for(const[c,d]of SECONDARY){let dd=Math.abs(norm-c);if(dd>180)dd=360-dd;if(dd<=d)return'secondary';}
     return'tertiary';
@@ -380,24 +467,20 @@ new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classL
     '#00cc00+#0033cc':{name:'Cyan',hex:'#00cccc',hint:'Green + Blue = Cyan. Cool and electric — used in UI highlights and neon digital effects.'},
     '#0033cc+#00cc00':{name:'Cyan',hex:'#00cccc',hint:'Green + Blue = Cyan. Cool and electric — used in UI highlights and neon digital effects.'},
   };
-  let sel=[null,null],picking=0; // 0=first, 1=second
+  let sel=[null,null],picking=0;
   const mA=document.getElementById('mA'),mB=document.getElementById('mB');
   const resultSw=document.getElementById('mixResult'),resultName=document.getElementById('mixResultName'),hint=document.getElementById('mixHint');
   const mixBtn=document.getElementById('mixBtn');
   if(!mA)return;
   function updateSlots(){
-    function style(el,color){
-      if(color){el.style.background=color;el.style.border='2.5px solid #fff';el.innerHTML='';}
-      else{el.style.background='rgba(255,255,255,.05)';el.style.border='2px dashed rgba(255,255,255,.2)';el.innerHTML='<span style="font-size:1.4rem;color:rgba(255,255,255,.3)">?</span>';}
-    }
+    function style(el,color){if(color){el.style.background=color;el.style.border='2.5px solid #fff';el.innerHTML='';}else{el.style.background='rgba(255,255,255,.05)';el.style.border='2px dashed rgba(255,255,255,.2)';el.innerHTML='<span style="font-size:1.4rem;color:rgba(255,255,255,.3)">?</span>';}}
     style(mA,sel[0]);style(mB,sel[1]);
     mixBtn.disabled=!(sel[0]&&sel[1]);
   }
   document.querySelectorAll('[data-pick]').forEach(btn=>{
     btn.addEventListener('click',()=>{
       const c=btn.dataset.pick;
-      if(picking===0){sel[0]=c;picking=1;}
-      else{sel[1]=c;picking=0;}
+      if(picking===0){sel[0]=c;picking=1;}else{sel[1]=c;picking=0;}
       updateSlots();
       if(sel[0]&&sel[1])hint.textContent='Now click Mix! to combine them';
       else hint.textContent='Pick one more color';
@@ -406,11 +489,8 @@ new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classL
   mA.addEventListener('click',()=>{sel[0]=null;picking=0;updateSlots();hint.textContent='Select two primary colors above';});
   mB.addEventListener('click',()=>{sel[1]=null;picking=1;updateSlots();if(sel[0])hint.textContent='Now pick the second color';});
   function animateMix(result){
-    resultSw.style.background=result.hex;
-    resultSw.style.boxShadow=`0 6px 28px ${result.hex}88`;
-    resultSw.style.transform='scale(1.15)';
-    resultName.textContent=result.name;
-    hint.textContent=result.hint;
+    resultSw.style.background=result.hex;resultSw.style.boxShadow=`0 6px 28px ${result.hex}88`;
+    resultSw.style.transform='scale(1.15)';resultName.textContent=result.name;hint.textContent=result.hint;
     setTimeout(()=>resultSw.style.transform='scale(1)',300);
   }
   mixBtn.addEventListener('click',()=>{
@@ -441,17 +521,11 @@ new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classL
   QS.forEach((_,i)=>{const d=document.createElement('div');d.className='qdot';dotsEl.appendChild(d);dots[i]=d;});
   function showQ(){
     if(qIdx>=QS.length){card.style.display='none';done.classList.add('show');document.getElementById('quizFinalScore').textContent=score+'/'+QS.length;const msgs=['Keep studying — color theory takes practice!','Good start — review the color cards above.','Nice work! You know your color psychology.','Great job! Almost a color expert.','Perfect score! You are a color theory pro!'];document.getElementById('quizFinalMsg').textContent=msgs[score];return;}
-    answered=false;
-    const q=QS[qIdx];
-    qEl.textContent=(qIdx+1)+'. '+q.q;
-    fbEl.textContent='';fbEl.style.color='';
-    nextBtn.classList.remove('show');
-    choicesEl.innerHTML='';
+    answered=false;const q=QS[qIdx];qEl.textContent=(qIdx+1)+'. '+q.q;fbEl.textContent='';fbEl.style.color='';nextBtn.classList.remove('show');choicesEl.innerHTML='';
     q.choices.forEach(c=>{const btn=document.createElement('div');btn.className='quiz-choice';btn.style.background=c;btn.dataset.c=c;btn.addEventListener('click',()=>answer(c));choicesEl.appendChild(btn);});
   }
   function answer(color){
-    if(answered)return;answered=true;
-    const q=QS[qIdx];const ok=color===q.correct;
+    if(answered)return;answered=true;const q=QS[qIdx];const ok=color===q.correct;
     document.querySelectorAll('#quizChoices .quiz-choice').forEach(b=>{if(b.dataset.c===q.correct)b.classList.add('correct');else if(b.dataset.c===color&&!ok)b.classList.add('wrong');});
     if(ok){score++;fbEl.style.color='#22c55e';fbEl.textContent='✓ Correct! '+q.msg;dots[qIdx].classList.add('done');}
     else{fbEl.style.color='#ef4444';fbEl.textContent='✗ Not quite. '+q.msg;dots[qIdx].classList.add('wrong-dot');}

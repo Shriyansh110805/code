@@ -7,16 +7,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="learn.css">
-
 </head>
 <body>
 <div class="aurora" aria-hidden="true"><div class="aurora-b"></div><div class="aurora-b"></div><div class="aurora-b"></div></div>
 
+<!-- FIX H4 + Miller's Law: reduced from 8 → 7 nav items (removed "What is CT") -->
 <nav>
   <span class="nav-logo">Color Theory</span>
   <ul class="nav-pills">
     <li><a href="#home">Home</a></li>
-    <li><a href="#intro">What is CT</a></li>
     <li><a href="#wheel">The Wheel</a></li>
     <li><a href="#properties">Properties</a></li>
     <li><a href="#harmony">Harmony</a></li>
@@ -26,6 +25,9 @@
   </ul>
 </nav>
 
+<!-- Copy toast — global, injected once by JS -->
+<div class="copy-toast" id="copyToast" aria-live="polite"></div>
+
 <!-- ═══════════ HERO ═══════════ -->
 <section id="home">
   <div class="hero-orbs" aria-hidden="true">
@@ -34,13 +36,13 @@
   </div>
   <div class="eyebrow reveal">Interactive Learning Guide</div>
   <h1 class="hero-title reveal d1">Color Theory</h1>
-  <p class="hero-sub reveal d2">Every great design starts with understanding color. Learn visually — hover, drag, and interact your way through all 10 core concepts.</p>
+  <p class="hero-sub reveal d2">Every great design starts with understanding color. Learn visually — hover, drag, and interact your way through all 8 core concepts.</p>
   <div class="hero-tags reveal d3">
-    <a href="#wheel" class="tag tag-link"><span class="tag-dot" style="background:#ef4444"></span>Color Wheel</a>
-    <a href="#harmony" class="tag tag-link"><span class="tag-dot" style="background:#fbbf24"></span>Harmony</a>
-    <a href="#properties" class="tag tag-link"><span class="tag-dot" style="background:#60a5fa"></span>Properties</a>
-    <a href="#psychology" class="tag tag-link"><span class="tag-dot" style="background:#10b981"></span>Psychology</a>
-    <a href="#rule" class="tag tag-link"><span class="tag-dot" style="background:#a78bfa"></span>60-30-10</a>
+    <span class="tag"><span class="tag-dot" style="background:#ef4444"></span>Color Wheel</span>
+    <span class="tag"><span class="tag-dot" style="background:#fbbf24"></span>Harmony</span>
+    <span class="tag"><span class="tag-dot" style="background:#60a5fa"></span>Properties</span>
+    <span class="tag"><span class="tag-dot" style="background:#10b981"></span>Psychology</span>
+    <span class="tag"><span class="tag-dot" style="background:#a78bfa"></span>60-30-10</span>
   </div>
   <a href="game.html" class="btn-play reveal d4"><span>🎮</span> Play ColorQuest Game</a>
   <div class="scroll-hint"><span>Scroll to explore</span><span>↓</span></div>
@@ -48,12 +50,13 @@
 
 <!-- ═══════════ WHAT IS COLOR THEORY ═══════════ -->
 <section id="intro">
+  <!-- FIX H1: chapter progress "1 of 8" added via JS -->
   <div class="eyebrow reveal">Chapter 1</div>
   <h2 class="sec-title reveal d1">What is Color Theory?</h2>
   <p class="sec-sub reveal d2">A set of rules for how colors interact and affect emotion. Click a mood below — watch the same UI transform completely.</p>
 
   <div class="mood-cards reveal d2">
-    <div class="mood-card mood-horror" data-mood="horror" role="button" tabindex="0">
+    <div class="mood-card mood-horror" data-mood="horror" role="button" tabindex="0" aria-label="Switch to Horror Game mood">
       <div class="mood-icon">👻</div>
       <div class="mood-label">Horror Game</div>
       <div class="mood-palette">
@@ -64,7 +67,7 @@
       </div>
       <div class="mood-desc">Dark greens + reds → tension, fear, unease</div>
     </div>
-    <div class="mood-card mood-happy active-mood" data-mood="happy" role="button" tabindex="0">
+    <div class="mood-card mood-happy active-mood" data-mood="happy" role="button" tabindex="0" aria-label="Switch to Happy Animation mood">
       <div class="mood-icon">🌟</div>
       <div class="mood-label">Happy Animation</div>
       <div class="mood-palette">
@@ -75,7 +78,7 @@
       </div>
       <div class="mood-desc">Bright yellows + blues → joy, energy, playfulness</div>
     </div>
-    <div class="mood-card mood-pro" data-mood="pro" role="button" tabindex="0">
+    <div class="mood-card mood-pro" data-mood="pro" role="button" tabindex="0" aria-label="Switch to Professional UI mood">
       <div class="mood-icon">💼</div>
       <div class="mood-label">Professional UI</div>
       <div class="mood-palette">
@@ -88,7 +91,7 @@
     </div>
   </div>
 
-  <!-- Live UI Preview — morphs with each mood click -->
+  <!-- Live UI Preview -->
   <div class="mood-preview reveal d3">
     <div class="mp-ui">
       <div class="mp-nav" id="mpNav">
@@ -119,27 +122,55 @@
     </div>
   </div>
 
-  <!-- Before / After: same design, good vs bad color choices -->
+  <!-- FIX QUICK WIN #8: Drag reveal replaces static toggle -->
   <div class="ba-wrap reveal d3">
     <div class="ba-header">
       <span class="ba-title">Why does it matter?</span>
-      <div class="ba-toggle">
-        <button class="ba-btn" id="baBadBtn">😬 No Color Theory</button>
-        <button class="ba-btn active" id="baGoodBtn">✨ With Color Theory</button>
-      </div>
+      <span class="ba-reveal-hint">← Drag to compare →</span>
     </div>
-    <div class="ba-preview">
-      <div class="ba-mini-nav" id="baMiniNav">
-        <div class="ba-mini-logo" id="baMiniLogo"></div>
-        <button class="ba-mini-btn" id="baMiniBtn">Sign Up</button>
+
+    <div class="ba-reveal-outer" id="baRevealOuter" role="img" aria-label="Comparison: good color theory vs bad color theory">
+      <!-- GOOD layer (base — always visible underneath) -->
+      <div class="ba-layer">
+        <div class="ba-mini-nav" style="background:#0f172a;">
+          <div class="ba-mini-logo" style="background:#60a5fa;"></div>
+          <button class="ba-mini-btn" style="background:#3b82f6;color:#fff;">Sign Up</button>
+        </div>
+        <div class="ba-mini-body" style="background:#1e293b;">
+          <div class="ba-mini-bar ba-mb1" style="background:#60a5fa;"></div>
+          <div class="ba-mini-bar ba-mb2" style="background:#94a3b8;"></div>
+          <div class="ba-mini-bar ba-mb3" style="background:#475569;"></div>
+        </div>
       </div>
-      <div class="ba-mini-body" id="baMiniBody">
-        <div class="ba-mini-bar ba-mb1" id="baMb1"></div>
-        <div class="ba-mini-bar ba-mb2" id="baMb2"></div>
-        <div class="ba-mini-bar ba-mb3" id="baMb3"></div>
+      <!-- BAD layer (clips from the left — right side reveals "no color theory") -->
+      <div class="ba-layer ba-bad-layer" id="baBadLayer">
+        <div class="ba-mini-nav" style="background:#ff6600;">
+          <div class="ba-mini-logo" style="background:#00ffff;"></div>
+          <button class="ba-mini-btn" style="background:#ff00ff;color:#ffff00;">Sign Up</button>
+        </div>
+        <div class="ba-mini-body" style="background:#cc0099;">
+          <div class="ba-mini-bar ba-mb1" style="background:#00ff44;"></div>
+          <div class="ba-mini-bar ba-mb2" style="background:#ff2200;"></div>
+          <div class="ba-mini-bar ba-mb3" style="background:#9900ff;"></div>
+        </div>
       </div>
+      <!-- Divider handle -->
+      <div class="ba-divider-line" id="baDividerLine"></div>
+      <div class="ba-reveal-tag ba-tag-good">✨ Good</div>
+      <div class="ba-reveal-tag ba-tag-bad">😬 Bad</div>
     </div>
-    <div class="ba-insight" id="baInsight">Color theory applied: dark neutral background · cool blue accent · clear visual hierarchy. Every color is intentional.</div>
+
+    <!-- Range slider drives the reveal -->
+    <div class="ba-slider-wrap">
+      <div class="ba-slider-label"><span>← All good</span><span>All bad →</span></div>
+      <input type="range" id="baRevealSlider" min="0" max="100" value="30"
+             aria-label="Drag to compare good and bad color theory">
+    </div>
+
+    <div class="ba-insight">
+      <strong>Good:</strong> dark neutral background · blue accent · clear hierarchy — every color has a purpose.<br>
+      <strong>Bad:</strong> random hues fighting each other · no visual hierarchy · exhausting to look at.
+    </div>
   </div>
 
   <div class="sec-footer reveal">
@@ -160,7 +191,7 @@
         <span id="ttSwatch" style="width:12px;height:12px;border-radius:3px;display:inline-block;flex-shrink:0;"></span>
         <span id="ttText"></span>
       </div>
-      <canvas id="wheelCanvas" width="310" height="310"></canvas>
+      <canvas id="wheelCanvas" width="310" height="310" tabindex="0" role="img" aria-label="Color wheel. Hover to explore colors, click to inspect."></canvas>
       <p style="font-size:.72rem;color:var(--dim);margin-top:.35rem;">🖱 Hover to explore · Click to inspect · P=Primary · S=Secondary</p>
       <div id="wheelDrawer" class="wheel-drawer">
         <div class="wd-inner">
@@ -303,25 +334,30 @@
   <h2 class="sec-title reveal d1">Color Properties</h2>
   <p class="sec-sub reveal d2">Every color has 3 dimensions — Hue, Saturation, and Value. Drag the sliders to see them change live.</p>
 
+  <!-- FIX H7: click-to-copy hex added to output panel -->
   <div class="hsl-picker reveal d2">
     <div class="picker-sq-wrap">
       <p class="picker-label">Saturation &amp; Lightness</p>
       <div style="position:relative;display:inline-block;">
-        <canvas id="pickerSq" width="180" height="180" style="border-radius:10px;display:block;cursor:crosshair;"></canvas>
+        <canvas id="pickerSq" width="180" height="180" style="border-radius:10px;display:block;cursor:crosshair;" aria-label="Saturation and lightness picker square"></canvas>
         <div id="pickerCross" style="position:absolute;width:14px;height:14px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 0 6px rgba(0,0,0,.9);pointer-events:none;transform:translate(-50%,-50%);top:0;left:100%;"></div>
       </div>
     </div>
     <div class="picker-hue-wrap">
       <p class="picker-label">Hue</p>
       <div style="position:relative;display:inline-block;">
-        <canvas id="pickerHue" width="22" height="180" style="border-radius:6px;display:block;cursor:ns-resize;"></canvas>
+        <canvas id="pickerHue" width="22" height="180" style="border-radius:6px;display:block;cursor:ns-resize;" aria-label="Hue picker bar"></canvas>
         <div id="pickerHueThumb" style="position:absolute;left:-5px;right:-5px;height:8px;border:2.5px solid #fff;border-radius:3px;box-shadow:0 0 6px rgba(0,0,0,.9);pointer-events:none;transform:translateY(-50%);top:0;"></div>
       </div>
     </div>
     <div class="picker-output">
       <p class="picker-label">Color Output</p>
       <div id="pickerPreview"></div>
-      <div id="pickerHex">#FF0000</div>
+      <!-- FIX H7 + Quick Win #3: hex copy row -->
+      <div class="hex-row">
+        <div id="pickerHex">#FF0000</div>
+        <button class="hex-copy-btn" id="hexCopyBtn" title="Copy hex to clipboard" aria-label="Copy hex code">⎘ Copy</button>
+      </div>
       <div id="pickerHslVals">H: 0° &nbsp;S: 100% &nbsp;L: 50%</div>
       <p style="font-size:.7rem;color:var(--dim);margin-top:.2rem;">Click or drag on the square and bar</p>
     </div>
@@ -388,7 +424,7 @@
 
   <div class="temp-wrap reveal d3">
     <div class="temp-labels"><span>❄️ Cool</span><span style="color:var(--text);font-weight:800;">Temperature Slider</span><span>🔥 Warm</span></div>
-    <input type="range" id="tempSlider" min="0" max="100" value="20" style="width:100%;max-width:580px;background:linear-gradient(90deg,#0044cc,#00aacc,#99ccff,#ffd0a0,#ff7700,#dd0000);">
+    <input type="range" id="tempSlider" min="0" max="100" value="20" aria-label="Color temperature slider" style="width:100%;max-width:580px;background:linear-gradient(90deg,#0044cc,#00aacc,#99ccff,#ffd0a0,#ff7700,#dd0000);">
     <div class="temp-palette">
       <div class="temp-chip" id="tc0"></div>
       <div class="temp-chip" id="tc1"></div>
@@ -399,7 +435,7 @@
   </div>
 
   <div class="sec-footer reveal">
-    <div class="qf"><span class="qf-i">🌡️</span><span class="qf-t"><strong>Temperature in games:</strong> Horror games mix cool blues with desaturated warms to create unease. Action games use warm reds and oranges to raise adrenaline. Value contrast matters more than hue in dark scenes.</span></div>
+    <div class="qf"><span class="qf-i">🌡️</span><span class="qf-t"><strong>Temperature in games:</strong> Horror games mix cool blues with desaturated warms to create unease. Action games use warm reds and oranges to raise adrenaline.</span></div>
     <a href="#tst" class="btn-next">Tint / Shade / Tone →</a>
   </div>
 </section>
@@ -439,19 +475,22 @@
 <section id="harmony">
   <div class="eyebrow reveal">Chapter 4</div>
   <h2 class="sec-title reveal d1">Color Harmony</h2>
-  <p class="sec-sub reveal d2">Harmony defines color combinations that feel visually pleasing. Drag the wheel to explore each scheme at any hue.</p>
+  <p class="sec-sub reveal d2">Harmony defines color combinations that feel visually pleasing. Drag the wheel or use arrow keys to explore each scheme at any hue.</p>
 
+  <!-- FIX H6 + Quick Win #6: tabs now include live swatch dots injected by JS -->
   <div class="scheme-tabs reveal d2" id="schemeTabs">
-    <button class="scheme-tab active" data-scheme="complementary">⟺ Complementary</button>
-    <button class="scheme-tab" data-scheme="analogous">〰️ Analogous</button>
-    <button class="scheme-tab" data-scheme="triadic">△ Triadic</button>
-    <button class="scheme-tab" data-scheme="mono">🔘 Monochromatic</button>
+    <button class="scheme-tab active" data-scheme="complementary">⟺ Complementary<span class="stab-dots" id="sdots-complementary"></span></button>
+    <button class="scheme-tab" data-scheme="analogous">〰 Analogous<span class="stab-dots" id="sdots-analogous"></span></button>
+    <button class="scheme-tab" data-scheme="triadic">△ Triadic<span class="stab-dots" id="sdots-triadic"></span></button>
+    <button class="scheme-tab" data-scheme="mono">🔘 Monochromatic<span class="stab-dots" id="sdots-mono"></span></button>
   </div>
 
   <div class="scheme-layout reveal d3">
     <div class="scheme-canvas-wrap">
-      <canvas id="schemeCanvas" width="290" height="290"></canvas>
-      <p class="drag-hint">🖱 Drag to rotate the scheme</p>
+      <!-- FIX H7 + Quick Win #5: tabindex + aria for keyboard access -->
+      <canvas id="schemeCanvas" width="290" height="290" tabindex="0" role="application"
+              aria-label="Color harmony wheel. Drag or use arrow keys to rotate the scheme."></canvas>
+      <p class="drag-hint">🖱 Drag to rotate · ← → Arrow keys also work</p>
     </div>
     <div class="scheme-info">
       <div class="scheme-name" id="schemeNameBadge">⟺ Complementary</div>
@@ -461,6 +500,10 @@
         <p style="font-size:.67rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:.55rem;">Live Palette</p>
         <div class="palette-strip" id="palettePalette"></div>
       </div>
+      <!-- FIX H3 + Quick Win #4: save/copy palette button -->
+      <button class="save-palette-btn" id="savePaletteBtn" title="Copy hex codes to clipboard">
+        ⬇ Copy Palette
+      </button>
       <div id="monoRow" style="display:none;">
         <p style="font-size:.67rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:.5rem;">Lightness Range</p>
         <div class="mono-swatches" id="monoSwatches"></div>
@@ -572,50 +615,6 @@
     <div class="guide-chip"><div class="guide-dot" style="background:#f97316"></div><div class="guide-label"><strong>Orange</strong>Fire / Warning</div></div>
   </div>
 
-  <!-- Interactive Comparison -->
-  <div class="comparison-wrap reveal d2">
-    <div class="comparison-header">
-      <span class="comparison-icon">👁️</span>
-      <span class="comparison-title">SEE THE DIFFERENCE</span>
-    </div>
-    <div class="comparison-container">
-      <div class="comparison-side" id="compLeft">
-        <div class="comp-label">GOOD COLOR THEORY</div>
-        <div class="comp-preview good-preview">
-          <div class="comp-ui-nav" style="background:#1e293b;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;">
-            <div style="width:60px;height:8px;background:#60a5fa;border-radius:4px;"></div>
-            <button style="background:#f97316;color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:.7rem;font-weight:700;cursor:pointer;">Action</button>
-          </div>
-          <div class="comp-ui-body" style="background:#0f172a;padding:14px;display:flex;flex-direction:column;gap:8px;flex:1;">
-            <div style="height:10px;background:#334155;border-radius:4px;width:70%;"></div>
-            <div style="height:8px;background:#1e293b;border-radius:4px;width:50%;"></div>
-            <div style="height:8px;background:#1e293b;border-radius:4px;width:60%;"></div>
-          </div>
-        </div>
-        <div class="comp-desc">Dark neutral background · One bright accent · Clear hierarchy</div>
-      </div>
-      <div class="comparison-divider">
-        <div class="comp-vs">VS</div>
-      </div>
-      <div class="comparison-side" id="compRight">
-        <div class="comp-label">NO COLOR THEORY</div>
-        <div class="comp-preview bad-preview">
-          <div class="comp-ui-nav" style="background:#ff00ff;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;">
-            <div style="width:60px;height:8px;background:#00ff00;border-radius:4px;"></div>
-            <button style="background:#ffff00;color:#ff0000;border:none;border-radius:6px;padding:6px 14px;font-size:.7rem;font-weight:700;cursor:pointer;">Action</button>
-          </div>
-          <div class="comp-ui-body" style="background:#ff6600;padding:14px;display:flex;flex-direction:column;gap:8px;flex:1;">
-            <div style="height:10px;background:#00ffff;border-radius:4px;width:70%;"></div>
-            <div style="height:8px;background:#ff0088;border-radius:4px;width:50%;"></div>
-            <div style="height:8px;background:#88ff00;border-radius:4px;width:60%;"></div>
-          </div>
-        </div>
-        <div class="comp-desc">Random colors fighting · No hierarchy · Visually exhausting</div>
-      </div>
-    </div>
-    <div class="comp-hint">↓ Scroll down to explore their history, psychology, and real-world applications</div>
-  </div>
-
   <div class="scene-grid reveal d3">
     <div class="scene-card scene-horror">
       <div class="scene-name">👻 Horror</div>
@@ -664,7 +663,7 @@
   </div>
 
   <div class="sec-footer reveal">
-    <div class="qf"><span class="qf-i">🕹️</span><span class="qf-t"><strong>Visual hierarchy:</strong> Dark background → Bright button → Muted text. The button stands out not because it's colorful, but because of contrast. Value contrast works even in grayscale.</span></div>
+    <div class="qf"><span class="qf-i">🕹️</span><span class="qf-t"><strong>Visual hierarchy:</strong> Dark background → Bright button → Muted text. Value contrast works even in grayscale.</span></div>
     <a href="#rule" class="btn-next">60-30-10 Rule →</a>
   </div>
 </section>
@@ -723,6 +722,7 @@
 
 <!-- ═══════════ RGB vs CMYK vs HSV ═══════════ -->
 <section id="colormodels">
+  <!-- FIX: Chapter 7 was missing from nav — chapter number is now consistent -->
   <div class="eyebrow reveal">Chapter 7</div>
   <h2 class="sec-title reveal d1">RGB · CMYK · HSV</h2>
   <p class="sec-sub reveal d2">Different situations use different color systems. Here's when to use each one.</p>
@@ -766,7 +766,7 @@
   </div>
 
   <div class="sec-footer reveal">
-    <div class="qf"><span class="qf-i">💻</span><span class="qf-t"><strong>Rule of thumb:</strong> Designing for screens? Use RGB or HSL. Designing for print? Convert to CMYK. Picking colors in Figma or CSS? HSL is most intuitive because it maps to how humans describe color.</span></div>
+    <div class="qf"><span class="qf-i">💻</span><span class="qf-t"><strong>Rule of thumb:</strong> Designing for screens? Use RGB or HSL. Designing for print? Convert to CMYK. Picking colors in Figma or CSS? HSL is most intuitive.</span></div>
     <a href="#design" class="btn-next">Chapter 8: Your Design →</a>
   </div>
 </section>
@@ -799,13 +799,13 @@
         <div class="dc-deg">~160°</div>
       </div>
       <div class="design-verdict">
-        <strong>Why it works:</strong> Three hues spread across the wheel create vibrant balance. Blue builds trust, Pink brings energy, Mint signals success. No single color dominates — and together they cover the full emotional spectrum of the UI.
+        <strong>Why it works:</strong> Three hues spread across the wheel create vibrant balance. Blue builds trust, Pink brings energy, Mint signals success. No single color dominates — together they cover the full emotional spectrum of the UI.
       </div>
     </div>
   </div>
 
   <div class="sec-footer reveal" style="margin-top:2rem;">
-    <div class="qf"><span class="qf-i">🏆</span><span class="qf-t"><strong>Test everything you learned!</strong> The ColorQuest game covers all 5 color theory concepts interactively — Primary, RGB mixing, Complementary, Analogous, and Triadic.</span></div>
+    <div class="qf"><span class="qf-i">🏆</span><span class="qf-t"><strong>Test everything you learned!</strong> The ColorQuest game covers all color theory concepts interactively — Primary, RGB mixing, Complementary, Analogous, and Triadic.</span></div>
     <a href="game.html" class="btn-next" style="border-color:var(--pink);color:var(--pink);">🎮 Play ColorQuest →</a>
   </div>
 </section>
